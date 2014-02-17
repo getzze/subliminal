@@ -85,7 +85,7 @@ class Video(object):
     def fromname(cls, name):
         return cls.fromguess(os.path.split(name)[1], guessit.guess_file_info(name, 'autodetect'))
 
-    def fromimdb(self):
+    def fromimdb(self, update=True):
         """Get video information from imdb.com using omdbapi.com
         """
         if not self.title:
@@ -93,12 +93,18 @@ class Video(object):
           return
 
         # Get omdb dict from api
-        omdb_data = omdb_search(self.title, self.year, match=True)
+        omdb_data = omdb_search(self.title, self.year, match='title')
+ 
+        if not ((type(self).__name__ == 'Movie' and omdb_data.Type == 'movie') or (type(self).__name__ == 'Episode' and omdb_data.Type == 'episode') ):
+            logger.info('Wrong imdb_id match: %r -> (imdb) %r'%(os.path.split(self.name)[0], omdb_data.get('Title',None)))
+            return
         
         self.imdb_id = omdb_data.get('imdbID',None)
-        if not self.year:
+        if update or not self.year:
             self.year = omdb_data.get('Year',None)
-
+        if update:
+            self.title = omdb_data.get('Title',self.title)
+                
     def __repr__(self):
         return '<%s [%r]>' % (self.__class__.__name__, self.name)
 
@@ -151,14 +157,14 @@ class Episode(Video):
     def fromname(cls, name):
         return cls.fromguess(os.path.split(name)[1], guessit.guess_episode_info(name))
 
-    def fromimdb(self):
+    def fromimdb(self, update=True):
         """Get video information from imdb.com
         """
-        self._fromtvdb()
+        self._fromtvdb(update=update)
         if not self.imdb_id and self.title:
-            super(Episode,self).fromimdb()
+            super(Episode,self).fromimdb(update=update)
 
-    def _fromtvdb(self):
+    def _fromtvdb(self, update=True):
         """Get video information from thetvdb.com
         """
       
@@ -174,14 +180,21 @@ class Episode(Video):
         show = search[0]
         episode = show[self.season][self.episode]   
         
-        if not self.title:
-            self.title = episode.EpisodeName
-        if not self.tvdb_id:
-            self.title = episode.id
-        if not self.imdb_id:
-            self.title = episode.IMDB_ID
-        if not self.year:
-            self.year = episode.FirstAired.year
+        ## update series name
+        if update:
+            self.series = show.SeriesName
+        if update or not self.title:
+            self.title = episode.get('EpisodeName',None)
+        if update or not self.tvdb_id:
+            self.title = episode.get('id',None)
+        if update or not self.imdb_id:
+            self.title = episode.get('IMDB_ID', None)
+        if update or not self.year:
+            try:
+                self.year = episode.FirstAired.year
+            except:
+                pass
+            
             
     def __repr__(self):
         if self.year is None:
@@ -229,26 +242,29 @@ class Movie(Video):
         return '<%s [%r, %d]>' % (self.__class__.__name__, self.title, self.year)
 
 
-def omdb_search(title,year=None, match=True):
-    """Search for information on omdbapi.com with title and (optional) year. If `match` is True, query return perfect match 
+def omdb_search(query,year=None, match=None):
+    """Search for information on omdbapi.com with title and (optional) year.
+      `match` defines what to look for.
 
     :param string title: title of the video
     :param double year: year of the video. Default None
-    :param bool match: perform a perfect match query
+    :param string match: None, 'title', 'imdb_id' . Perform a query which matches the `title` or the `imdb_id` or wide query (None)
     :return: found movie
     :rtype: dict with keys such as: Title, Year, imdbID, Type.
               for perfect match:  Language, Country, Director, Writer, Actors, Plot, Poster, Runtime, Rating, Votes, Genre, Released, Rated
     """
     
-    title = title.encode("utf-8")
+    query = query.encode("utf-8")
     base_url = OMDBAPI_URL + '?r=json'
 
     # if match is True, search for exact match
     match_search = '&s=%s'
-    if match:
+    if match == 'title':
         match_search = '&t=%s'
+    if match == 'imdb_id':
+        match_search = '&i=%s'
     
-    url = base_url + match_search %(urllib.parse.quote(title))
+    url = base_url + match_search %(urllib.parse.quote(query))
     if year:
         url += '&y=%d'%(year)
     
@@ -261,6 +277,7 @@ def omdb_search(title,year=None, match=True):
     if match:
         return data
     else:
+        ## Return only the best match
         return data.get("Search", [])[0]
 
 
