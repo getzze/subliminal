@@ -9,6 +9,15 @@ import babelfish
 import enzyme
 import guessit
 
+import pytvdbapi
+import json
+from urllib.parse import quote
+from urllib.request import urlopen
+
+#####
+# Search omdb from https://github.com/Adys/python-omdb
+#
+#####
 
 logger = logging.getLogger(__name__)
 
@@ -24,6 +33,11 @@ VIDEO_EXTENSIONS = ('.3g2', '.3gp', '.3gp2', '.3gpp', '.60d', '.ajp', '.asf', '.
 #: Subtitle extensions
 SUBTITLE_EXTENSIONS = ('.srt', '.sub', '.smi', '.txt', '.ssa', '.ass', '.mpl')
 
+#: omdbapi.com url
+OMDBAPI_URL = "http://www.omdbapi.com/"
+#: thetvdb api key
+TVDB_APIKEY = "B43FF87DE395DF56"
+
 
 class Video(object):
     """Base class for videos
@@ -33,6 +47,7 @@ class Video(object):
     subclasses.
 
     :param string name: name or path of the video
+    :param string format: format of the video (HDTV, WEB-DL, ...)
     :param string release_group: release group of the video
     :param string resolution: screen size of the video stream (480p, 720p, 1080p or 1080i)
     :param string video_codec: codec of the video stream
@@ -45,9 +60,10 @@ class Video(object):
     """
     scores = {}
 
-    def __init__(self, name, release_group=None, resolution=None, video_codec=None, audio_codec=None, imdb_id=None,
-                 hashes=None, size=None, subtitle_languages=None):
+    def __init__(self, name, format=None, release_group=None, resolution=None, video_codec=None, audio_codec=None,
+                 imdb_id=None, hashes=None, size=None, subtitle_languages=None):
         self.name = name
+        self.format = format
         self.release_group = release_group
         self.resolution = resolution
         self.video_codec = video_codec
@@ -69,6 +85,20 @@ class Video(object):
     def fromname(cls, name):
         return cls.fromguess(os.path.split(name)[1], guessit.guess_file_info(name, 'autodetect'))
 
+    def fromimdb(self):
+        """Get video information from imdb.com using omdbapi.com
+        """
+        if not self.title:
+          logger.debug('Cannot search for movie on imdb without title')
+          return
+
+        # Get omdb dict from api
+        omdb_data = omdb_search(self.title, self.year, match=True)
+        
+        self.imdb_id = omdb_data.get('imdbID',None)
+        if not self.year:
+            self.year = omdb_data.get('Year',None)
+
     def __repr__(self):
         return '<%s [%r]>' % (self.__class__.__name__, self.name)
 
@@ -89,13 +119,13 @@ class Episode(Video):
     :param int tvdb_id: TheTVDB id of the episode
 
     """
-    scores = {'title': 12, 'video_codec': 2, 'tvdb_id': 48, 'imdb_id': 60, 'audio_codec': 1, 'year': 24,
-              'resolution': 2, 'season': 6, 'release_group': 6, 'series': 24, 'episode': 6, 'hash': 71}
+    scores = {'format': 3, 'video_codec': 2, 'tvdb_id': 48, 'title': 12, 'imdb_id': 60, 'audio_codec': 1, 'year': 24,
+              'resolution': 2, 'season': 6, 'release_group': 6, 'series': 24, 'episode': 6, 'hash': 74}
 
-    def __init__(self, name, series, season, episode, release_group=None, resolution=None, video_codec=None,
+    def __init__(self, name, series, season, episode, format=None, release_group=None, resolution=None, video_codec=None,
                  audio_codec=None, imdb_id=None, hashes=None, size=None, subtitle_languages=None, title=None,
                  year=None, tvdb_id=None):
-        super(Episode, self).__init__(name, release_group, resolution, video_codec, audio_codec, imdb_id, hashes,
+        super(Episode, self).__init__(name, format, release_group, resolution, video_codec, audio_codec, imdb_id, hashes,
                                       size, subtitle_languages)
         self.series = series
         self.season = season
@@ -103,6 +133,8 @@ class Episode(Video):
         self.title = title
         self.year = year
         self.tvdb_id = tvdb_id
+        self.tvdb_apikey = "B43FF87DE395DF56"
+        self.tvdb_lang = 'en'
 
     @classmethod
     def fromguess(cls, name, guess):
@@ -110,7 +142,7 @@ class Episode(Video):
             raise ValueError('The guess must be an episode guess')
         if 'series' not in guess or 'season' not in guess or 'episodeNumber' not in guess:
             raise ValueError('Insufficient data to process the guess')
-        return cls(name, guess['series'], guess['season'], guess['episodeNumber'],
+        return cls(name, guess['series'], guess['season'], guess['episodeNumber'], format=guess.get('format'),
                    release_group=guess.get('releaseGroup'), resolution=guess.get('screenSize'),
                    video_codec=guess.get('videoCodec'), audio_codec=guess.get('audioCodec'),
                    title=guess.get('title'), year=guess.get('year'))
@@ -119,6 +151,38 @@ class Episode(Video):
     def fromname(cls, name):
         return cls.fromguess(os.path.split(name)[1], guessit.guess_episode_info(name))
 
+    def fromimdb(self):
+        """Get video information from imdb.com
+        """
+        self._fromtvdb()
+        if not self.imdb_id and self.title:
+            super(Episode,self).fromimdb()
+
+    def _fromtvdb(self):
+        """Get video information from thetvdb.com
+        """
+      
+        # Assume that series, season and episode is known
+        # Search for series on thetvdb.com
+        db = pytvdbapi.api.TVDB(TVDB_APIKEY)
+        search = db.search(self.series, self.tvdb_lang)
+        if len(search) == 0:
+            logger.debug('Could not find exact match on thetvdb.com for series %r'%(self.series))
+            return 
+
+        # Return the best match only
+        show = search[0]
+        episode = show[self.season][self.episode]   
+        
+        if not self.title:
+            self.title = episode.EpisodeName
+        if not self.tvdb_id:
+            self.title = episode.id
+        if not self.imdb_id:
+            self.title = episode.IMDB_ID
+        if not self.year:
+            self.year = episode.FirstAired.year
+            
     def __repr__(self):
         if self.year is None:
             return '<%s [%r, %dx%d]>' % (self.__class__.__name__, self.series, self.season, self.episode)
@@ -134,12 +198,12 @@ class Movie(Video):
     :param int year: year of the movie
 
     """
-    scores = {'title': 13, 'video_codec': 2, 'resolution': 2, 'audio_codec': 1, 'year': 7, 'imdb_id': 31,
-              'release_group': 6, 'hash': 31}
+    scores = {'format': 3, 'video_codec': 2, 'title': 13, 'imdb_id': 34, 'audio_codec': 1, 'year': 7, 'resolution': 2,
+              'release_group': 6, 'hash': 34}
 
-    def __init__(self, name, title, release_group=None, resolution=None, video_codec=None, audio_codec=None,
+    def __init__(self, name, title, format=None, release_group=None, resolution=None, video_codec=None, audio_codec=None,
                  imdb_id=None, hashes=None, size=None, subtitle_languages=None, year=None):
-        super(Movie, self).__init__(name, release_group, resolution, video_codec, audio_codec, imdb_id, hashes,
+        super(Movie, self).__init__(name, format, release_group, resolution, video_codec, audio_codec, imdb_id, hashes,
                                     size, subtitle_languages)
         self.title = title
         self.year = year
@@ -150,21 +214,57 @@ class Movie(Video):
             raise ValueError('The guess must be a movie guess')
         if 'title' not in guess:
             raise ValueError('Insufficient data to process the guess')
-        return cls(name, guess['title'], release_group=guess.get('releaseGroup'), resolution=guess.get('screenSize'),
-                   video_codec=guess.get('videoCodec'), audio_codec=guess.get('audioCodec'),
-                   year=guess.get('year'))
+        return cls(name, guess['title'], format=guess.get('format'), release_group=guess.get('releaseGroup'),
+                   resolution=guess.get('screenSize'), video_codec=guess.get('videoCodec'),
+                   audio_codec=guess.get('audioCodec'),year=guess.get('year'))
 
     @classmethod
     def fromname(cls, name):
         return cls.fromguess(os.path.split(name)[1], guessit.guess_movie_info(name))
 
+       
     def __repr__(self):
         if self.year is None:
             return '<%s [%r]>' % (self.__class__.__name__, self.title)
         return '<%s [%r, %d]>' % (self.__class__.__name__, self.title, self.year)
 
 
-def scan_subtitle_languages(path, sub_extensions=SUBTITLE_EXTENSIONS):
+def omdb_search(title,year=None, match=True):
+    """Search for information on omdbapi.com with title and (optional) year. If `match` is True, query return perfect match 
+
+    :param string title: title of the video
+    :param double year: year of the video. Default None
+    :param bool match: perform a perfect match query
+    :return: found movie
+    :rtype: dict with keys such as: Title, Year, imdbID, Type.
+              for perfect match:  Language, Country, Director, Writer, Actors, Plot, Poster, Runtime, Rating, Votes, Genre, Released, Rated
+    """
+    
+    title = title.encode("utf-8")
+    base_url = OMDBAPI_URL + '?r=json'
+
+    # if match is True, search for exact match
+    match_search = '&s=%s'
+    if match:
+        match_search = '&t=%s'
+    
+    url = base_url + match_search %(urllib.parse.quote(title))
+    if year:
+        url += '&y=%d'%(year)
+    
+    data = urllib.request.urlopen(url).read().decode("utf-8")
+    data = json.loads(data)
+    if data.get("Response") == "False":
+        logger.debug(data.get("Error", "Unknown error"))
+        return None
+
+    if match:
+        return data
+    else:
+        return data.get("Search", [])[0]
+
+
+def scan_subtitle_languages(path):
     """Search for subtitles with alpha2 extension from a video `path` and return their language
 
     :param string path: path to the video
@@ -172,11 +272,11 @@ def scan_subtitle_languages(path, sub_extensions=SUBTITLE_EXTENSIONS):
     :rtype: set
 
     """
-    language_extensions = tuple('.' + c for c in babelfish['alpha2'].codes)
+    language_extensions = tuple('.' + c for c in babelfish.language_converters['alpha2'].codes)
     dirpath, filename = os.path.split(path)
     subtitles = set()
     for p in os.listdir(dirpath):
-        if p.startswith(os.path.splitext(filename)[0]) and p.endswith(sub_extensions):
+        if not isinstance(p, bytes) and p.startswith(os.path.splitext(filename)[0]) and p.endswith(SUBTITLE_EXTENSIONS):
             if os.path.splitext(p)[0].endswith(language_extensions):
                 subtitles.add(babelfish.Language.fromalpha2(os.path.splitext(p)[0][-2:]))
             else:
@@ -292,11 +392,6 @@ def scan_videos(paths, subtitles=True, embedded_subtitles=True, age=None):
 
     """
     videos = []
-    # convert paths to utf-8
-    try:
-        paths = [os.path.abspath(os.path.expanduser(p.decode('utf-8') if isinstance(p, bytes) else p)) for p in paths]
-    except UnicodeDecodeError:
-        logger.warning('argument paths: encodings is not utf-8: %r' % paths)
     # scan files
     for filepath in [p for p in paths if os.path.isfile(p)]:
         if age is not None:
@@ -375,7 +470,7 @@ def hash_opensubtitles(video_path):
     :rtype: string
 
     """
-    bytesize = struct.calcsize(b'q')
+    bytesize = struct.calcsize(b'<q')
     with open(video_path, 'rb') as f:
         filesize = os.path.getsize(video_path)
         filehash = filesize
@@ -383,13 +478,13 @@ def hash_opensubtitles(video_path):
             return None
         for _ in range(65536 // bytesize):
             filebuffer = f.read(bytesize)
-            (l_value,) = struct.unpack(b'q', filebuffer)
+            (l_value,) = struct.unpack(b'<q', filebuffer)
             filehash += l_value
             filehash = filehash & 0xFFFFFFFFFFFFFFFF  # to remain as 64bit number
         f.seek(max(0, filesize - 65536), 0)
         for _ in range(65536 // bytesize):
             filebuffer = f.read(bytesize)
-            (l_value,) = struct.unpack(b'q', filebuffer)
+            (l_value,) = struct.unpack(b'<q', filebuffer)
             filehash += l_value
             filehash = filehash & 0xFFFFFFFFFFFFFFFF
     returnedhash = '%016x' % filehash
