@@ -41,7 +41,8 @@ SUBTITLE_EXTENSIONS = ('.srt', '.sub', '.smi', '.txt', '.ssa', '.ass', '.mpl')
 #: omdbapi.com url
 OMDBAPI_URL = "http://www.omdbapi.com/"
 #: thetvdb api key
-TVDB_APIKEY = "B43FF87DE395DF56"
+TVDB_APIKEY = "0A06FB7976672207"
+#TVDB_APIKEY = "B43FF87DE395DF56"
 
 
 class Video(object):
@@ -99,16 +100,21 @@ class Video(object):
 
         # Get omdb dict from api
         omdb_data = omdb_search(self.title, self.year, match='title')
- 
-        #if not ((type(self).__name__ == 'Movie' and omdb_data.Type == 'movie') or (type(self).__name__ == 'Episode' and omdb_data.Type == 'episode') ):
-            #logger.info('Wrong imdb_id match: %r -> (imdb) %r'%(os.path.split(self.name)[0], omdb_data.get('Title',None)))
-            #return
+        if not omdb_data:
+            logger.info('Could not get information for %r'%(os.path.split(self.name)[0]))
+            return
+        
+        if not ((type(self).__name__ == 'Movie' and omdb_data.get('Type', None) == 'movie') or (type(self).__name__ == 'Episode' and omdb_data.get('Type', None) == 'episode') ):
+            logger.info('Wrong imdb_id match: %r -> (imdb) %r'%(os.path.split(self.name)[0], omdb_data.get('Title',None)))
+            return
         
         self.imdb_id = omdb_data.get('imdbID',None)
         if update or not self.year:
-            self.year = omdb_data.get('Year',None)
+            self.year = int(omdb_data.get('Year',None))
         if update:
             self.title = omdb_data.get('Title',self.title)
+            
+        logger.debug('Updated information for Video %r'%(self))
     
     __fromimdb = fromimdb
                 
@@ -185,31 +191,41 @@ class Episode(Video):
 
         # Return the best match only
         show = search[0]
-        episode = show[self.season][self.episode]   
-
         ## update series name
         if update:
-            self.series = show.SeriesName
+            try:
+                self.series = show.SeriesName
+            except:
+                logger.debug('Problem with the series name %r'%(show))
+
+        # Retrieve episode information
+        try:
+            episode = show[self.season][self.episode]   
+        except:
+            logger.debug('Could not find exact match on thetvdb.com for show %r, with filename %r'%(show, self.name))
+            return 
+            
         if update or not self.title:
             try:
-                self.title = episode.EpisodeName
+                self.title = episode.data.get('EpisodeName',None)
             except:
-                logger.debug('Problem with the episode %r'%(episode))
+                logger.debug('Problem with the episode %r, could not retrieve episode name'%(episode))
         if update or not self.tvdb_id:
             try:
                 self.tvdb_id = episode.data.get('id',None)
             except:
-                logger.debug('Problem with the episode %r'%(episode))
+                logger.debug('Problem with the episode %r, could not retrieve tvdbID'%(episode))
         if update or not self.imdb_id:
             try:
                 self.imdb_id = episode.data.get('IMDB_ID',None)
             except:
-                logger.debug('Problem with the episode %r'%(episode))
+                logger.debug('Problem with the episode %r, could not retrieve imdbID'%(episode))
         if update or not self.year:
             try:
-                self.year = episode.data.get('FirstAired',None).year
+                year = episode.data.get('FirstAired',None).year
+                self.year = year
             except:
-                pass
+                logger.debug('Problem with the episode %r, could not retrieve year'%(episode))
             
             
     def __repr__(self):
@@ -288,7 +304,7 @@ def omdb_search(query,year=None, match=None):
     data = json.loads(data)
     if data.get("Response") == "False":
         logger.debug(data.get("Error", "Unknown error"))
-        return None
+        return dict()
 
     if match:
         return data
@@ -305,7 +321,7 @@ def scan_subtitle_languages(path):
     :rtype: set
 
     """
-    language_extensions = tuple('.' + c for c in babelfish.language_converters['alpha2'].codes)
+    language_extensions = tuple('.' + c for c in babelfish.get_language_converter('alpha2').codes)
     dirpath, filename = os.path.split(path)
     subtitles = set()
     for p in os.listdir(dirpath):
