@@ -9,10 +9,15 @@ import babelfish
 import enzyme
 import guessit
 
-import pytvdbapi
+from pytvdbapi import api as tvdbapi
 import json
-from urllib.parse import quote
-from urllib.request import urlopen
+try:  # for python3.*
+    from urllib.parse import quote
+    from urllib.request import urlopen
+except ImportError:
+    # for python2.*
+    from urllib2 import urlopen
+    from urllib import quote
 
 #####
 # Search omdb from https://github.com/Adys/python-omdb
@@ -61,7 +66,7 @@ class Video(object):
     scores = {}
 
     def __init__(self, name, format=None, release_group=None, resolution=None, video_codec=None, audio_codec=None,
-                 imdb_id=None, hashes=None, size=None, subtitle_languages=None, update_fromimdb=True):
+                 imdb_id=None, hashes=None, size=None, subtitle_languages=None):
         self.name = name
         self.format = format
         self.release_group = release_group
@@ -130,9 +135,9 @@ class Episode(Video):
 
     def __init__(self, name, series, season, episode, format=None, release_group=None, resolution=None, video_codec=None,
                  audio_codec=None, imdb_id=None, hashes=None, size=None, subtitle_languages=None, title=None,
-                 year=None, tvdb_id=None, update_fromimdb=True):
+                 year=None, tvdb_id=None):
         super(Episode, self).__init__(name, format, release_group, resolution, video_codec, audio_codec, imdb_id, hashes,
-                                      size, subtitle_languages, update_fromimdb=True)
+                                      size, subtitle_languages)
         self.series = series
         self.season = season
         self.episode = episode
@@ -141,11 +146,9 @@ class Episode(Video):
         self.tvdb_id = tvdb_id
         self.tvdb_apikey = "B43FF87DE395DF56"
         self.tvdb_lang = 'en'
-        if update_fromimdb:
-            self.fromimdb(update=update_fromimdb)
 
     @classmethod
-    def fromguess(cls, name, guess, update_fromimdb=True):
+    def fromguess(cls, name, guess):
         if guess['type'] != 'episode':
             raise ValueError('The guess must be an episode guess')
         if 'series' not in guess or 'season' not in guess or 'episodeNumber' not in guess:
@@ -153,7 +156,7 @@ class Episode(Video):
         return cls(name, guess['series'], guess['season'], guess['episodeNumber'], format=guess.get('format'),
                    release_group=guess.get('releaseGroup'), resolution=guess.get('screenSize'),
                    video_codec=guess.get('videoCodec'), audio_codec=guess.get('audioCodec'),
-                   title=guess.get('title'), year=guess.get('year'), update_fromimdb=update_fromimdb)
+                   title=guess.get('title'), year=guess.get('year'))
 
     @classmethod
     def fromname(cls, name):
@@ -172,7 +175,7 @@ class Episode(Video):
       
         # Assume that series, season and episode is known
         # Search for series on thetvdb.com
-        db = pytvdbapi.api.TVDB(TVDB_APIKEY)
+        db = tvdbapi.TVDB(TVDB_APIKEY)
         search = db.search(self.series, self.tvdb_lang)
         if len(search) == 0:
             logger.debug('Could not find exact match on thetvdb.com for series %r'%(self.series))
@@ -181,19 +184,22 @@ class Episode(Video):
         # Return the best match only
         show = search[0]
         episode = show[self.season][self.episode]   
-        
+
         ## update series name
         if update:
             self.series = show.SeriesName
         if update or not self.title:
-            self.title = episode.get('EpisodeName',None)
+            try:
+                self.title = episode.EpisodeName
+            except:
+                logger.debug('Problem with the episode %r'%(episode))
         if update or not self.tvdb_id:
-            self.title = episode.get('id',None)
+            self.title = episode.data.get('id',None)
         if update or not self.imdb_id:
-            self.title = episode.get('IMDB_ID', None)
+            self.title = episode.data.get('IMDB_ID',None)
         if update or not self.year:
             try:
-                self.year = episode.FirstAired.year
+                self.year = episode.data.get('FirstAired',None).year
             except:
                 pass
             
@@ -219,21 +225,19 @@ class Movie(Video):
     def __init__(self, name, title, format=None, release_group=None, resolution=None, video_codec=None, audio_codec=None,
                  imdb_id=None, hashes=None, size=None, subtitle_languages=None, year=None, update_fromimdb=True):
         super(Movie, self).__init__(name, format, release_group, resolution, video_codec, audio_codec, imdb_id, hashes,
-                                    size, subtitle_languages, update_fromimdb=True)
+                                    size, subtitle_languages)
         self.title = title
         self.year = year
-        if update_fromimdb:
-            self.fromimdb(update=update_fromimdb)
-
+ 
     @classmethod
-    def fromguess(cls, name, guess, update_fromimdb=True):
+    def fromguess(cls, name, guess):
         if guess['type'] != 'movie':
             raise ValueError('The guess must be a movie guess')
         if 'title' not in guess:
             raise ValueError('Insufficient data to process the guess')
         return cls(name, guess['title'], format=guess.get('format'), release_group=guess.get('releaseGroup'),
                    resolution=guess.get('screenSize'), video_codec=guess.get('videoCodec'),
-                   audio_codec=guess.get('audioCodec'),year=guess.get('year'), update_fromimdb=update_fromimdb)
+                   audio_codec=guess.get('audioCodec'),year=guess.get('year'))
 
     @classmethod
     def fromname(cls, name):
@@ -268,11 +272,11 @@ def omdb_search(query,year=None, match=None):
     if match == 'imdb_id':
         match_search = '&i=%s'
     
-    url = base_url + match_search %(urllib.parse.quote(query))
+    url = base_url + match_search %(quote(query))
     if year:
         url += '&y=%d'%(year)
     
-    data = urllib.request.urlopen(url).read().decode("utf-8")
+    data = urlopen(url).read().decode("utf-8")
     data = json.loads(data)
     if data.get("Response") == "False":
         logger.debug(data.get("Error", "Unknown error"))
