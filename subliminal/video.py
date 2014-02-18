@@ -41,7 +41,8 @@ SUBTITLE_EXTENSIONS = ('.srt', '.sub', '.smi', '.txt', '.ssa', '.ass', '.mpl')
 #: omdbapi.com url
 OMDBAPI_URL = "http://www.omdbapi.com/"
 #: thetvdb api key
-TVDB_APIKEY = "B43FF87DE395DF56"
+TVDB_APIKEY = "0A06FB7976672207"
+#TVDB_APIKEY = "B43FF87DE395DF56"
 
 
 class Video(object):
@@ -100,15 +101,17 @@ class Video(object):
         # Get omdb dict from api
         omdb_data = omdb_search(self.title, self.year, match='title')
  
-        if not ((type(self).__name__ == 'Movie' and omdb_data.Type == 'movie') or (type(self).__name__ == 'Episode' and omdb_data.Type == 'episode') ):
-            logger.info('Wrong imdb_id match: %r -> (imdb) %r'%(os.path.split(self.name)[0], omdb_data.get('Title',None)))
-            return
+        #if not ((type(self).__name__ == 'Movie' and omdb_data.Type == 'movie') or (type(self).__name__ == 'Episode' and omdb_data.Type == 'episode') ):
+            #logger.info('Wrong imdb_id match: %r -> (imdb) %r'%(os.path.split(self.name)[0], omdb_data.get('Title',None)))
+            #return
         
         self.imdb_id = omdb_data.get('imdbID',None)
         if update or not self.year:
             self.year = omdb_data.get('Year',None)
         if update:
             self.title = omdb_data.get('Title',self.title)
+    
+    __fromimdb = fromimdb
                 
     def __repr__(self):
         return '<%s [%r]>' % (self.__class__.__name__, self.name)
@@ -144,7 +147,6 @@ class Episode(Video):
         self.title = title
         self.year = year
         self.tvdb_id = tvdb_id
-        self.tvdb_apikey = "B43FF87DE395DF56"
         self.tvdb_lang = 'en'
 
     @classmethod
@@ -168,6 +170,7 @@ class Episode(Video):
         self._fromtvdb(update=update)
         if not self.imdb_id and self.title:
             super(Episode,self).fromimdb(update=update)
+            #self.__fromimdb(update=update)
 
     def _fromtvdb(self, update=True):
         """Get video information from thetvdb.com
@@ -194,9 +197,15 @@ class Episode(Video):
             except:
                 logger.debug('Problem with the episode %r'%(episode))
         if update or not self.tvdb_id:
-            self.title = episode.data.get('id',None)
+            try:
+                self.tvdb_id = episode.data.get('id',None)
+            except:
+                logger.debug('Problem with the episode %r'%(episode))
         if update or not self.imdb_id:
-            self.title = episode.data.get('IMDB_ID',None)
+            try:
+                self.imdb_id = episode.data.get('IMDB_ID',None)
+            except:
+                logger.debug('Problem with the episode %r'%(episode))
         if update or not self.year:
             try:
                 self.year = episode.data.get('FirstAired',None).year
