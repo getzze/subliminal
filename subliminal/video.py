@@ -41,8 +41,7 @@ SUBTITLE_EXTENSIONS = ('.srt', '.sub', '.smi', '.txt', '.ssa', '.ass', '.mpl')
 #: omdbapi.com url
 OMDBAPI_URL = "http://www.omdbapi.com/"
 #: thetvdb api key
-TVDB_APIKEY = "0A06FB7976672207"
-#TVDB_APIKEY = "B43FF87DE395DF56"
+TVDB_APIKEY = "B43FF87DE395DF56"
 
 
 class Video(object):
