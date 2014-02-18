@@ -61,7 +61,7 @@ class Video(object):
     scores = {}
 
     def __init__(self, name, format=None, release_group=None, resolution=None, video_codec=None, audio_codec=None,
-                 imdb_id=None, hashes=None, size=None, subtitle_languages=None):
+                 imdb_id=None, hashes=None, size=None, subtitle_languages=None, update_fromimdb=True):
         self.name = name
         self.format = format
         self.release_group = release_group
@@ -130,9 +130,9 @@ class Episode(Video):
 
     def __init__(self, name, series, season, episode, format=None, release_group=None, resolution=None, video_codec=None,
                  audio_codec=None, imdb_id=None, hashes=None, size=None, subtitle_languages=None, title=None,
-                 year=None, tvdb_id=None):
+                 year=None, tvdb_id=None, update_fromimdb=True):
         super(Episode, self).__init__(name, format, release_group, resolution, video_codec, audio_codec, imdb_id, hashes,
-                                      size, subtitle_languages)
+                                      size, subtitle_languages, update_fromimdb=True)
         self.series = series
         self.season = season
         self.episode = episode
@@ -141,9 +141,11 @@ class Episode(Video):
         self.tvdb_id = tvdb_id
         self.tvdb_apikey = "B43FF87DE395DF56"
         self.tvdb_lang = 'en'
+        if update_fromimdb:
+            self.fromimdb(update=update_fromimdb)
 
     @classmethod
-    def fromguess(cls, name, guess):
+    def fromguess(cls, name, guess, update_fromimdb=True):
         if guess['type'] != 'episode':
             raise ValueError('The guess must be an episode guess')
         if 'series' not in guess or 'season' not in guess or 'episodeNumber' not in guess:
@@ -151,7 +153,7 @@ class Episode(Video):
         return cls(name, guess['series'], guess['season'], guess['episodeNumber'], format=guess.get('format'),
                    release_group=guess.get('releaseGroup'), resolution=guess.get('screenSize'),
                    video_codec=guess.get('videoCodec'), audio_codec=guess.get('audioCodec'),
-                   title=guess.get('title'), year=guess.get('year'))
+                   title=guess.get('title'), year=guess.get('year'), update_fromimdb=update_fromimdb)
 
     @classmethod
     def fromname(cls, name):
@@ -215,21 +217,23 @@ class Movie(Video):
               'release_group': 6, 'hash': 34}
 
     def __init__(self, name, title, format=None, release_group=None, resolution=None, video_codec=None, audio_codec=None,
-                 imdb_id=None, hashes=None, size=None, subtitle_languages=None, year=None):
+                 imdb_id=None, hashes=None, size=None, subtitle_languages=None, year=None, update_fromimdb=True):
         super(Movie, self).__init__(name, format, release_group, resolution, video_codec, audio_codec, imdb_id, hashes,
-                                    size, subtitle_languages)
+                                    size, subtitle_languages, update_fromimdb=True)
         self.title = title
         self.year = year
+        if update_fromimdb:
+            self.fromimdb(update=update_fromimdb)
 
     @classmethod
-    def fromguess(cls, name, guess):
+    def fromguess(cls, name, guess, update_fromimdb=True):
         if guess['type'] != 'movie':
             raise ValueError('The guess must be a movie guess')
         if 'title' not in guess:
             raise ValueError('Insufficient data to process the guess')
         return cls(name, guess['title'], format=guess.get('format'), release_group=guess.get('releaseGroup'),
                    resolution=guess.get('screenSize'), video_codec=guess.get('videoCodec'),
-                   audio_codec=guess.get('audioCodec'),year=guess.get('year'))
+                   audio_codec=guess.get('audioCodec'),year=guess.get('year'), update_fromimdb=update_fromimdb)
 
     @classmethod
     def fromname(cls, name):
