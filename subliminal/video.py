@@ -101,9 +101,11 @@ class Video(object):
         # Get omdb dict from api
         omdb_data = omdb_search(self.title, self.year, match='title')
         if not omdb_data:
-            logger.info('Could not get information for %r'%(os.path.split(self.name)[0]))
+            logger.debug('Could not get information for %r'%(os.path.split(self.name)[1]))
             return
         
+        # DEBUG : must add other tests to check that the imdbID is not totally wrong
+        # -> compare series, season, episode for Episode - name and duration for Movie
         if not ((type(self).__name__ == 'Movie' and omdb_data.get('Type', None) == 'movie') or (type(self).__name__ == 'Episode' and omdb_data.get('Type', None) == 'episode') ):
             logger.info('Wrong imdb_id match: %r -> (imdb) %r'%(os.path.split(self.name)[0], omdb_data.get('Title',None)))
             return
@@ -114,7 +116,7 @@ class Video(object):
         if update:
             self.title = omdb_data.get('Title',self.title)
             
-        logger.debug('Updated information for Video %r'%(self))
+        logger.info('Updated information from omdb for Video %r'%(self))
     
     __fromimdb = fromimdb
                 
@@ -173,9 +175,11 @@ class Episode(Video):
         """Get video information from imdb.com
         """
         self._fromtvdb(update=update)
-        if not self.imdb_id and self.title:
-            super(Episode,self).fromimdb(update=update)
-            #self.__fromimdb(update=update)
+        if self.imdb_id or not self.title:
+            return  # return if the imdbID was found or there is no title to search for on omdb
+            
+        super(Episode,self).fromimdb(update=update)
+        #self.__fromimdb(update=update)
 
     def _fromtvdb(self, update=True):
         """Get video information from thetvdb.com
@@ -226,6 +230,9 @@ class Episode(Video):
                 self.year = year
             except:
                 logger.debug('Problem with the episode %r, could not retrieve year'%(episode))
+                
+        logger.info('Updated information from tvdb for Video %r'%(self))
+        
             
             
     def __repr__(self):
