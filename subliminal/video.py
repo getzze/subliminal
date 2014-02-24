@@ -12,13 +12,17 @@ import guessit
 from pytvdbapi import api as tvdbapi
 import json
 try:  # for python3.*
-    from urllib.parse import quote
+    from urllib.parse import urlencode
     from urllib.request import urlopen
+    from urllib.request import Request
+    from urllib.error import URLError
 except ImportError:
     # for python2.*
     from urllib2 import urlopen
-    from urllib import quote
-
+    from urllib import urlencode
+    from urllib2 import Request
+    from urllib2 import URLError
+from .imdbid import omdb_search, get_imdbID_Episode, get_imdbID_Movie, int2str_imdb
 #####
 # Search omdb from https://github.com/Adys/python-omdb
 #
@@ -37,12 +41,6 @@ VIDEO_EXTENSIONS = ('.3g2', '.3gp', '.3gp2', '.3gpp', '.60d', '.ajp', '.asf', '.
 
 #: Subtitle extensions
 SUBTITLE_EXTENSIONS = ('.srt', '.sub', '.smi', '.txt', '.ssa', '.ass', '.mpl')
-
-#: omdbapi.com url
-OMDBAPI_URL = "http://www.omdbapi.com/"
-#: thetvdb api key
-TVDB_APIKEY = "0A06FB7976672207"
-#TVDB_APIKEY = "B43FF87DE395DF56"
 
 
 class Video(object):
@@ -91,34 +89,10 @@ class Video(object):
     def fromname(cls, name):
         return cls.fromguess(os.path.split(name)[1], guessit.guess_file_info(name, 'autodetect'))
 
-    def fromimdb(self, update=True):
-        """Get video information from imdb.com using omdbapi.com
+    def fromimdb(cls, videotype, imdbid, series_imdbid=None):
+        """Not implemented
         """
-        if not self.title:
-          logger.debug('Cannot search for movie on imdb without title')
-          return
-
-        # Get omdb dict from api
-        omdb_data = omdb_search(self.title, self.year, match='title')
-        if not omdb_data:
-            logger.debug('Could not get information for %r'%(os.path.split(self.name)[1]))
-            return
-        
-        # DEBUG : must add other tests to check that the imdbID is not totally wrong
-        # -> compare series, season, episode for Episode - name and duration for Movie
-        if not ((type(self).__name__ == 'Movie' and omdb_data.get('Type', None) == 'movie') or (type(self).__name__ == 'Episode' and omdb_data.get('Type', None) == 'episode') ):
-            logger.info('Wrong imdb_id match: %r -> (imdb) %r'%(os.path.split(self.name)[0], omdb_data.get('Title',None)))
-            return
-        
-        self.imdb_id = omdb_data.get('imdbID',None)
-        if update or not self.year:
-            self.year = int(omdb_data.get('Year',None))
-        if update:
-            self.title = omdb_data.get('Title',self.title)
-            
-        logger.info('Updated information from omdb for Video %r'%(self))
-    
-    __fromimdb = fromimdb
+        pass    
                 
     def __repr__(self):
         return '<%s [%r]>' % (self.__class__.__name__, self.name)
@@ -145,7 +119,7 @@ class Episode(Video):
 
     def __init__(self, name, series, season, episode, format=None, release_group=None, resolution=None, video_codec=None,
                  audio_codec=None, imdb_id=None, hashes=None, size=None, subtitle_languages=None, title=None,
-                 year=None, tvdb_id=None):
+                 year=None, tvdb_id=None, series_imdb_id=None, series_tvdb_id=None):
         super(Episode, self).__init__(name, format, release_group, resolution, video_codec, audio_codec, imdb_id, hashes,
                                       size, subtitle_languages)
         self.series = series
@@ -154,7 +128,8 @@ class Episode(Video):
         self.title = title
         self.year = year
         self.tvdb_id = tvdb_id
-        self.tvdb_lang = 'en'
+        self.series_imdb_id = series_imdb_id
+        self.series_tvdb_id = series_tvdb_id
 
     @classmethod
     def fromguess(cls, name, guess):
@@ -171,69 +146,43 @@ class Episode(Video):
     def fromname(cls, name):
         return cls.fromguess(os.path.split(name)[1], guessit.guess_episode_info(name))
 
-    def fromimdb(self, update=True):
-        """Get video information from imdb.com
-        """
-        self._fromtvdb(update=update)
-        if self.imdb_id or not self.title:
-            return  # return if the imdbID was found or there is no title to search for on omdb
-            
-        super(Episode,self).fromimdb(update=update)
-        #self.__fromimdb(update=update)
-
-    def _fromtvdb(self, update=True):
-        """Get video information from thetvdb.com
-        """
-      
-        # Assume that series, season and episode is known
-        # Search for series on thetvdb.com
-        db = tvdbapi.TVDB(TVDB_APIKEY)
-        search = db.search(self.series, self.tvdb_lang)
-        if len(search) == 0:
-            logger.debug('Could not find exact match on thetvdb.com for series %r'%(self.series))
-            return 
-
-        # Return the best match only
-        show = search[0]
-        ## update series name
-        if update:
-            try:
-                self.series = show.SeriesName
-            except:
-                logger.debug('Problem with the series name %r'%(show))
-
-        # Retrieve episode information
-        try:
-            episode = show[self.season][self.episode]   
-        except:
-            logger.debug('Could not find exact match on thetvdb.com for show %r, with filename %r'%(show, self.name))
-            return 
-            
-        if update or not self.title:
-            try:
-                self.title = episode.data.get('EpisodeName',None)
-            except:
-                logger.debug('Problem with the episode %r, could not retrieve episode name'%(episode))
-        if update or not self.tvdb_id:
-            try:
-                self.tvdb_id = episode.data.get('id',None)
-            except:
-                logger.debug('Problem with the episode %r, could not retrieve tvdbID'%(episode))
-        if update or not self.imdb_id:
-            try:
-                self.imdb_id = episode.data.get('IMDB_ID',None)
-            except:
-                logger.debug('Problem with the episode %r, could not retrieve imdbID'%(episode))
-        if update or not self.year:
-            try:
-                year = episode.data.get('FirstAired',None).year
-                self.year = year
-            except:
-                logger.debug('Problem with the episode %r, could not retrieve year'%(episode))
-                
-        logger.info('Updated information from tvdb for Video %r'%(self))
+    def getimdb(self, update=False, **kwargs):
+        """Get imdbID
         
-            
+        :param dict kwargs: optional parameters for ImdbID search. List of available options (default):
+                                use_tvdb (True)
+                                use_imdb (True)
+                                use_omdb (True)
+                                use_tmdbsimple (True)
+        """
+        # get ImdbID dict
+        logger.info('Get ImdbID for episode: %s %dx%d' %(self.series, self.season, self.episode))
+        ids = get_imdbID_Episode(self.series, self.season, self.episode, year=self.year, **kwargs)
+        self.imdb_id = ids.get('imdb_id',None)
+        self.tvdb_id = ids.get('tvdb_id',None)
+        self.tmdb_id = ids.get('tmdb_id',None)
+        self.series_imdb_id = ids.get('series_imdb_id',None)
+        self.series_tvdb_id = ids.get('series_tvdb_id',None)
+        self.series_tmdb_id = ids.get('series_tmdb_id',None)
+        if update:
+            self.imdb_update()
+
+    def imdb_update(self):
+        """Update episode info from imdbID
+        """
+        if not self.imdb_id:
+            logger.info('No imdbID found')
+            return
+        data = omdb_search(int2str_imdb(self.imdb_id), match='imdbid')
+        self.title = data.get('Title', None)
+        self.year = data.get('Year', None)
+        self.lang = data.get('Language', None)
+        if self.series_imdb_id:
+            data_series = omdb_search(int2str_imdb(self.series_imdb_id), match='imdbid')
+            self.series = data_series.get('Title', self.series)
+            logger.info('Episode updated using imdbIDs from series and episode: %r and %r' %(self.series_imdb_id, self.imdb_id))
+            return
+        logger.info('Episode updated using imdbID from episode: %r' %(self.imdb_id))
             
     def __repr__(self):
         if self.year is None:
@@ -254,12 +203,15 @@ class Movie(Video):
               'release_group': 6, 'hash': 34}
 
     def __init__(self, name, title, format=None, release_group=None, resolution=None, video_codec=None, audio_codec=None,
-                 imdb_id=None, hashes=None, size=None, subtitle_languages=None, year=None, update_fromimdb=True):
+                 imdb_id=None, hashes=None, size=None, subtitle_languages=None, year=None, lang=None, country=None, genre=None):
         super(Movie, self).__init__(name, format, release_group, resolution, video_codec, audio_codec, imdb_id, hashes,
                                     size, subtitle_languages)
         self.title = title
         self.year = year
- 
+        self.lang = lang
+        self.country = country
+        self.genre = genre
+        
     @classmethod
     def fromguess(cls, name, guess):
         if guess['type'] != 'movie':
@@ -274,50 +226,36 @@ class Movie(Video):
     def fromname(cls, name):
         return cls.fromguess(os.path.split(name)[1], guessit.guess_movie_info(name))
 
-       
+    def getimdb(self, update=False, **kwargs):
+        """Get imdbID
+        :param dict kwargs: optional parameters for ImdbID search. List of available options (default):
+                                use_tmdbsimple (True)
+                                use_scrapper (True)
+                                use_omdb (True)
+        """
+        logger.info('Get ImdbID for movie: %s' %(self.title) + (' (%d)'%(self.year) if self.year else ''))
+        self.imdb_id = get_imdbID_Movie(self.title, year=self.year, **kwargs)
+        if update:
+            self.imdb_update()
+        
+    def imdb_update(self):
+        """Update movie info from imdbID
+        """
+        if not self.imdb_id:
+            logger.info('No imdbID found')
+            return
+        data = omdb_search(int2str_imdb(self.imdb_id), match='imdbid')
+        self.title = data.get('Title', None)
+        self.year = data.get('Year', None)
+        self.lang = data.get('Language', None)
+        self.country = data.get('Country', None)
+        self.genre = data.get('Genre', None)  
+        logger.info('Movie updated using imdbID %r' %(self.imdb_id))
+        
     def __repr__(self):
         if self.year is None:
             return '<%s [%r]>' % (self.__class__.__name__, self.title)
         return '<%s [%r, %d]>' % (self.__class__.__name__, self.title, self.year)
-
-
-def omdb_search(query,year=None, match=None):
-    """Search for information on omdbapi.com with title and (optional) year.
-      `match` defines what to look for.
-
-    :param string title: title of the video
-    :param double year: year of the video. Default None
-    :param string match: None, 'title', 'imdb_id' . Perform a query which matches the `title` or the `imdb_id` or wide query (None)
-    :return: found movie
-    :rtype: dict with keys such as: Title, Year, imdbID, Type.
-              for perfect match:  Language, Country, Director, Writer, Actors, Plot, Poster, Runtime, Rating, Votes, Genre, Released, Rated
-    """
-    
-    query = query.encode("utf-8")
-    base_url = OMDBAPI_URL + '?r=json'
-
-    # if match is True, search for exact match
-    match_search = '&s=%s'
-    if match == 'title':
-        match_search = '&t=%s'
-    if match == 'imdb_id':
-        match_search = '&i=%s'
-    
-    url = base_url + match_search %(quote(query))
-    if year:
-        url += '&y=%d'%(year)
-    
-    data = urlopen(url).read().decode("utf-8")
-    data = json.loads(data)
-    if data.get("Response") == "False":
-        logger.debug(data.get("Error", "Unknown error"))
-        return dict()
-
-    if match:
-        return data
-    else:
-        ## Return only the best match
-        return data.get("Search", [])[0]
 
 
 def scan_subtitle_languages(path):
@@ -355,7 +293,8 @@ def scan_video(path, subtitles=True, embedded_subtitles=True):
     dirpath, filename = os.path.split(path)
     logger.info('Scanning video %r in %r', filename, dirpath)
     video = Video.fromguess(path, guessit.guess_file_info(path, 'autodetect'))
-    video.fromimdb()
+    logger.info('Updating video %r information with imdb', filename)
+    video.getimdb(update=True, use_tvdb = False, use_omdb_movie=False, use_scrapper = False)
     video.size = os.path.getsize(path)
     if video.size > 10485760:
         logger.debug('Size is %d', video.size)
