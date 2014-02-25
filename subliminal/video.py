@@ -22,7 +22,7 @@ except ImportError:
     from urllib import urlencode
     from urllib2 import Request
     from urllib2 import URLError
-from .imdbid import omdb_search, get_imdbID_Episode, get_imdbID_Movie, int2str_imdb
+from .imdbid import omdb_search, get_imdbID_Episode, get_imdbID_Movie
 #####
 # Search omdb from https://github.com/Adys/python-omdb
 #
@@ -173,15 +173,12 @@ class Episode(Video):
         if not self.imdb_id:
             logger.info('No imdbID found')
             return
-        data = omdb_search(int2str_imdb(self.imdb_id), match='imdbid')
+        data = omdb_search(self.imdb_id, match='imdbid')
         self.title = data.get('Title', None)
-        try:
-            self.year = int(data.get('Year', None))
-        except:
-            pass
+        self.year = int(data.get('Year', None))
         self.lang = data.get('Language', None)
         if self.series_imdb_id:
-            data_series = omdb_search(int2str_imdb(self.series_imdb_id), match='imdbid')
+            data_series = omdb_search(self.series_imdb_id, match='imdbid')
             self.series = data_series.get('Title', self.series)
             logger.info('Episode updated using imdbIDs from series and episode: %r and %r' %(self.series_imdb_id, self.imdb_id))
             return
@@ -247,12 +244,9 @@ class Movie(Video):
         if not self.imdb_id:
             logger.info('No imdbID found')
             return
-        data = omdb_search(int2str_imdb(self.imdb_id), match='imdbid')
+        data = omdb_search(self.imdb_id, match='imdbid')
         self.title = data.get('Title', None)
-        try:
-            self.year = int(data.get('Year', None))
-        except:
-            pass
+        self.year = int(data.get('Year', None))
         self.lang = data.get('Language', None)
         self.country = data.get('Country', None)
         self.genre = data.get('Genre', None)  
@@ -300,7 +294,7 @@ def scan_video(path, subtitles=True, embedded_subtitles=True):
     logger.info('Scanning video %r in %r', filename, dirpath)
     video = Video.fromguess(path, guessit.guess_file_info(path, 'autodetect'))
     logger.info('Updating video %r information with imdb', filename)
-    video.getimdb(update=False, use_tvdb = False, use_omdb_movie=False, use_scrapper_movie = False)
+    video.getimdb(update=True, use_tvdb = False, use_omdb_movie=False, use_scrapper_movie = False)
     video.size = os.path.getsize(path)
     if video.size > 10485760:
         logger.debug('Size is %d', video.size)
