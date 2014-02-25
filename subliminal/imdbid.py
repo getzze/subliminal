@@ -86,16 +86,19 @@ def get_imdbID_Episode(series, season, episode, year=None, **kwargs):
             logger.debug('Found ids for series: %r' %(ids))
         else:
             logger.debug('No ids found')
-    if use_tvdb and not ids.get('series_tvdb_id',None) and not ids.get('series_imdb_id', None):
+    if use_tvdb and not ids.get('series_imdb_id', None):
         logger.debug('Use thetvdb.org to get series imdbID of %r' %(series))
+        show_tvdb = dict()
         search = _tvdb.search(series, tvdb_lang)
         if len(search) > 0:
             show_tvdb = search[0]
-            ids['series_tvdb_id'] = str2int_imdb(show_tvdb.data.get('tvdbid',None))   
+            ids['series_tvdb_id'] = str2int_imdb(show_tvdb.data.get('tvdbid',None)) or ids['series_tvdb_id']    
             ids['series_imdb_id'] = str2int_imdb(show_tvdb.data.get('imdbid',None))    
             logger.debug('Found ids for series: %r' %(ids))
         else:
             logger.debug('No ids found')
+    elif use_tvdb:
+        show_tvdb = dict()
     if use_omdb_episode and not ids.get('series_imdb_id',None):
         logger.debug('Use omdbapi.com to get series imdbID of %r' %(series))
         data_series = omdb_search(series, match='string')
@@ -132,15 +135,22 @@ def get_imdbID_Episode(series, season, episode, year=None, **kwargs):
                 ids['imdb_id'] = int(match.group('id'))
                 logger.debug('Found ids: %r' %(ids))
                 break
-    if use_tvdb and (not ids.get('imdb_id',None)) and show_tvdb in locals():
+    if use_tvdb and (not ids.get('imdb_id',None)):
         logger.debug('Use thetvdb.org to get imdbID of %r %dx%d' %(series, season, episode))
-        try:
-            episode_tvdb = show_tvdb.get(season, dict()).get(episode, dict()).get(data, dict())
-            ids['imdb_id'] = str2int_imdb(episode_tvdb.get('imdbid',None))    
-            ids['tvdb_id'] = str2int_imdb(episode_tvdb.get('tvdbid',None))    
-            logger.debug('Found ids: %r' %(ids))
-        except Exception as e:
-            logger.debug('Could not find exact match on thetvdb.com for show %r, episode %dx%d: %r'%(show_tvdb, season, episode, e))
+        if not show_tvdb:
+            search = _tvdb.search(series, tvdb_lang)
+            if len(search) > 0:
+                show_tvdb = search[0]
+        if show_tvdb:
+            try:
+                episode_tvdb = show_tvdb.get(season, dict()).get(episode, dict()).get(data, dict())
+                ids['imdb_id'] = str2int_imdb(episode_tvdb.get('imdbid',None))    
+                ids['tvdb_id'] = str2int_imdb(episode_tvdb.get('tvdbid',None)) or ids['tvdb_id']   
+                logger.debug('Found ids: %r' %(ids))
+            except Exception as e:
+                logger.debug('Could not find exact match on thetvdb.com for show %r, episode %dx%d: %r'%(show_tvdb, season, episode, e))
+        else:
+            logger.debug('Could not find exact match on thetvdb.com for series "%r"'%(series))
     if use_imdb and not ids.get('imdb_id',None) and ids.get('series_imdb_id',None):
         logger.debug('Use imdb.org to get imdbID of %r %dx%d' %(series, season, episode))
         #imdb = imdbapi.IMDb()
