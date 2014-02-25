@@ -1,13 +1,8 @@
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals, division
-import datetime, time
-import hashlib
+from __future__ import unicode_literals
+import time
 import logging
-import os
-import struct
 import babelfish
-import enzyme
-import guessit
 
 from collections import namedtuple
 import difflib
