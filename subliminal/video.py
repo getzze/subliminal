@@ -175,7 +175,10 @@ class Episode(Video):
             return
         data = omdb_search(int2str_imdb(self.imdb_id), match='imdbid')
         self.title = data.get('Title', None)
-        self.year = data.get('Year', None)
+        try:
+            self.year = int(data.get('Year', None))
+        except:
+            pass
         self.lang = data.get('Language', None)
         if self.series_imdb_id:
             data_series = omdb_search(int2str_imdb(self.series_imdb_id), match='imdbid')
@@ -246,7 +249,10 @@ class Movie(Video):
             return
         data = omdb_search(int2str_imdb(self.imdb_id), match='imdbid')
         self.title = data.get('Title', None)
-        self.year = data.get('Year', None)
+        try:
+            self.year = int(data.get('Year', None))
+        except:
+            pass
         self.lang = data.get('Language', None)
         self.country = data.get('Country', None)
         self.genre = data.get('Genre', None)  
