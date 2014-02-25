@@ -294,7 +294,7 @@ def scan_video(path, subtitles=True, embedded_subtitles=True):
     logger.info('Scanning video %r in %r', filename, dirpath)
     video = Video.fromguess(path, guessit.guess_file_info(path, 'autodetect'))
     logger.info('Updating video %r information with imdb', filename)
-    video.getimdb(update=True, use_tvdb = False, use_omdb_movie=False, use_scrapper_movie = False)
+    video.getimdb(update=False, use_tvdb = False, use_omdb_movie=False, use_scrapper_movie = False)
     video.size = os.path.getsize(path)
     if video.size > 10485760:
         logger.debug('Size is %d', video.size)
