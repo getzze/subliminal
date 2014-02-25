@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals
+from __future__ import unicode_literals, division
 import time
 import logging
-import babelfish
 
 from collections import namedtuple
 import difflib
@@ -23,6 +22,7 @@ except ImportError:
 ## Search omdb from https://github.com/Adys/python-omdb idea
 
 ## use_tvdb
+# key from pytvdbapi example
 from pytvdbapi import api as tvdbapi
 __tvdb_apikey__ = "B43FF87DE395DF56"
 
@@ -32,11 +32,11 @@ import imdb as imdbapi
 ## use_scrapper
 from mechanize import Browser
 from bs4 import BeautifulSoup
-# Duckduckgo scrapper from http://github.com/djinn/python-duckduckgo
 __ddg_version__ = 0.242
 __search_engines__ = ['bing']
 
 ## use_tmdbsimple
+# key from vlc (videolan.org)
 import tmdbsimple
 __tmdb_apikey__ = 'c2c73ebd1e25cbc29cf61158c04ad78a'
 
@@ -56,7 +56,7 @@ def get_imdbID_Episode(series, season, episode, year=None, **kwargs):
     """Get imdbID
     For Episode:
         require: `series`, `season`, `episode`, (optional `year`)
-        return: dict with keys (imdb_id, series_imdb_id, tvdb_id, series_tvdb_id, tmdb_id, series_tmdb_id)    
+        return: dict with keys (imdb_id, series_imdb_id, tvdb_id, series_tvdb_id, tmdb_id, series_tmdb_id)
     """
     # Time execution
     start_time = time.time()
@@ -81,7 +81,7 @@ def get_imdbID_Episode(series, season, episode, year=None, **kwargs):
         if search['total_results'] > 0:
             ids['series_tmdb_id'] = search['results'][0]['id']
             series_ids = _tmdbsimple.TV(ids['series_tmdb_id']).external_ids()
-            ids['series_imdb_id'] = str2int_imdb(series_ids.get('imdb_id', None))
+            ids['series_imdb_id'] = check_imdb(series_ids.get('imdb_id', None))
             ids['series_tvdb_id'] = series_ids.get('tvdb_id', None)
             logger.debug('Found ids for series: %r' %(ids))
         else:
@@ -92,8 +92,8 @@ def get_imdbID_Episode(series, season, episode, year=None, **kwargs):
         search = _tvdb.search(series, tvdb_lang)
         if len(search) > 0:
             show_tvdb = search[0]
-            ids['series_tvdb_id'] = str2int_imdb(show_tvdb.data.get('tvdbid',None)) or ids['series_tvdb_id']    
-            ids['series_imdb_id'] = str2int_imdb(show_tvdb.data.get('imdbid',None))    
+            ids['series_tvdb_id'] = check_imdb(show_tvdb.data.get('tvdbid',None)) or ids['series_tvdb_id']
+            ids['series_imdb_id'] = show_tvdb.data.get('imdbid',None)
             logger.debug('Found ids for series: %r' %(ids))
         else:
             logger.debug('No ids found')
@@ -105,7 +105,7 @@ def get_imdbID_Episode(series, season, episode, year=None, **kwargs):
         for response in data_series:
             # check if one answer is of type `series`
             if response.get('Type',None) == 'series':
-                series_imdbid = str2int_imdb(response.get('imdbID', None))
+                series_imdbid = check_imdb(response.get('imdbID', None))
                 logger.debug('Found ids for series: %r' %(ids))
                 break
 
@@ -115,7 +115,7 @@ def get_imdbID_Episode(series, season, episode, year=None, **kwargs):
         logger.debug('Use themoviedb.org to get imdbID of %r %dx%d' %(series, season, episode))
         episode_ids = _tmdbsimple.TV_Episodes(ids['series_tmdb_id'], season, episode).external_ids()
         ids['tmdb_id'] = episode_ids.get('id', None)
-        ids['imdb_id'] = str2int_imdb(episode_ids.get('imdb_id', None))
+        ids['imdb_id'] = check_imdb(episode_ids.get('imdb_id', None))
         ids['tvdb_id'] = episode_ids.get('tvdb_id', None)
         logger.debug('Found ids: %r' %(ids))
     if use_scrapper_episode and not ids.get('imdb_id',None) and ids.get('series_imdb_id',None):
@@ -126,13 +126,13 @@ def get_imdbID_Episode(series, season, episode, year=None, **kwargs):
         br.addheaders = [('User-agent', 'Mozilla/5.0 (Windows NT 6.2;\
                             WOW64) AppleWebKit/537.11 (KHTML, like Gecko)\
                             Chrome/23.0.1271.97 Safari/537.11')]
-        r = br.open(url_base %(int2str_imdb(ids['series_imdb_id']), season))
+        r = br.open(url_base %(ids['series_imdb_id'], season))
         soup = BeautifulSoup(r, 'lxml')
         for a in soup.find_all('a'):
             href = a.get('href','')
             match = re.search(r"/title/tt(?P<id>\d{7})/\?ref_=tt_ep_ep"+'%d'%episode, href)
             if match:
-                ids['imdb_id'] = int(match.group('id'))
+                ids['imdb_id'] = check_imdb(match.group('id'))
                 logger.debug('Found ids: %r' %(ids))
                 break
     if use_tvdb and (not ids.get('imdb_id',None)):
@@ -144,8 +144,8 @@ def get_imdbID_Episode(series, season, episode, year=None, **kwargs):
         if show_tvdb:
             try:
                 episode_tvdb = show_tvdb.get(season, dict()).get(episode, dict()).get(data, dict())
-                ids['imdb_id'] = str2int_imdb(episode_tvdb.get('imdbid',None))    
-                ids['tvdb_id'] = str2int_imdb(episode_tvdb.get('tvdbid',None)) or ids['tvdb_id']   
+                ids['imdb_id'] = check_imdb(episode_tvdb.get('imdbid',None))
+                ids['tvdb_id'] = episode_tvdb.get('tvdbid',None) or ids['tvdb_id']
                 logger.debug('Found ids: %r' %(ids))
             except Exception as e:
                 logger.debug('Could not find exact match on thetvdb.com for show %r, episode %dx%d: %r'%(show_tvdb, season, episode, e))
@@ -155,9 +155,9 @@ def get_imdbID_Episode(series, season, episode, year=None, **kwargs):
         logger.debug('Use imdb.org to get imdbID of %r %dx%d' %(series, season, episode))
         #imdb = imdbapi.IMDb()
         try:
-            show_imdb = _imdb.get_movie_episodes('%r' % ids['series_imdb_id']).get('data',dict()).get('episodes', dict())
+            show_imdb = _imdb.get_movie_episodes(ids['series_imdb_id'][2:]).get('data',dict()).get('episodes', dict())
             episode_imdb = show_imdb[season][episode]
-            ids['imdb_id'] = str2int_imdb(episode_imdb.getID())
+            ids['imdb_id'] = check_imdb(episode_imdb.getID())
             logger.debug('Found ids: %r' %(ids))
         except Exception as e:
             logger.debug('Could not find exact match on imdb.com for show %s, episode %dx%d: %r'%(series, season, episode, e))
@@ -165,7 +165,7 @@ def get_imdbID_Episode(series, season, episode, year=None, **kwargs):
     end_time = time.time()
     logger.info('Ids for "%s %dx%d" found in %.2f s: %r' %(series, season, episode, (end_time - start_time),ids))
     return ids
-                  
+
 def get_imdbID_Movie(title, year=None, use_tmdbsimple=True, use_omdb=True, use_omdb_movie=True, use_scrapper=True, **kwargs):
     """Get imdbID
     For Movie:
@@ -193,10 +193,10 @@ def get_imdbID_Movie(title, year=None, use_tmdbsimple=True, use_omdb=True, use_o
         search = _tmdbsimple.Search().movie({'query':title, 'year':year})
         if search['total_results'] > 0:
             movie_tmdbsimple = _tmdbsimple.Movies(search['results'][0]['id'])
-            dump_imdb = str2int_imdb(movie_tmdbsimple.info().get('imdb_id',None))    
+            dump_imdb = check_imdb(movie_tmdbsimple.info().get('imdb_id',None))    
             if dump_imdb not in matches:
                 matches.append(dump_imdb)
-                logger.debug('Found possible imdbID for title %s: %d'%(title, dump_imdb))
+                logger.debug('Found possible imdbID for title %s: %s'%(title, dump_imdb))
 
     if use_scrapper_movie:
         try:
@@ -206,17 +206,17 @@ def get_imdbID_Movie(title, year=None, use_tmdbsimple=True, use_omdb=True, use_o
             
         logger.debug('Use scrapper to get imdbID of %r from search engines: %r' %(title, bangs))
         for bang in bangs:
-            query = title + (' %d'%(year) if type(year) in (int, float) else '')
+            query = title + (' %d'%(year) if isinstance(year, (int, float)) else '')
             answer = imdb_query(query, bang=bang)
             if not answer:
                 logger.debug('Could not make the search on duckduckgo with query %s and bang %s'%(query, bang))
                 continue
-            dump_imdb = str2int_imdb(answer)
+            dump_imdb = check_imdb(answer)
             if dump_imdb not in matches:
                 matches.append(dump_imdb)
-                logger.debug('Found possible imdbID for title %s: %d'%(title, dump_imdb))
+                logger.debug('Found possible imdbID for title %s: %s'%(title, dump_imdb))
             else:
-                logger.debug('ImdbID already matched for title %s: %d'%(title, dump_imdb))
+                logger.debug('ImdbID already matched for title %s: %s'%(title, dump_imdb))
 
 
     if use_omdb_movie:
@@ -225,10 +225,10 @@ def get_imdbID_Movie(title, year=None, use_tmdbsimple=True, use_omdb=True, use_o
         for response in data_series:
             # only compute `movie` response
             if response.get('Type',None) == 'movie':
-                dump_imdb = str2int_imdb(response.get('imdbID', None))
+                dump_imdb = check_imdb(response.get('imdbID', None))
                 if dump_imdb not in matches:
                     matches.append(dump_imdb)
-                    logger.debug('Found possible imdbID for title %s: %d'%(title, dump_imdb))
+                    logger.debug('Found possible imdbID for title %s: %s'%(title, dump_imdb))
 
 
     if len(matches) <= 0: ## No match
@@ -237,7 +237,7 @@ def get_imdbID_Movie(title, year=None, use_tmdbsimple=True, use_omdb=True, use_o
         return None
     elif len(matches) == 1: ## One single match
         end_time = time.time()
-        logger.info('One single match for title "%s" found in %.2f s: imdbID %d'%(title, end_time-start_time, matches[0]))
+        logger.info('One single match for title "%s" found in %.2f s: imdbID %s'%(title, end_time-start_time, matches[0]))
         return matches[0]
     else:
         best_match = matches[0]
@@ -247,39 +247,27 @@ def get_imdbID_Movie(title, year=None, use_tmdbsimple=True, use_omdb=True, use_o
             #if response.get('Type',None) == 'movie':
                 #(title, year) = (response.get('Title',None),response.get('Year',None) )
         end_time = time.time()
-        logger.info('Best match for title "%s" found in %.2f s: imdbID %d'%(title, end_time-start_time, best_match))
+        logger.info('Best match for title "%s" found in %.2f s: imdbID %s'%(title, end_time-start_time, best_match))
         return best_match
 
 
-                    
-def str2int_imdb(imdb):
-    """Convert imdbID in string format to int
+def check_imdb(imdb):
+    """Return a valid imdbID: 'tt' + 7 digits
     """        
     if not imdb:
         return None
-    if type(imdb) == int:
-        return imdb
-    else:
-        match = re.search(r"t{0,2}(\d+)", imdb)
+        
+    if isinstance(imdb, int):
+        return u'tt%.7d' % imdb
+    elif isinstance(imdb, str) or isinstance(imdb, basestring):
+        match = re.search(r"t{0,2}(?P<number>\d{7})", imdb)
         if match:
-            return int(match.group(1))
+            return u'tt' + match.group('number')
         else:
-            return None
-
-def int2str_imdb(imdb):
-    """Convert imdbID in string format to int
-    """        
-    if type(imdb) is int:
-        return 'tt%.7d' % imdb
-    elif type(imdb) is str:
-        match = re.search(r"t{0,2}(\d+)", imdb)
-        if match:
-            return 'tt' + match.group(1)
-        else:
-            return None
+            raise ValueError('ImdbID is badly formed: "%r"'%(imdb))
     else:
-        return None
-
+        raise ValueError('ImdbID must be integer or string: %r'%(type(imdb)))
+                    
 def omdb_search(query, year=None, match='string', n_match=None, **kwargs):
     """Search for information on omdbapi.com with title and (optional) year.
       `match` defines what to look for.
@@ -300,12 +288,13 @@ def omdb_search(query, year=None, match='string', n_match=None, **kwargs):
     #: omdbapi.com url
     omdbapi_url = "http://www.omdbapi.com/?"
 
-    query = query.encode("utf-8")
     match_search = 's'
     if match == 'title':
         match_search = 't'
     if match == 'imdbid':
         match_search = 'i'
+        query = check_imdb(query)    
+    query = query.encode("utf-8")
 
     params = {'r':'json', match_search: query}
     if year:
@@ -329,7 +318,7 @@ def omdb_search(query, year=None, match='string', n_match=None, **kwargs):
         return data
     else:
         ## Return only the first n_match. All if n_match is None
-        if type(n_match) != int:
+        if not isinstance(n_match, int):
             n_match = None
         elif n_match > len(data.get("Search", [])):
             n_match = None
@@ -448,9 +437,9 @@ def imdb_query(query, bang=None):
 
     for link in soup.find_all('a'):
         href = link.get('href','')
-        match = re.search(r"imdb\.com/.*tt([^/]*)", href)
+        match = re.search(r"imdb\.com/.*tt(?P<number>[^/]*)", href)
         if match:
-            imdb_id = int(match.group(1))
+            imdb_id = check_imdb(match.group('number'))
             return imdb_id
     
     return None
