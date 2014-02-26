@@ -3,7 +3,7 @@ from __future__ import unicode_literals
 import logging
 import babelfish
 import bs4
-import charade
+import cchardet as chardet
 import requests
 from . import Provider
 from .. import __version__
@@ -188,7 +188,7 @@ class Addic7edProvider(Provider):
             raise ProviderNotAvailable('Request failed with status code %d' % r.status_code)
         if r.headers['Content-Type'] == 'text/html':
             raise ProviderNotAvailable('Download limit exceeded')
-        subtitle_text = r.content.decode(charade.detect(r.content)['encoding'], 'replace')
+        subtitle_text = r.content.decode(chardet.detect(r.content)['encoding'], 'replace')
         if not is_valid_subtitle(subtitle_text):
             raise InvalidSubtitle
         return subtitle_text

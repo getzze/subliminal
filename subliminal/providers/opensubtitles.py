@@ -7,7 +7,7 @@ import re
 import xmlrpclib
 import zlib
 import babelfish
-import charade
+import cchardet as chardet
 import guessit
 from . import Provider
 from .. import __version__
@@ -153,7 +153,7 @@ class OpenSubtitlesProvider(Provider):
         if not response['data']:
             raise ProviderError('Nothing to download')
         subtitle_bytes = zlib.decompress(base64.b64decode(response['data'][0]['data']), 47)
-        subtitle_text = subtitle_bytes.decode(charade.detect(subtitle_bytes)['encoding'], 'replace')
+        subtitle_text = subtitle_bytes.decode(chardet.detect(subtitle_bytes)['encoding'], 'replace')
         if not is_valid_subtitle(subtitle_text):
             raise InvalidSubtitle
         return subtitle_text

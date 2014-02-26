@@ -3,7 +3,7 @@ from __future__ import unicode_literals
 import logging
 import urllib
 import babelfish
-import charade
+import cchardet as chardet
 import guessit
 import requests
 import xml.etree.ElementTree
@@ -129,7 +129,7 @@ class BierDopjeProvider(Provider):
             raise ProviderNotAvailable('Too Many Requests')
         elif r.status_code != 200:
             raise ProviderError('Request failed with status code %d' % r.status_code)
-        subtitle_text = r.content.decode(charade.detect(r.content)['encoding'], 'replace')
+        subtitle_text = r.content.decode(chardet.detect(r.content)['encoding'], 'replace')
         if not is_valid_subtitle(subtitle_text):
             raise InvalidSubtitle
         return subtitle_text
