@@ -1,3 +1,4 @@
+#!/usr/bin/python
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals, print_function
 import argparse
@@ -10,7 +11,7 @@ import babelfish
 import guessit
 import pkg_resources
 from subliminal import (__version__, PROVIDERS_ENTRY_POINT, cache_region, MutexLock, Video, Episode, Movie, scan_videos,
-    download_best_subtitles)
+    download_best_subtitles, convert_videos)
 try:
     import colorlog
 except ImportError:
@@ -20,8 +21,59 @@ except ImportError:
 DEFAULT_CACHE_FILE = os.path.join('~', '.config', 'subliminal.cache.dbm')
 
 
-def subliminal():
-    parser = argparse.ArgumentParser(prog='subliminal', description='Subtitles, faster than your thoughts',
+def main(args):
+
+    # configure cache
+    cache_region.configure('dogpile.cache.dbm', expiration_time=datetime.timedelta(days=30),  # @UndefinedVariable
+                           arguments={'filename': args.cache_file, 'lock_factory': MutexLock})
+
+    # scan videos
+    videos = scan_videos([p for p in args.paths if os.path.exists(p)], subtitles=not args.force,
+                         embedded_subtitles=not args.force, age=args.age)
+
+    # guess videos
+    videos.extend([Video.fromguess(os.path.split(p)[1], guessit.guess_file_info(p, 'autodetect')) for p in args.paths
+                   if not os.path.exists(p)])
+
+    # download best subtitles
+    subtitles = download_best_subtitles(videos, args.languages, providers=args.providers,
+                                        provider_configs=provider_configs, single=args.single,
+                                        min_score=args.min_score, hearing_impaired=args.hearing_impaired,
+                                        encoding=args.encoding)
+
+    # convert to .mkv including the subtitle. Alternatively, create .mkv in the `video_savepath` folder
+    if args.convert:
+        converted_videos = convert_videos(videos, languages = args.languages, single=args.single, video_savepath=None, delete_subtitles=True if args.delete_sub else False, force_mkvmerge=True)
+
+    # result output
+    if not subtitles:
+        if not args.quiet:
+            sys.stderr.write('No subtitles downloaded\n')
+        exit(1)
+    if not args.quiet:
+        subtitles_count = sum([len(s) for s in subtitles.values()])
+        if subtitles_count == 1:
+            print('%d subtitle downloaded' % subtitles_count)
+        else:
+            print('%d subtitles downloaded' % subtitles_count)
+
+    if args.convert:
+        if not converted_videos:
+            if not args.quiet:
+                sys.stderr.write('No converted videos\n')
+            exit(1)
+        if not args.quiet:
+            videos_count = len(converted_videos)
+            if videos_count == 1:
+                print('%d video converted' % videos_count)
+            else:
+                print('%d videos converted' % videos_count)
+            if args.delete_sub:
+                print('Subtitles deleted')
+
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description='Subtitles, faster than your thoughts',
                                      epilog='Suggestions and bug reports are greatly appreciated: '
                                      'https://github.com/Diaoul/subliminal/issues', add_help=False)
 
@@ -34,9 +86,15 @@ def subliminal():
     # configuration
     configuration_group = parser.add_argument_group('configuration')
     configuration_group.add_argument('-s', '--single', action='store_true',
-                                     help='download without language code in subtitle\'s filename i.e. .srt only')
+                                     help='download without language code in subtitle filename i.e. .srt only')
     configuration_group.add_argument('-c', '--cache-file', default=DEFAULT_CACHE_FILE,
                                      help='cache file (default: %(default)s)')
+    configuration_group.add_argument('-C', '--convert', action='store_true',
+                                     help='convert videos in .mkv with embedded subtitles')
+    configuration_group.add_argument('-D', '--delete_sub', action='store_true',
+                                     help='delete subtitles after converting videos in .mkv with embedded subtitles')
+    configuration_group.add_argument('-e', '--encoding', default='utf-8',
+                                     help='set encoding of downloaded subtitles, None for original encoding. (default: %(default)s)')
 
     # filtering
     filtering_group = parser.add_argument_group('filtering')
@@ -47,7 +105,7 @@ def subliminal():
                                  help='minimum score for subtitles (0-%d for episodes, 0-%d for movies)'
                                  % (Episode.scores['hash'], Movie.scores['hash']))
     filtering_group.add_argument('-a', '--age', help='download subtitles for videos newer than AGE e.g. 12h, 1w2d')
-    filtering_group.add_argument('-h', '--hearing-impaired', action='store_true',
+    filtering_group.add_argument('--hearing-impaired', action='store_true',
                                  help='download hearing impaired subtitles')
     filtering_group.add_argument('-f', '--force', action='store_true',
                                  help='force subtitle download for videos with existing subtitles')
@@ -68,7 +126,7 @@ def subliminal():
     troubleshooting_group = parser.add_argument_group('troubleshooting')
     troubleshooting_group.add_argument('--debug', action='store_true', help='debug output')
     troubleshooting_group.add_argument('--version', action='version', version=__version__)
-    troubleshooting_group.add_argument('--help', action='help', help='show this help message and exit')
+    troubleshooting_group.add_argument('-h', '--help', action='help', help='show this help message and exit')
 
     # parse args
     args = parser.parse_args()
@@ -110,6 +168,10 @@ def subliminal():
     if args.color and colorlog is None:
         parser.error('argument --color: colorlog required')
 
+    # parse convert
+    if args.delete_sub:
+        args.convert = True
+
     # setup output
     if args.debug:
         handler = logging.StreamHandler()
@@ -136,32 +198,10 @@ def subliminal():
             handler.setFormatter(logging.Formatter('%(levelname)s: %(message)s'))
         logging.getLogger('subliminal.api').addHandler(handler)
         logging.getLogger('subliminal.api').setLevel(logging.INFO)
+        logging.getLogger('subliminal.convert').addHandler(handler)
+        logging.getLogger('subliminal.convert').setLevel(logging.INFO)
+        logging.getLogger('subliminal.imdbid').addHandler(handler)
+        logging.getLogger('subliminal.imdbid').setLevel(logging.INFO)
 
-    # configure cache
-    cache_region.configure('dogpile.cache.dbm', expiration_time=datetime.timedelta(days=30),  # @UndefinedVariable
-                           arguments={'filename': args.cache_file, 'lock_factory': MutexLock})
-
-    # scan videos
-    videos = scan_videos([p for p in args.paths if os.path.exists(p)], subtitles=not args.force,
-                         embedded_subtitles=not args.force, age=args.age)
-
-    # guess videos
-    videos.extend([Video.fromguess(os.path.split(p)[1], guessit.guess_file_info(p, 'autodetect')) for p in args.paths
-                   if not os.path.exists(p)])
-
-    # download best subtitles
-    subtitles = download_best_subtitles(videos, args.languages, providers=args.providers,
-                                        provider_configs=provider_configs, single=args.single,
-                                        min_score=args.min_score, hearing_impaired=args.hearing_impaired)
-
-    # result output
-    if not subtitles:
-        if not args.quiet:
-            sys.stderr.write('No subtitles downloaded\n')
-        exit(1)
-    if not args.quiet:
-        subtitles_count = sum([len(s) for s in subtitles.values()])
-        if subtitles_count == 1:
-            print('%d subtitle downloaded' % subtitles_count)
-        else:
-            print('%d subtitles downloaded' % subtitles_count)
+    ## run script
+    main(args)
