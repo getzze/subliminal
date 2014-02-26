@@ -249,9 +249,5 @@ def sort_video(video, outpath):
         arborescence = "Films"
     else:
         logger.info("Video must be Movie or Episode") 
-<<<<<<< HEAD
         arborescence = "Others"  
-=======
-        arborescence = "Autres"  
->>>>>>> 692ca1c00c8123fbd30136c2d2cbef4b457b876d
     return os.path.join(outpath, arborescence)
