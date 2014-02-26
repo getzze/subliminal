@@ -140,8 +140,12 @@ class OpenSubtitlesProvider(Provider):
         query = None
         if ('opensubtitles' not in video.hashes or not video.size) and not video.imdb_id:
             query = video.name.split(os.sep)[-1]
-        return self.query(languages, hash=video.hashes.get('opensubtitles'), size=video.size, imdb_id=video.imdb_id,
+        subs = self.query(languages, hash=video.hashes.get('opensubtitles'), size=video.size, imdb_id=video.imdb_id,
                           query=query)
+        if video.imdb_id:
+            subs.extend(self.query(languages, hash=None, size=video.size, imdb_id=video.imdb_id,
+                          query=query))
+        return subs
 
     def download_subtitle(self, subtitle):
         try:
