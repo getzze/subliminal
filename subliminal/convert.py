@@ -236,6 +236,10 @@ def sort_video(video, outpath):
     :return extrapath: additional arborescence.
     """
     if isinstance(video, Episode):
+        try:
+            video.imdb_update()
+        except AttributeError:
+            logger.debug('Update from imdbID not implemented.')
         series_path = os.path.join(outpath, 'Series')
         series_name=difflib.get_close_matches(video.series,  [ f for f in os.listdir(series_path) if isdir(join(series_path,f)) ], 1, cutoff=0.9)
         if series_name:
