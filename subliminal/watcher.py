@@ -2,47 +2,21 @@
 # -*- coding: utf-8 -*-
 
 ##/usr/bin/env python
+##
+##  Author: Bertrand Lacoste
+##  Modified from daemon.runner
+##
 
-# Modified by Bertrand Lacoste
-# Copyright (c) 2010 Greggory Hernandez
-
-# Permission is hereby granted, free of charge, to any person obtaining a copy
-# of this software and associated documentation files (the "Software"), to deal
-# in the Software without restriction, including without limitation the rights
-# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-# copies of the Software, and to permit persons to whom the Software is
-# furnished to do so, subject to the following conditions:
-
-# The above copyright notice and this permission notice shall be included in
-# all copies or substantial portions of the Software.
-
-# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-# THE SOFTWARE.
-
-### BEGIN INIT INFO
-# Provides:          watcher.py
-# Required-Start:    $remote_fs $syslog
-# Required-Stop:     $remote_fs $syslog
-# Default-Start:     2 3 4 5
-# Default-Stop:      0 1 6
-# Short-Description: Monitor directories for file changes
-# Description:       Monitor directories specified in /etc/watcher.ini for
-#                    changes using the Kernel's inotify mechanism and run
-#                    jobs when files or directories change
-### END INIT INFO
-
-import sys, os
+import sys, os, grp
 import atexit
 import datetime, signal, errno
 import pyinotify
 from types import *
 import argparse, ConfigParser, string
+from collections import OrderedDict
 import logging, time
+import daemon, lockfile
+from lockfile import pidlockfile
 
 #third party libs
 try:
@@ -50,334 +24,155 @@ try:
 except ImportError:
     VIDEO_EXTENSIONS = None
 
+
+class DaemonRunnerError(Exception):
+    """ Abstract base class for errors from DaemonRunner. """
 
+class DaemonRunnerInvalidActionError(ValueError, DaemonRunnerError):
+    """ Raised when specified action for DaemonRunner is invalid. """
 
-class Daemon:
-    """
-    A generic daemon class
+class DaemonRunnerStartFailureError(RuntimeError, DaemonRunnerError):
+    """ Raised when failure starting DaemonRunner. """
 
-    Usage: subclass the Daemon class and override the run method
-    """
-    def __init__(self, pidfile, stdin='/dev/null', stdout='/dev/null', stderr='/dev/null'):
-        self.stdin = stdin
-        self.stdout = stdout
-        self.stderr = stderr
-        self.pidfile = pidfile
+class DaemonRunnerStopFailureError(RuntimeError, DaemonRunnerError):
+    """ Raised when failure stopping DaemonRunner. """
 
-    def daemonize(self):
+
+class DaemonRunner(object):
+    """ Controller for a callable running in a separate background process.
+
+        * 'start': Become a daemon and call `run()`.
+        * 'stop': Exit the daemon process specified in the PID file.
+        * 'restart': Call `stop()`, then `start()`.
+        * 'run': Run `func(func_arg)`
         """
-        do the UNIX double-fork magic, see Stevens' "Advanced Programming in the
-        UNIX Environment" for details (ISBN 0201563177)
-        http://www.erlenstar.demon.co.uk/unix/faq_2.html#SEC16
-        """
-        try:
-            pid = os.fork()
-            if pid > 0:
-                #exit first parent
-                sys.exit(0)
-        except OSError, e:
-            logger.warning("fork #1 failed: %d (%s)\n" % (e.errno, e.strerror))
-            sys.exit(1)
+    def __init__(self, func, func_arg=None, pidfile=None, stdin=None, stdout=None, stderr=None, uid=None, gid=None, umask=None, working_directory=None, signal_map=None, files_preserve=None):
+        """ Set up the parameters of a new runner.
 
-        # decouple from parent environment
-        os.chdir("/")
-        os.setsid()
-        os.umask(0)
+            The `func` argument is the function, with single argument `func_arg`, to daemonize.
 
-        # do second fork
-        try:
-            pid = os.fork()
-            if pid > 0:
-                # exit from second parent
-                sys.exit(0)
-        except OSError, e:
-            logger.warning("fork #2 failed: %d (%s)\n" % (e.errno, e.strerror))
-            sys.exit(1)
+            """
+        self.func = func
+        self.func_arg = func_arg
+        self.daemon_context = daemon.DaemonContext(umask=umask or 0,
+                            working_directory=working_directory or '/',
+                            uid=uid, gid=gid)
+        self.daemon_context.stdin  = open(stdin or '/dev/null', 'r')
+        self.daemon_context.stdout = open(stdout or '/dev/null', 'w+')
+        self.daemon_context.stderr = open(stderr or '/dev/null', 'w+', buffering=0)
 
-        #redirect standard file descriptors
-        sys.stdout.flush()
-        sys.stderr.flush()
-        si = file(self.stdin, 'r')
-        so = file(self.stdout, 'a+')
-        se = file(self.stderr, 'a+', 0)
-        os.dup2(si.fileno(), sys.stdin.fileno())
-        os.dup2(so.fileno(), sys.stdout.fileno())
-        os.dup2(se.fileno(), sys.stderr.fileno())
+        self.pidfile = None
+        if pidfile is not None:
+            self.pidfile = make_pidlockfile(pidfile)
+        self.daemon_context.pidfile = self.pidfile
+        ## TO BE IMPLEMENTED
+        if signal_map is not None:
+            self.daemon_context.signal_map = signal_map
+        self.daemon_context.files_preserve = files_preserve
 
-        #write pid file
-        #self.delpid()
-        atexit.register(self.force_delpid)
-        pid = str(os.getpid())
-        file(self.pidfile, 'w+').write("%s\n" % pid)
-
-    def force_delpid(self):
-        os.remove(self.pidfile)
-
-    def delpid(self):
-        self.del_pidfile(self.pidfile)
+    def restart(self):
+        """ Stop, then start.
+            """
+        self.stop()
+        self.start()
+        
+    def run(self):
+        """ Run the application.
+            """
+        return self.func(self.func_arg)
 
     def start(self):
-        """
-        Start the daemon
-        """
-        ## Get daemon status
-        status = self.status()
-        
-        if status[0] == 0:
-            # Start the Daemon
-            self.daemonize()
-            logger.info('Daemon started')
-            self.run()
-        elif status[0] == 1:
-            self.delpid()
-            # Start the Daemon
-            self.daemonize()
-            logger.info('Daemon started')
-            self.run()
-        elif status[0] == 2:
-            logger.info("pidfile %s already exists. Daemon already running."%(self.pidfile))
-            sys.exit(1)
-            #return
-        else:
-            logger.warning('Unknown error %r with pid %r: %r'%(status[0], status[1], status[2]))
+        """ Open the daemon context and run the application.
+            """
+        status = is_pidfile_stale(self.pidfile)    
+        if status == True:
+            self.pidfile.break_lock()
+        elif status == False:
+            ## Allow only one instance of the daemon
+            pid = self.pidfile.read_pid()
+            logger.info("Daemon already running with PID %(pid)r" % vars())
+            return
+            
+        try:
+            self.daemon_context.open()
+        except pidlockfile.AlreadyLocked:
+            pidfile_path = self.pidfile.path
+            logger.info("PID file %(pidfile_path)r already locked" % vars())
+            return
+        pid = os.getpid()
+        logger.info('Daemon started with pid %(pid)d' % vars())
+
+        self.run()
 
     def stop(self):
-        """
-        Stop the daemon
-        """
-        ## Get daemon status
-        status = self.status()
-        
-        if status[0] == 0:
-            logger.info("pidfile %s does not exist. Daemon not running?"% self.pidfile)
-            return # not an error in a restart
-        elif status[0] == 1:
-            self.delpid()
-            logger.info("pid %i is a stale pid."% status[1])
-            return # not an error in a restart
-        elif status[0] == 2:
-            try:
-                self.kill_pid(status[1])
-            except:
-                raise
-            else:
-                self.delpid()
-                logger.info('Daemon stopped')
-        else:
-            logger.warning('Unknown error %r with pid %r: %r'%(status[0], status[1], status[2]))
-
-        ## Get daemon status to check that everything went well
-        status = self.status()
-        if status[0] != 0:
-            logger.warning('!! Daemon not stopped with error %r with pid %r: %r'%(status[0], status[1], status[2]))
-            raise OSError
-
-    def status(self):
-        """
-        Return the status of the daemon as a tuple (CODE, PID, ERROR).
-        0 : no pidfile found
-        1 : pidfile found with pid corresponding to no running process, `stale` pid
-        2 : pid corresponding to running process
-        9 : undefined status.
-        """
-        # get the pid from the pidfile
-        status = [9, None, None]
-        pid = self.get_pid(self.pidfile)
-
-        if not pid:
-            status = [0, None, None]
-            return status
+        """ Exit the daemon process specified in the current PID file.
+            """
+        if not self.pidfile.is_locked():
+            pidfile_path = self.pidfile.path
+            logger.info("PID file %(pidfile_path)r not locked" % vars())
+            return
             
+        if is_pidfile_stale(self.pidfile):
+            self.pidfile.break_lock()
+        else:
+            self._terminate_daemon_process()
+            self.pidfile.break_lock()
+        logger.info("Daemon stopped")
+
+    def _terminate_daemon_process(self, sig=signal.SIGTERM):
+        """ Terminate the daemon process specified in the current PID file.
+            """
+        pid = self.pidfile.read_pid()
+        try:
+            os.kill(pid, sig)
+        except OSError as exc:
+            raise DaemonRunnerStopFailureError(
+                "Failed to terminate %(pid)d: %(exc)s" % vars())
+
+        time.sleep(0.2)
         try:
             os.kill(pid, 0)
         except OSError as exc:
             if exc.errno == errno.ESRCH:
                 # The specified PID does not exist
-                status = [1, pid, '%r'%(exc)]
-        except:
-            raise
-            #status = [9, pid,'%r'%(e)]
-        else:
-            status = [2, pid, None]
-        
-        return status
+                logger.info("Pid %(pid)d terminated." % vars())
+                return
 
-    def get_pid(self, pidfile):
+        raise DaemonRunnerStopFailureError(
+            "Failed to terminate %(pid)d" % vars())
+        
+def make_pidlockfile(path):
+    """ Make a PIDLockFile instance with the given filesystem path. """
+    if not isinstance(path, basestring):
+        error = ValueError("Not a filesystem path: %(path)r" % vars())
+        raise error
+    if not os.path.isabs(path):
+        error = ValueError("Not an absolute path: %(path)r" % vars())
+        raise error
+    return pidlockfile.PIDLockFile(path)
+
+def is_pidfile_stale(pidfile):
+    """ Determine whether a PID file is stale.
+
+        Return ``True`` (“stale”) if the contents of the PID file are
+        valid but do not match the PID of a currently-running process;
+        otherwise return ``False``.
+
         """
-        Return pid from pidfile. Return None if pidfile does not exist
-        """
-        # get the pid from the pidfile
+    result = False
+    if not os.path.isfile(pidfile.path):
+        return None
+    pidfile_pid = pidfile.read_pid()
+    if pidfile_pid is not None:
         try:
-            with file(self.pidfile, 'r') as pf:
-                pid = int(pf.read().strip())
-        except IOError:
-            pid = None
-        except Exception:
-            raise
-        return pid
-        
-    def kill_pid(self,pid):
-        """
-        Kill pid with sigterm.
-        """
-        if type(pid) != int:
-            logger.warning()
-            raise TypeError
-        first_attempt = True
-        
-        try:
-            while 1:
-                os.kill(pid, signal.SIGTERM)
-                first_attempt = False
-                time.sleep(0.1)
-        except IOError as ioe:
-            logger.warning('%r' % e)
-            #status = [1, None, '%r'%(e)]
-        except OSError as e:
-            if first_attempt:
-                raise
-            else:
-                pass
-                #status = [1, None, '%r'%(e)]
-        except:  
-            logger.warning('Error with pid %r' % pid)
-            raise
-            #status = [9, pid, '%r'%(e)]
-        #return status
+            os.kill(pidfile_pid, signal.SIG_DFL)
+        except OSError, exc:
+            if exc.errno == errno.ESRCH:
+                # The specified PID does not exist
+                result = True
 
-    def del_pidfile(self,pidfile):
-        if os.path.exists(self.pidfile):
-            os.remove(pidfile)
-        else:
-            logger.debug('Pidfile does not exist anymore.')
+    return result
 
-
-    def restart(self):
-        """
-        Restart the daemon
-        """
-        self.stop()
-        self.start()
-
-
-    def run(self):
-        """
-        You should override this method when you subclass Daemon. It will be called after the process has been
-        daemonized by start() or restart().
-        """
-    
-class WatcherDaemon(Daemon):
-
-    def __init__(self, config):
-        self.stdin = '/dev/null'
-        self.stdout = config.get('DEFAULT','logfile')
-        self.stderr = config.get('DEFAULT','logfile')
-        self.pidfile =  config.get('DEFAULT','pidfile')
-        self.pidfile_timeout = 5
-        self.config  = config
-
-
-    def run(self):
-        wdds      = dict()
-        notifiers = dict()
-
-        # read jobs from config file
-        for section in self.config.sections():
-            # get the basic config info
-            mask      = self._parseMask(self.config.get(section,'events').split(','))
-            folder    = self.config.get(section,'watch')
-            recursive = self.config.getboolean(section,'recursive')
-            autoadd   = self.config.getboolean(section,'autoadd')
-            excluded  = None if '' in self.config.get(section,'excluded').split(',') else set(self.config.get(section,'excluded').split(','))
-            include_extensions = None if '' in self.config.get(section,'include_extensions').split(',') else set(self.config.get(section,'include_extensions').split(','))
-            exclude_extensions = None if '' in self.config.get(section,'exclude_extensions').split(',') else set(self.config.get(section,'exclude_extensions').split(','))
-            command   = self.config.get(section,'command')
-
-            logger.info(section + ": " + folder)
-
-            # parse include_extensions
-            if 'video' in include_extensions:
-                include_extensions.discard('video')
-                include_extensions |= set(VIDEO_EXTENSIONS)
-          
-            wm = pyinotify.WatchManager()
-            handler = EventHandler(command, include_extensions, exclude_extensions)
-
-            wdds[section] = wm.add_watch(folder, mask, rec=recursive,auto_add=autoadd)
-            # Remove watch about excluded dir. Not the perfect solution as they would
-            # just have to not be added in first place...
-            if excluded:
-                for excluded_dir in excluded :
-                    for (k,v) in wdds[section].iteritems():
-                        if k.startswith(excluded_dir):
-                            wm.rm_watch(v)
-                            wdds[section].pop(v) 
-                    #wdds[-1] = dict((k,v) for (k,v) in wdds[-1].iteritems() if not k.startswith(excluded_dir))
-                    logger.debug("Excluded dirs : " + excluded_dir)
-            # BUT we need a new ThreadNotifier so I can specify a different
-            # EventHandler instance for each job
-            # this means that each job has its own thread as well (I think)
-            notifiers[section] = pyinotify.ThreadedNotifier(wm, handler)
-
-        # now we need to start ALL the notifiers.
-        for notifier in notifiers.values():
-            try:
-                notifier.start()
-                # close threads when the program is exited
-                atexit.register(notifier.stop)
-                logger.debug('Notifier for %s is instanciated'%(section))
-            except pyinotify.NotifierError, err:
-                logger.warning( '%r %r'%(sys.stderr, err))
-
-    def _parseMask(self, masks):
-        ret = False;
-
-        for mask in masks:
-            mask = mask.strip()
-
-            if 'access' == mask:
-                ret = self._addMask(pyinotify.IN_ACCESS, ret)
-            elif 'attribute_change' == mask:
-                ret = self._addMask(pyinotify.IN_ATTRIB, ret)
-            elif 'write_close' == mask:
-                ret = self._addMask(pyinotify.IN_CLOSE_WRITE, ret)
-            elif 'nowrite_close' == mask:
-                ret = self._addMask(pyinotify.IN_CLOSE_NOWRITE, ret)
-            elif 'create' == mask:
-                ret = self._addMask(pyinotify.IN_CREATE, ret)
-            elif 'delete' == mask:
-                ret = self._addMask(pyinotify.IN_DELETE, ret)
-            elif 'self_delete' == mask:
-                ret = self._addMask(pyinotify.IN_DELETE_SELF, ret)
-            elif 'modify' == mask:
-                ret = self._addMask(pyinotify.IN_MODIFY, ret)
-            elif 'self_move' == mask:
-                ret = self._addMask(pyinotify.IN_MOVE_SELF, ret)
-            elif 'move_from' == mask:
-                ret = self._addMask(pyinotify.IN_MOVED_FROM, ret)
-            elif 'move_to' == mask:
-                ret = self._addMask(pyinotify.IN_MOVED_TO, ret)
-            elif 'open' == mask:
-                ret = self._addMask(pyinotify.IN_OPEN, ret)
-            elif 'all' == mask:
-                m = pyinotify.IN_ACCESS | pyinotify.IN_ATTRIB | pyinotify.IN_CLOSE_WRITE | \
-                    pyinotify.IN_CLOSE_NOWRITE | pyinotify.IN_CREATE | pyinotify.IN_DELETE | \
-                    pyinotify.IN_DELETE_SELF | pyinotify.IN_MODIFY | pyinotify.IN_MOVE_SELF | \
-                    pyinotify.IN_MOVED_FROM | pyinotify.IN_MOVED_TO | pyinotify.IN_OPEN
-                ret = self._addMask(m, ret)
-            elif 'move' == mask:
-                ret = self._addMask(pyinotify.IN_MOVED_FROM | pyinotify.IN_MOVED_TO, ret)
-            elif 'close' == mask:
-                ret = self._addMask(pyinotify.IN_CLOSE_WRITE | pyinotify.IN_CLOSE_NOWRITE, ret)
-
-        return ret
-
-    def _addMask(self, new_option, current_options):
-        if not current_options:
-            return new_option
-        else:
-            return current_options | new_option
-  
 class EventHandler(pyinotify.ProcessEvent):
     def __init__(self, command, include_extensions, exclude_extensions):
         pyinotify.ProcessEvent.__init__(self)
@@ -473,6 +268,153 @@ class EventHandler(pyinotify.ProcessEvent):
         logger.info("Opened: %s"%(event.pathname))
         self.runCommand(event)
 
+def watcher(config):
+    wdds      = dict()
+    notifiers = dict()
+
+    # read jobs from config file
+    for section in config.sections():
+        # get the basic config info
+        mask      = parseMask(config.get(section,'events').split(','))
+        folder    = config.get(section,'watch')
+        recursive = config.getboolean(section,'recursive')
+        autoadd   = config.getboolean(section,'autoadd')
+        excluded  = None if '' in config.get(section,'excluded').split(',') else set(config.get(section,'excluded').split(','))
+        include_extensions = None if '' in config.get(section,'include_extensions').split(',') else set(config.get(section,'include_extensions').split(','))
+        exclude_extensions = None if '' in config.get(section,'exclude_extensions').split(',') else set(config.get(section,'exclude_extensions').split(','))
+        command   = config.get(section,'command')
+
+        logger.info(section + ": " + folder)
+
+        # parse include_extensions
+        if include_extensions and 'video' in include_extensions:
+            include_extensions.discard('video')
+            include_extensions |= set(VIDEO_EXTENSIONS)
+      
+        wm = pyinotify.WatchManager()
+        handler = EventHandler(command, include_extensions, exclude_extensions)
+
+        wdds[section] = wm.add_watch(folder, mask, rec=recursive,auto_add=autoadd)
+        # Remove watch about excluded dir. 
+        if excluded:
+            for excluded_dir in excluded :
+                for (k,v) in wdds[section].iteritems():
+                    if k.startswith(excluded_dir):
+                        wm.rm_watch(v)
+                        wdds[section].pop(v) 
+                logger.debug("Excluded dirs : " + excluded_dir)
+        # Create ThreadNotifier so that each job has its own thread
+        notifiers[section] = pyinotify.ThreadedNotifier(wm, handler)
+
+    # Start all the notifiers.
+    for notifier in notifiers.values():
+        try:
+            notifier.start()
+            logger.debug('Notifier for %s is instanciated'%(section))
+        except pyinotify.NotifierError as err:
+            logger.warning( '%r %r'%(sys.stderr, err))
+    
+    # Wait for SIGTERM
+    try:
+        while 1:
+            time.sleep(0.1)
+    except:
+        cleanup_notifiers(notifiers)
+    
+def cleanup_notifiers(notifiers):
+    """Close notifiers instances when the process is killed
+    """
+    for notifier in notifiers.values():
+        notifier.stop()
+
+def parseMask(masks):
+    ret = False;
+
+    for mask in masks:
+        mask = mask.strip()
+
+        if 'access' == mask:
+            ret = addMask(pyinotify.IN_ACCESS, ret)
+        elif 'attribute_change' == mask:
+            ret = addMask(pyinotify.IN_ATTRIB, ret)
+        elif 'write_close' == mask:
+            ret = addMask(pyinotify.IN_CLOSE_WRITE, ret)
+        elif 'nowrite_close' == mask:
+            ret = ddMask(pyinotify.IN_CLOSE_NOWRITE, ret)
+        elif 'create' == mask:
+            ret = addMask(pyinotify.IN_CREATE, ret)
+        elif 'delete' == mask:
+            ret = addMask(pyinotify.IN_DELETE, ret)
+        elif 'self_delete' == mask:
+            ret = addMask(pyinotify.IN_DELETE_SELF, ret)
+        elif 'modify' == mask:
+            ret = addMask(pyinotify.IN_MODIFY, ret)
+        elif 'self_move' == mask:
+            ret = addMask(pyinotify.IN_MOVE_SELF, ret)
+        elif 'move_from' == mask:
+            ret = addMask(pyinotify.IN_MOVED_FROM, ret)
+        elif 'move_to' == mask:
+            ret = addMask(pyinotify.IN_MOVED_TO, ret)
+        elif 'open' == mask:
+            ret = addMask(pyinotify.IN_OPEN, ret)
+        elif 'all' == mask:
+            m = pyinotify.IN_ACCESS | pyinotify.IN_ATTRIB | pyinotify.IN_CLOSE_WRITE | \
+                pyinotify.IN_CLOSE_NOWRITE | pyinotify.IN_CREATE | pyinotify.IN_DELETE | \
+                pyinotify.IN_DELETE_SELF | pyinotify.IN_MODIFY | pyinotify.IN_MOVE_SELF | \
+                pyinotify.IN_MOVED_FROM | pyinotify.IN_MOVED_TO | pyinotify.IN_OPEN
+            ret = addMask(m, ret)
+        elif 'move' == mask:
+            ret = addMask(pyinotify.IN_MOVED_FROM | pyinotify.IN_MOVED_TO, ret)
+        elif 'close' == mask:
+            ret = addMask(pyinotify.IN_CLOSE_WRITE | pyinotify.IN_CLOSE_NOWRITE, ret)
+    return ret
+
+def addMask(new_option, current_options):
+    if not current_options:
+        return new_option
+    else:
+        return current_options | new_option
+
+def init_daemon(cf):
+    """Convert config.defaults() OrderedDict to a `dict` to use in daemon initialization
+    """
+    #logfile = cf.get('logfile', '/tmp/watcher.log')
+    pidfile = cf.get('pidfile', '/tmp/watcher.pid')
+    # uid
+    uid = cf.get('uid', None)
+    if uid is not None:
+        try:
+            uid = int(uid)
+        except ValueError as e:
+            if uid != '':
+                logger.warning('Incorrect uid value: %r' %(e))    
+            uid = None
+    # gid
+    gid = cf.get('gid', None)
+    if gid is not None:
+        try:
+            gid = int(gid)
+        except ValueError as e:
+            if gid != '':
+                logger.warning('Incorrect gid value: %r' %(e))    
+            gid = None
+
+    umask = cf.get('umask', None)
+    if umask is not None:
+        try:
+            umask = int(umask)
+        except ValueError as e:
+            if umask != '':
+                logger.warning('Incorrect umask value: %r' %(e))    
+            umask = None
+
+    wd = cf.get('working_directory', None)
+    if wd is not None and not os.path.isdir(wd):
+        if wd != '':
+            logger.warning('Working directory not a valid directory ("%s"). Set to default ("/")' %(wd))    
+        wd = None
+
+    return {'pidfile':pidfile, 'stdin':None, 'stdout':None, 'stderr':None, 'uid':uid, 'gid':gid, 'umask':umask, 'working_directory':wd}
 
 if __name__ == "__main__":
     # Parse commandline arguments
@@ -486,6 +428,8 @@ if __name__ == "__main__":
                         action='store',
                         choices=['start','stop','restart','debug'],
                         help='What to do.')
+    parser.add_argument('-v', '--verbose', action='store_true', help='verbose output')
+
     args = parser.parse_args()
 
     # Parse the config file
@@ -509,12 +453,20 @@ if __name__ == "__main__":
         logger.setLevel(logging.DEBUG)
     else: 
         loghandler = logging.FileHandler(config.get('DEFAULT','logfile'))
+    if args.verbose:
+        logger.setLevel(logging.DEBUG)
     loghandler.setFormatter(logformatter)
     logger.addHandler(loghandler)
 
     # Initialize the daemon
-    daemon = WatcherDaemon(config)
-
+    options = init_daemon(config.defaults())
+    options['files_preserve'] = [loghandler.stream]
+    signal_map = {signal.SIGTERM: cleanup_notifiers,
+                    signal.SIGHUP: 'terminate',
+                    signal.SIGUSR1: init_daemon}
+    options['func_arg'] = config
+    daemon = DaemonRunner(watcher, **options)
+    
     # Execute the command
     if 'start' == args.command:
         daemon.start()
@@ -528,13 +480,7 @@ if __name__ == "__main__":
     elif 'debug' == args.command:
         logger.warning('Press Control+C to quit...')
         daemon.run()
-        ## Stay awake until Control+C is hit
-        try:
-            while 1:
-                time.sleep(0.1)
-        except KeyboardInterrupt:
-            # Kill the process
-            daemon.kill_pid(os.getpid())
+        #logger.info('Debug mode')
     else:
         print "Unkown Command"
         sys.exit(2)
