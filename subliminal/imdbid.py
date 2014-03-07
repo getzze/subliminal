@@ -303,7 +303,7 @@ def omdb_search(query, year=None, match='string', n_match=None, **kwargs):
 
     url = omdbapi_url + urlencode(params)
     try:
-        data = urlopen(url).read().decode("utf-8")
+        data = urlopen(url, timeout=5).read().decode("utf-8")
         data = json.loads(data)
     except Exception as e:
         logger.debug('Error with url %r:\n %r'%(url, e))
@@ -389,7 +389,7 @@ def ddg_query(query, bang=None, useragent='python-duckduckgo '+str(__ddg_version
     url = base_url + encparams
     request = Request(url, headers={'User-Agent': useragent})
     try:
-        response = urlopen(request)
+        response = urlopen(request, timeout=5)
     except URLError, e:
         return Response(type='Error', api_version=__ddg_version__,
                         heading=None, redirect=None,
