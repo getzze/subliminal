@@ -61,6 +61,8 @@ def get_imdbID_Episode(series, season, episode, year=None, **kwargs):
     # Time execution
     start_time = time.time()
 
+    timeout = kwargs.get('timeout', 5)
+
     ids = dict()
     tvdb_lang = 'en'
 
@@ -101,7 +103,7 @@ def get_imdbID_Episode(series, season, episode, year=None, **kwargs):
         show_tvdb = dict()
     if use_omdb_episode and not ids.get('series_imdb_id',None):
         logger.debug('Use omdbapi.com to get series imdbID of %r' %(series))
-        data_series = omdb_search(series, match='string')
+        data_series = omdb_search(series, match='string', timeout=timeout)
         for response in data_series:
             # check if one answer is of type `series`
             if response.get('Type',None) == 'series':
@@ -175,6 +177,8 @@ def get_imdbID_Movie(title, year=None, use_tmdbsimple=True, use_omdb=True, use_o
     # Time execution
     start_time = time.time()
 
+    timeout = kwargs.get('timeout', 5)
+    
     # match must be an ordered list
     matches = []
 
@@ -207,7 +211,7 @@ def get_imdbID_Movie(title, year=None, use_tmdbsimple=True, use_omdb=True, use_o
         logger.debug('Use scrapper to get imdbID of %r from search engines: %r' %(title, bangs))
         for bang in bangs:
             query = title + (' %d'%(year) if isinstance(year, (int, float)) else '')
-            answer = imdb_query(query, bang=bang)
+            answer = imdb_query(query, bang=bang, timeout=timeout)
             if not answer:
                 logger.debug('Could not make the search on duckduckgo with query %s and bang %s'%(query, bang))
                 continue
@@ -221,7 +225,7 @@ def get_imdbID_Movie(title, year=None, use_tmdbsimple=True, use_omdb=True, use_o
 
     if use_omdb_movie:
         logger.debug('Use omdbapi.com to get imdbID of %r' %(title) + (' (%d)'%(year) if year else ''))
-        data_series = omdb_search(title, year, match='string')
+        data_series = omdb_search(title, year, match='string', timeout=timeout)
         for response in data_series:
             # only compute `movie` response
             if response.get('Type',None) == 'movie':
@@ -243,7 +247,7 @@ def get_imdbID_Movie(title, year=None, use_tmdbsimple=True, use_omdb=True, use_o
         best_match = matches[0]
         ## TO DO : compare to best value
         #for match in matches[1:]:
-            #response = omdb_search(int2str_imdb(match), match='imdbid')
+            #response = omdb_search(int2str_imdb(match), match='imdbid', timeout=timeout)
             #if response.get('Type',None) == 'movie':
                 #(title, year) = (response.get('Title',None),response.get('Year',None) )
         end_time = time.time()
@@ -281,6 +285,7 @@ def omdb_search(query, year=None, match='string', n_match=None, **kwargs):
     :rtype: dict with keys such as: Title, Year, imdbID, Type.
               for perfect match:  Language, Country, Director, Writer, Actors, Plot, Poster, Runtime, Rating, Votes, Genre, Released, Rated
     """
+    timeout = kwargs.get('timeout', 5)
     if not query:
         logger.debug('Query is empty: %r' % (type(query)))
         return dict()
@@ -303,7 +308,7 @@ def omdb_search(query, year=None, match='string', n_match=None, **kwargs):
 
     url = omdbapi_url + urlencode(params)
     try:
-        data = urlopen(url, timeout=5).read().decode("utf-8")
+        data = urlopen(url, timeout=timeout).read().decode("utf-8")
         data = json.loads(data)
     except Exception as e:
         logger.debug('Error with url %r:\n %r'%(url, e))
@@ -369,6 +374,8 @@ def ddg_query(query, bang=None, useragent='python-duckduckgo '+str(__ddg_version
     Any other keyword arguments are passed directly to DuckDuckGo as URL params.
     """ % __ddg_version__
 
+    timeout = kwargs.get('timeout', 5)
+    
     base_url = 'http://api.duckduckgo.com/?'
     safesearch = '1' if safesearch else '-1'
     html = '0' if html else '1'
@@ -389,7 +396,7 @@ def ddg_query(query, bang=None, useragent='python-duckduckgo '+str(__ddg_version
     url = base_url + encparams
     request = Request(url, headers={'User-Agent': useragent})
     try:
-        response = urlopen(request, timeout=5)
+        response = urlopen(request, timeout=timeout)
     except URLError, e:
         return Response(type='Error', api_version=__ddg_version__,
                         heading=None, redirect=None,
@@ -416,9 +423,10 @@ def ddg_query(query, bang=None, useragent='python-duckduckgo '+str(__ddg_version
 
     return process_results(js)
 
-def imdb_query(query, bang=None):
+def imdb_query(query, bang=None, **kwargs):
     
-    r = ddg_query('imbd ' + query, bang=bang)
+    timeout = kwargs.get('timeout', 5)
+    r = ddg_query('imbd ' + query, bang=bang, timeout=timeout)
     if 'redirect' in dir(r) and 'primary' in dir(r.redirect):
         url = r.redirect.primary
     else:
