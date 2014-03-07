@@ -156,6 +156,7 @@ class Episode(Video):
                                 use_tmdbsimple (True)
                                 timeout (5)  # timeout for http access with urlopen
         """
+        timeout = kwargs.get('timeout', 5)
         # get ImdbID dict
         logger.info('Get ImdbID for episode: %s %dx%d' %(self.series, self.season, self.episode))
         ids = get_imdbID_Episode(self.series, self.season, self.episode, year=self.year, **kwargs)
@@ -166,20 +167,21 @@ class Episode(Video):
         self.series_tvdb_id = ids.get('series_tvdb_id',None)
         self.series_tmdb_id = ids.get('series_tmdb_id',None)
         if update:
-            self.imdb_update()
+            self.imdb_update(timeout=timeout)
 
-    def imdb_update(self):
+    def imdb_update(self, timeout=None):
         """Update episode info from imdbID
         """
+        timeout = timeout or 5
         if not self.imdb_id:
             logger.info('No imdbID found')
             return
-        data = omdb_search(self.imdb_id, match='imdbid')
+        data = omdb_search(self.imdb_id, match='imdbid', timeout=timeout)
         self.title = data.get('Title', None)
         self.year = int(data.get('Year', None))
         self.lang = data.get('Language', None)
         if self.series_imdb_id:
-            data_series = omdb_search(self.series_imdb_id, match='imdbid')
+            data_series = omdb_search(self.series_imdb_id, match='imdbid', timeout=timeout)
             self.series = data_series.get('Title', self.series)
             logger.info('Episode updated using imdbIDs from series and episode: %r and %r' %(self.series_imdb_id, self.imdb_id))
             return
@@ -235,18 +237,20 @@ class Movie(Video):
                                 use_omdb (True)
                                 timeout (5)  # timeout for http access with urlopen
         """
+        timeout = kwargs.get('timeout', 5)
         logger.info('Get ImdbID for movie: %s' %(self.title) + (' (%d)'%(self.year) if self.year else ''))
         self.imdb_id = get_imdbID_Movie(self.title, year=self.year, **kwargs)
         if update:
-            self.imdb_update()
+            self.imdb_update(timeout=timeout)
         
-    def imdb_update(self):
+    def imdb_update(self, timeout=None):
         """Update movie info from imdbID
         """
+        timeout = timeout or 5
         if not self.imdb_id:
             logger.info('No imdbID found')
             return
-        data = omdb_search(self.imdb_id, match='imdbid')
+        data = omdb_search(self.imdb_id, match='imdbid', timeout=timeout)
         self.title = data.get('Title', None)
         self.year = int(data.get('Year', None))
         self.lang = data.get('Language', None)
