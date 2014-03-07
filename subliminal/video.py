@@ -154,6 +154,7 @@ class Episode(Video):
                                 use_imdb (True)
                                 use_omdb (True)
                                 use_tmdbsimple (True)
+                                timeout (5)  # timeout for http access with urlopen
         """
         # get ImdbID dict
         logger.info('Get ImdbID for episode: %s %dx%d' %(self.series, self.season, self.episode))
@@ -232,6 +233,7 @@ class Movie(Video):
                                 use_tmdbsimple (True)
                                 use_scrapper (True)
                                 use_omdb (True)
+                                timeout (5)  # timeout for http access with urlopen
         """
         logger.info('Get ImdbID for movie: %s' %(self.title) + (' (%d)'%(self.year) if self.year else ''))
         self.imdb_id = get_imdbID_Movie(self.title, year=self.year, **kwargs)
