@@ -223,7 +223,7 @@ def convert_videos(videos, languages=None, language=babelfish.Language('eng'), s
             else:
                 logger.debug('No subtitles to embed')
         except Exception as e: # name the Exception `e`
-            logger.info("Failed to convert video %r : %r", path, e) 
+            logger.exception("Failed to convert video %r", path) 
             # continue to next video if error occured in one video
             continue 
     return converted_videos
