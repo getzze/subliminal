@@ -1,27 +1,46 @@
 Changelog
-=========
+---------
 
-0.8.0
------
-**release date:** *not released*
+1.0.1
+^^^^^
+**release date:** 2015-07-23
 
-**WARNING:** Backward incompatible changes
+* Fix unicode issues in CLI (python 2 only)
+* Fix score scaling in CLI (python 2 only)
+* Improve error handling in CLI
+* Color collect report in CLI
 
-* Add some provider utilities
-* Add a ProviderManager class to manage multiple providers
-* Add a content attribute to the Subtitle class
-* Dissociate download and save functions to give more control to the user
-* Add a fromname classmethod to Video, Episode and Movie classes
-* Add year to Episode class to differentiate two series with the same name
-* Remove dead BierDopje provider
-* Improve exceptions
-* Fix line endings of subtitles
-* Add timeout support for XMLRPC providers
-* Update unittests
+
+1.0
+^^^
+**release date:** 2015-07-22
+
+* Many changes and fixes
+* New test suite
+* New documentation
+* New CLI
+
+
+0.7.5
+^^^^^
+**release date:** 2015-03-04
+
+* Update requirements
+* Remove BierDopje provider
+* Add pre-guessed video optional argument in scan_video
+* Improve hearing impaired support
+* Fix TVSubtitles and Podnapisi providers
+
+
+0.7.4
+^^^^^
+**release date:** 2014-01-27
+
+* Fix requirements for guessit and babelfish
 
 
 0.7.3
------
+^^^^^
 **release date:** 2013-11-22
 
 * Fix windows compatibility
@@ -31,7 +50,7 @@ Changelog
 
 
 0.7.2
------
+^^^^^
 **release date:** 2013-11-10
 
 * Fix TVSubtitles for ambiguous series
@@ -44,7 +63,7 @@ Changelog
 
 
 0.7.1
------
+^^^^^
 **release date:** 2013-11-06
 
 * Improve CLI
@@ -54,7 +73,7 @@ Changelog
 
 
 0.7.0
------
+^^^^^
 **release date:** 2013-10-29
 
 **WARNING:** Complete rewrite of subliminal with backward incompatible changes
@@ -71,20 +90,23 @@ Changelog
 * Drop a few providers
 * And much more...
 
+
 0.6.4
------
+^^^^^
 **release date:** 2013-05-19
 
 * Fix requirements due to enzyme 0.3
 
+
 0.6.3
------
+^^^^^
 **release date:** 2013-01-17
 
 * Fix requirements due to requests 1.0
 
+
 0.6.2
------
+^^^^^
 **release date:** 2012-09-15
 
 * Fix BierDopje
@@ -95,8 +117,9 @@ Changelog
 * Add possible services in help message of the CLI
 * Allow existing filenames to be passed without the ./ prefix
 
+
 0.6.1
------
+^^^^^
 **release date:** 2012-06-24
 
 * Fix subtitle release name in BierDopje
@@ -113,9 +136,11 @@ Changelog
 * Fix guessit.Language in Video.scan
 * Fix language detection of subtitles
 
+
 0.6.0
------
+^^^^^
 **release date:** 2012-06-16
+
 **WARNING:** Backward incompatible changes
 
 * Fix --workers option in CLI
@@ -129,13 +154,14 @@ Changelog
 
 
 0.5.1
------
+^^^^^
 **release date:** 2012-03-25
 
 * Improve error handling of enzyme parsing
 
+
 0.5
----
+^^^
 **release date:** 2012-03-25
 **WARNING:** Backward incompatible changes
 
@@ -148,15 +174,17 @@ Changelog
 * Remove class Subliminal
 * Remove permissions handling
 
+
 0.4
----
+^^^
 **release date:** 2011-11-11
 
 * Many fixes
 * Better error handling
 
+
 0.3
----
+^^^
 **release date:** 2011-08-18
 
 * Fix a bug when series is not guessed by guessit
@@ -166,16 +194,18 @@ Changelog
 * Add possibility to choose mode of created files
 * Add more checks before adjusting permissions
 
+
 0.2
----
+^^^
 **release date:** 2011-07-11
 
 * Fix plugin configuration
 * Fix some encoding issues
 * Remove extra logging
 
+
 0.1
----
-**release date:** not released yet
+^^^
+**release date:** *private release*
 
 * Initial release

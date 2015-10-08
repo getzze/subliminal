@@ -1,11 +1,7 @@
 API
 ===
-.. module:: subliminal.api
+.. automodule:: subliminal.api
 
-.. autofunction:: list_subtitles
+    .. data:: provider_manager
 
-.. autofunction:: download_subtitles
-
-.. autofunction:: download_best_subtitles
-
-.. autofunction:: save_subtitles
+        :class:`~stevedore.extension.ExtensionManager` based on the entry point ``subliminal.providers``

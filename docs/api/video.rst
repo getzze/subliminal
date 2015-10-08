@@ -1,26 +1,10 @@
 Video
 =====
-.. module:: subliminal.video
+.. automodule:: subliminal.video
+    :exclude-members: VIDEO_EXTENSIONS, SUBTITLE_EXTENSIONS
 
-.. autodata:: VIDEO_EXTENSIONS
+    .. autodata:: VIDEO_EXTENSIONS
+        :annotation:
 
-.. autodata:: SUBTITLE_EXTENSIONS
-
-.. autoclass:: Video
-    :members:
-
-.. autoclass:: Episode
-    :members:
-
-.. autoclass:: Movie
-    :members:
-
-.. autofunction:: hash_opensubtitles
-
-.. autofunction:: hash_thesubdb
-
-.. autofunction:: scan_subtitle_languages
-
-.. autofunction:: scan_video
-
-.. autofunction:: scan_videos
+    .. autodata:: SUBTITLE_EXTENSIONS
+        :annotation:
