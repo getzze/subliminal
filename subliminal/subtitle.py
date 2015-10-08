@@ -2,7 +2,10 @@
 import logging
 import os
 
-import chardet
+try:
+	import cchardet as chardet
+except ImportError:
+	import chardet
 from guessit.matchtree import MatchTree
 from guessit.plugins.transformers import get_transformer
 import pysrt
