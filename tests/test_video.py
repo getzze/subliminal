@@ -329,7 +329,7 @@ def test_scan_videos(movies, tmpdir, monkeypatch):
     monkeypatch.chdir(str(tmpdir))
     videos = scan_videos('movies')
 
-    kwargs = dict(subtitles=True, embedded_subtitles=True)
+    kwargs = dict(subtitles=True, embedded_subtitles=True, use_imdbfetcher=False)
     calls = [((os.path.join('movies', movies['man_of_steel'].name),), kwargs),
              ((os.path.join('movies', movies['enders_game'].name),), kwargs)]
     assert len(videos) == len(calls)
