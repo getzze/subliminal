@@ -46,6 +46,8 @@ class Video(object):
     """
     #: Score by match property
     scores = {}
+    #: Options for imdbfetcher
+    imdbfetcher_options = {}
 
     def __init__(self, name, format=None, release_group=None, resolution=None, video_codec=None, audio_codec=None,
                  imdb_id=None, hashes=None, size=None, subtitle_languages=None):
@@ -142,6 +144,8 @@ class Episode(Video):
     scores = {'hash': 137, 'imdb_id': 110, 'tvdb_id': 88, 'series': 44, 'year': 44, 'title': 22, 'season': 11,
               'episode': 11, 'release_group': 11, 'format': 6, 'video_codec': 4, 'resolution': 4, 'audio_codec': 2,
               'hearing_impaired': 1}
+    #: Options for imdbfetcher
+    imdbfetcher_options = {use_tmdbsimple = True, use_tvdb = False, use_omdb=True, use_scrapper = False, use_imdb=True}
 
     def __init__(self, name, series, season, episode, format=None, release_group=None, resolution=None,
                  video_codec=None, audio_codec=None, imdb_id=None, hashes=None, size=None, subtitle_languages=None,
@@ -194,7 +198,9 @@ class Episode(Video):
         """
         # get ImdbID dict
         logger.info('Get ImdbID for episode: %s %dx%d' %(self.series, self.season, self.episode))
-        ids = get_id_episode(self.series, self.season, self.episode, **kwargs)
+        options = self.imdbfetcher_options.copy()
+        options.update(kwargs)
+        ids = get_id_episode(self.series, self.season, self.episode, year=self.year, **options)
         self.imdb_id = ids.get('episode_imdb_id')
         self.tvdb_id = ids.get('episode_tvdb_id')
         self.tmdb_id = ids.get('episode_tmdb_id')
@@ -243,6 +249,8 @@ class Movie(Video):
     #: Score by match property
     scores = {'hash': 62, 'imdb_id': 62, 'title': 23, 'year': 12, 'release_group': 11, 'format': 6, 'video_codec': 4,
               'resolution': 4, 'audio_codec': 2, 'hearing_impaired': 1}
+    #: Options for imdbfetcher
+    imdbfetcher_options = {use_tmdbsimple = True, use_tvdb = False, use_omdb=False, use_scrapper = False, use_imdb=True}
 
     def __init__(self, name, title, format=None, release_group=None, resolution=None, video_codec=None,
                  audio_codec=None, imdb_id=None, hashes=None, size=None, subtitle_languages=None, year=None):
@@ -278,7 +286,9 @@ class Movie(Video):
          use_omdb (True)
         """
         logger.info('Get ImdbID for movie: %s' %(self.title) + (' (%d)'%(self.year) if self.year else ''))
-        self.imdb_id = get_id_movie(self.title, year=self.year, **kwargs)
+        options = self.imdbfetcher_options.copy()
+        options.update(kwargs)
+        self.imdb_id = get_id_movie(self.title, year=self.year, **options)
         if update:
             self.fromimdb()
     
@@ -343,7 +353,7 @@ def search_external_subtitles(path):
     return subtitles
 
 
-def scan_video(path, subtitles=True, embedded_subtitles=True, update_imdb_id=False):
+def scan_video(path, subtitles=True, embedded_subtitles=True):
     """Scan a video and its subtitle languages from a video `path`.
 
     :param str path: existing path to the video.
@@ -368,7 +378,7 @@ def scan_video(path, subtitles=True, embedded_subtitles=True, update_imdb_id=Fal
     video = Video.fromguess(path, guess_file_info(path))
     
     # update imdb_id
-    video.get_imdb(update=update_imdb_id, use_tvdb = False, use_scrapper = False)
+    video.get_imdb(update=False)
 
     # size and hashes
     video.size = os.path.getsize(path)
@@ -462,7 +472,7 @@ def scan_video(path, subtitles=True, embedded_subtitles=True, update_imdb_id=Fal
     return video
 
 
-def scan_videos(path, subtitles=True, embedded_subtitles=True, update_imdb_id=False):
+def scan_videos(path, subtitles=True, embedded_subtitles=True):
     """Scan `path` for videos and their subtitles.
 
     :param str path: existing directory path to scan.
@@ -512,7 +522,7 @@ def scan_videos(path, subtitles=True, embedded_subtitles=True, update_imdb_id=Fa
 
             # scan video
             try:
-                video = scan_video(filepath, subtitles=subtitles, embedded_subtitles=embedded_subtitles, update_imdb_id=update_imdb_id)
+                video = scan_video(filepath, subtitles=subtitles, embedded_subtitles=embedded_subtitles)
             except ValueError:  # pragma: no cover
                 logger.exception('Error scanning video')
                 continue
