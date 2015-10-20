@@ -250,7 +250,7 @@ class Movie(Video):
     scores = {'hash': 62, 'imdb_id': 62, 'title': 23, 'year': 12, 'release_group': 11, 'format': 6, 'video_codec': 4,
               'resolution': 4, 'audio_codec': 2, 'hearing_impaired': 1}
     #: Options for imdbfetcher
-    imdbfetcher_options = {'use_tmdbsimple': True, 'use_tvdb': False, 'use_omdb': False, 'use_scrapper': False, 'use_imdb': True}
+    imdbfetcher_options = {'use_tmdbsimple': True, 'use_tvdb': False, 'use_omdb': True, 'use_scrapper': False, 'use_imdb': True}
 
     def __init__(self, name, title, format=None, release_group=None, resolution=None, video_codec=None,
                  audio_codec=None, imdb_id=None, hashes=None, size=None, subtitle_languages=None, year=None):
