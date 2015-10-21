@@ -13,6 +13,10 @@ from subliminal.video import Video, Movie, Episode
 
 logger = logging.getLogger(__name__)
 
+if int(sys.version[0]) <= 2:
+    def next(iterator):
+        return iterator.next()
+
 def scan_embedded_subtitle_languages(path):
     """Search for embedded subtitles from a video `path` and return their language
 
@@ -108,7 +112,7 @@ def sort_video(video, savepath):
         series_path = os.path.join(savepath, 'Series')
         series_name=""
         if os.path.exists(series_path):        
-            series_name_list=difflib.get_close_matches(video.series, os.walk(os.path.join(savepath, "Series")).next()[1], 1, cutoff=0.8)
+            series_name_list=difflib.get_close_matches(video.series, next(os.walk(os.path.join(savepath, "Series")))[1], 1, cutoff=0.8)
             if len(series_name_list)>0:
                 series_name=series_name_list[0]
         if len(series_name)==0:
