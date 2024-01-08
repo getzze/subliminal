@@ -2,6 +2,8 @@ Subliminal
 ==========
 Subtitles, faster than your thoughts.
 
+‼️ Subliminal is looking for maintainers! See `here <https://github.com/Diaoul/subliminal/issues/1064>`_
+
 .. image:: https://img.shields.io/pypi/v/subliminal.svg
     :target: https://pypi.python.org/pypi/subliminal
     :alt: Latest Version
