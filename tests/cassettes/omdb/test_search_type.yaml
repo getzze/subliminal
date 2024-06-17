@@ -25,20 +25,22 @@ interactions:
         Man of Steel","Year":"2019","imdbID":"tt10069974","Type":"movie","Poster":"https://m.media-amazon.com/images/M/MV5BODcxNDg4YjYtZjZmYS00NDAwLTg2NjctYTNiMjFiMDRlNmU5XkEyXkFqcGdeQXVyODc5OTgyODQ@._V1_SX300.jpg"},{"Title":"Stalin:
         Man of Steel","Year":"2003","imdbID":"tt6643772","Type":"movie","Poster":"https://m.media-amazon.com/images/M/MV5BNGI0NjJiM2QtNDlkNS00NWYxLWI0MjctNjQwZDA4YmY0ZmNkXkEyXkFqcGdeQXVyNzI4MDMyMTU@._V1_SX300.jpg"}],"totalResults":"28","Response":"True"}'
     headers:
+      Age:
+      - '679'
       CF-Cache-Status:
-      - MISS
+      - HIT
       CF-RAY:
-      - 887d9bf088aa153b-CDG
+      - 89522cbcac2b48aa-LIS
       Cache-Control:
       - public, max-age=86400
       Connection:
       - keep-alive
       Content-Encoding:
-      - gzip
+      - br
       Content-Type:
       - application/json; charset=utf-8
       Date:
-      - Wed, 22 May 2024 14:48:47 GMT
+      - Mon, 17 Jun 2024 09:57:19 GMT
       Server:
       - cloudflare
       Transfer-Encoding:
@@ -46,9 +48,9 @@ interactions:
       access-control-allow-origin:
       - '*'
       expires:
-      - Wed, 22 May 2024 15:48:47 GMT
+      - Mon, 17 Jun 2024 10:46:00 GMT
       last-modified:
-      - Wed, 22 May 2024 14:48:47 GMT
+      - Mon, 17 Jun 2024 09:46:00 GMT
       vary:
       - '*, Accept-Encoding'
       x-aspnet-version:

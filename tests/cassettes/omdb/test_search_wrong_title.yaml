@@ -18,10 +18,12 @@ interactions:
     headers:
       Accept-Ranges:
       - bytes
+      Age:
+      - '680'
       CF-Cache-Status:
-      - MISS
+      - HIT
       CF-RAY:
-      - 887d9680bc4c999f-CDG
+      - 89522cbc4a429500-LIS
       Cache-Control:
       - public, max-age=86400
       Connection:
@@ -31,15 +33,15 @@ interactions:
       Content-Type:
       - application/json; charset=utf-8
       Date:
-      - Wed, 22 May 2024 14:45:05 GMT
+      - Mon, 17 Jun 2024 09:57:19 GMT
       Server:
       - cloudflare
       access-control-allow-origin:
       - '*'
       expires:
-      - Wed, 22 May 2024 15:45:05 GMT
+      - Mon, 17 Jun 2024 10:45:59 GMT
       last-modified:
-      - Wed, 22 May 2024 14:45:05 GMT
+      - Mon, 17 Jun 2024 09:45:59 GMT
       vary:
       - '*, Accept-Encoding'
       x-aspnet-version:

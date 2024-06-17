@@ -18,20 +18,22 @@ interactions:
         of Cards\",\"Year\":\"1990\",\"imdbID\":\"tt0098825\",\"Type\":\"series\",\"Poster\":\"https://m.media-amazon.com/images/M/MV5BNmVhMGFlMjUtN2I0NS00MTM4LWFlZTgtMWI1Y2QyMmI1ODdjXkEyXkFqcGdeQXVyNzkwMjQ5NzM@._V1_SX300.jpg\"},{\"Title\":\"DateSmash:
         Bernie Sanders & House of Cards' Frank Underwood\",\"Year\":\"2016\",\"imdbID\":\"tt14397660\",\"Type\":\"series\",\"Poster\":\"N/A\"}],\"totalResults\":\"3\",\"Response\":\"True\"}"
     headers:
+      Age:
+      - '673'
       CF-Cache-Status:
-      - MISS
+      - HIT
       CF-RAY:
-      - 887d96c7fc9003fb-CDG
+      - 89522cca5f8094f5-LIS
       Cache-Control:
       - public, max-age=86400
       Connection:
       - keep-alive
       Content-Encoding:
-      - gzip
+      - br
       Content-Type:
       - application/json; charset=utf-8
       Date:
-      - Wed, 22 May 2024 14:45:16 GMT
+      - Mon, 17 Jun 2024 09:57:21 GMT
       Server:
       - cloudflare
       Transfer-Encoding:
@@ -39,9 +41,9 @@ interactions:
       access-control-allow-origin:
       - '*'
       expires:
-      - Wed, 22 May 2024 15:45:16 GMT
+      - Mon, 17 Jun 2024 10:46:08 GMT
       last-modified:
-      - Wed, 22 May 2024 14:45:16 GMT
+      - Mon, 17 Jun 2024 09:46:08 GMT
       vary:
       - '*, Accept-Encoding'
       x-aspnet-version:

@@ -23,17 +23,17 @@ interactions:
       CF-Cache-Status:
       - MISS
       CF-RAY:
-      - 887d96c368d099ba-CDG
+      - 89522cc67f74153f-CDG
       Cache-Control:
       - public, max-age=86400
       Connection:
       - keep-alive
       Content-Encoding:
-      - gzip
+      - br
       Content-Type:
       - application/json; charset=utf-8
       Date:
-      - Wed, 22 May 2024 14:45:15 GMT
+      - Mon, 17 Jun 2024 09:57:21 GMT
       Server:
       - cloudflare
       Transfer-Encoding:
@@ -41,9 +41,9 @@ interactions:
       access-control-allow-origin:
       - '*'
       expires:
-      - Wed, 22 May 2024 15:45:15 GMT
+      - Mon, 17 Jun 2024 10:46:08 GMT
       last-modified:
-      - Wed, 22 May 2024 14:45:15 GMT
+      - Mon, 17 Jun 2024 09:46:08 GMT
       vary:
       - '*, Accept-Encoding'
       x-aspnet-version:

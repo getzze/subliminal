@@ -16,20 +16,22 @@ interactions:
     body:
       string: '{"Response":"False","Error":"Error getting data."}'
     headers:
+      Age:
+      - '682'
       CF-Cache-Status:
-      - MISS
+      - HIT
       CF-RAY:
-      - 887d966ebf73f864-CDG
+      - 89522cb72d53338d-LIS
       Cache-Control:
       - public, max-age=86400
       Connection:
       - keep-alive
       Content-Encoding:
-      - gzip
+      - br
       Content-Type:
       - application/json; charset=utf-8
       Date:
-      - Wed, 22 May 2024 14:45:02 GMT
+      - Mon, 17 Jun 2024 09:57:18 GMT
       Server:
       - cloudflare
       Transfer-Encoding:
@@ -37,9 +39,9 @@ interactions:
       access-control-allow-origin:
       - '*'
       expires:
-      - Wed, 22 May 2024 15:45:02 GMT
+      - Mon, 17 Jun 2024 10:45:53 GMT
       last-modified:
-      - Wed, 22 May 2024 14:45:02 GMT
+      - Mon, 17 Jun 2024 09:45:53 GMT
       vary:
       - '*, Accept-Encoding'
       x-aspnet-version:

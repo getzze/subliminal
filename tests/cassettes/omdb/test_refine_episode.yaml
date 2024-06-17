@@ -17,20 +17,22 @@ interactions:
       string: "{\"Search\":[{\"Title\":\"The Big Bang Theory\",\"Year\":\"2007\u20132019\",\"imdbID\":\"tt0898266\",\"Type\":\"series\",\"Poster\":\"https://m.media-amazon.com/images/M/MV5BY2FmZTY5YTktOWRlYy00NmIyLWE0ZmQtZDg2YjlmMzczZDZiXkEyXkFqcGdeQXVyNjg4NzAyOTA@._V1_SX300.jpg\"},{\"Title\":\"The
         Big Bang Theory After Show\",\"Year\":\"2015\u2013\",\"imdbID\":\"tt5612894\",\"Type\":\"series\",\"Poster\":\"N/A\"}],\"totalResults\":\"2\",\"Response\":\"True\"}"
     headers:
+      Age:
+      - '1810'
       CF-Cache-Status:
-      - MISS
+      - HIT
       CF-RAY:
-      - 887d96929de0998c-CDG
+      - 89522cc15ed933e9-LIS
       Cache-Control:
       - public, max-age=86400
       Connection:
       - keep-alive
       Content-Encoding:
-      - gzip
+      - br
       Content-Type:
       - application/json; charset=utf-8
       Date:
-      - Wed, 22 May 2024 14:45:08 GMT
+      - Mon, 17 Jun 2024 09:57:20 GMT
       Server:
       - cloudflare
       Transfer-Encoding:
@@ -38,9 +40,9 @@ interactions:
       access-control-allow-origin:
       - '*'
       expires:
-      - Wed, 22 May 2024 15:45:08 GMT
+      - Mon, 17 Jun 2024 10:27:10 GMT
       last-modified:
-      - Wed, 22 May 2024 14:45:08 GMT
+      - Mon, 17 Jun 2024 09:27:10 GMT
       vary:
       - '*, Accept-Encoding'
       x-aspnet-version:

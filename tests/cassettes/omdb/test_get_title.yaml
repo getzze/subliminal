@@ -22,23 +22,22 @@ interactions:
         when other survivors of his home planet invade Earth.","Language":"English","Country":"United
         States, United Kingdom","Awards":"Nominated for 1 BAFTA Award7 wins & 46 nominations
         total","Poster":"https://m.media-amazon.com/images/M/MV5BMTk5ODk1NDkxMF5BMl5BanBnXkFtZTcwNTA5OTY0OQ@@._V1_SX300.jpg","Ratings":[{"Source":"Internet
-        Movie Database","Value":"7.1/10"},{"Source":"Rotten Tomatoes","Value":"56%"},{"Source":"Metacritic","Value":"55/100"}],"Metascore":"55","imdbRating":"7.1","imdbVotes":"809,805","imdbID":"tt0770828","Type":"movie","DVD":"08
-        Dec 2015","BoxOffice":"$291,045,518","Production":"N/A","Website":"N/A","Response":"True"}'
+        Movie Database","Value":"7.1/10"},{"Source":"Rotten Tomatoes","Value":"56%"},{"Source":"Metacritic","Value":"55/100"}],"Metascore":"55","imdbRating":"7.1","imdbVotes":"814,509","imdbID":"tt0770828","Type":"movie","DVD":"N/A","BoxOffice":"$291,045,518","Production":"N/A","Website":"N/A","Response":"True"}'
     headers:
       CF-Cache-Status:
       - MISS
       CF-RAY:
-      - 887d96734af0216d-CDG
+      - 89522cb80980999e-CDG
       Cache-Control:
       - public, max-age=86400
       Connection:
       - keep-alive
       Content-Encoding:
-      - gzip
+      - br
       Content-Type:
       - application/json; charset=utf-8
       Date:
-      - Wed, 22 May 2024 14:45:03 GMT
+      - Mon, 17 Jun 2024 09:57:19 GMT
       Server:
       - cloudflare
       Transfer-Encoding:
@@ -46,9 +45,9 @@ interactions:
       access-control-allow-origin:
       - '*'
       expires:
-      - Wed, 22 May 2024 15:45:03 GMT
+      - Mon, 17 Jun 2024 10:57:19 GMT
       last-modified:
-      - Wed, 22 May 2024 14:45:03 GMT
+      - Mon, 17 Jun 2024 09:57:19 GMT
       vary:
       - '*, Accept-Encoding'
       x-aspnet-version:

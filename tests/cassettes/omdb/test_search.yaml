@@ -25,20 +25,22 @@ interactions:
         Bacon: Man of Steel","Year":"2014","imdbID":"tt3560162","Type":"movie","Poster":"https://m.media-amazon.com/images/M/MV5BNzg2MzQ2MTI3NF5BMl5BanBnXkFtZTgwNjI1OTkyMTE@._V1_SX300.jpg"},{"Title":"Superman:
         Man of Steel","Year":"2019","imdbID":"tt10069974","Type":"movie","Poster":"https://m.media-amazon.com/images/M/MV5BODcxNDg4YjYtZjZmYS00NDAwLTg2NjctYTNiMjFiMDRlNmU5XkEyXkFqcGdeQXVyODc5OTgyODQ@._V1_SX300.jpg"}],"totalResults":"30","Response":"True"}'
     headers:
+      Age:
+      - '680'
       CF-Cache-Status:
-      - MISS
+      - HIT
       CF-RAY:
-      - 887d967b7fd6153b-CDG
+      - 89522cbbedc103fa-LIS
       Cache-Control:
       - public, max-age=86400
       Connection:
       - keep-alive
       Content-Encoding:
-      - gzip
+      - br
       Content-Type:
       - application/json; charset=utf-8
       Date:
-      - Wed, 22 May 2024 14:45:04 GMT
+      - Mon, 17 Jun 2024 09:57:19 GMT
       Server:
       - cloudflare
       Transfer-Encoding:
@@ -46,9 +48,9 @@ interactions:
       access-control-allow-origin:
       - '*'
       expires:
-      - Wed, 22 May 2024 15:45:04 GMT
+      - Mon, 17 Jun 2024 10:45:59 GMT
       last-modified:
-      - Wed, 22 May 2024 14:45:04 GMT
+      - Mon, 17 Jun 2024 09:45:59 GMT
       vary:
       - '*, Accept-Encoding'
       x-aspnet-version:
