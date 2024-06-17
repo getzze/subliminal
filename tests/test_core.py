@@ -44,7 +44,7 @@ unix_platform = pytest.mark.skipif(
 )
 
 maxversion = pytest.mark.skipif(
-    sys.version_info < (3, 12),
+    sys.version_info >= (3, 12),
     reason='enzyme is not compatible with py312 yet',
 )
 
