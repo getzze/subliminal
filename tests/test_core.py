@@ -43,6 +43,11 @@ unix_platform = pytest.mark.skipif(
     reason='only on linux platform',
 )
 
+maxversion = pytest.mark.skipif(
+    sys.version_info >= (3, 12),
+    reason='enzyme is not compatible with py312 yet',
+)
+
 
 @pytest.fixture()
 def _mock_providers(monkeypatch):
@@ -245,6 +250,7 @@ def test_scan_video_episode(episodes, tmpdir, monkeypatch):
     assert scanned_video.tvdb_id is None
 
 
+@maxversion
 def test_refine_video_metadata(mkv):
     scanned_video = scan_video(mkv['test5'])
     refine(scanned_video, episode_refiners=('metadata',), movie_refiners=('metadata',))
