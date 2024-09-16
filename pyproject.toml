@@ -62,7 +62,10 @@ docs = [
     "towncrier",
 ]
 test = [
+    "coverage[toml]>=5.3",
     "mypy",
+    "types-requests",
+    "types-beautifulsoup4",
     "pytest>=6.0",
     "pytest-cov",
     "pytest-xdist",
