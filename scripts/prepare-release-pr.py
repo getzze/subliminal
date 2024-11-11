@@ -109,14 +109,14 @@ def prepare_release_pr(base_branch: str, bump: str, token: str, prerelease: str)
 
     release_branch = f'release-{version}'
 
-    # run(
-    #     ['git', 'config', 'user.name', 'pytest bot'],
-    #     check=True,
-    # )
-    # run(
-    #     ['git', 'config', 'user.email', 'pytestbot@gmail.com'],
-    #     check=True,
-    # )
+    run(
+        ['git', 'config', 'user.name', 'subliminal bot'],
+        check=True,
+    )
+    run(
+        ['git', 'config', 'user.email', 'diaoulael@gmail.com'],
+        check=True,
+    )
 
     run(
         ['git', 'checkout', '-b', release_branch, f'origin/{base_branch}'],
