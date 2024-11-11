@@ -11,7 +11,7 @@
 <header>
     <div class="content">
         <h1>Coverage report:
-            <span class="pc_cov">84%</span>
+            <span class="pc_cov">81%</span>
         </h1>
         <aside id="help_panel_wrapper">
             <input id="help_panel_state" type="checkbox">
@@ -27,6 +27,8 @@
                         <kbd>s</kbd>
                         <kbd>m</kbd>
                         <kbd>x</kbd>
+                        <kbd>b</kbd>
+                        <kbd>p</kbd>
                         <kbd>c</kbd>
                         &nbsp; change column sorting
                     </p>
@@ -54,8 +56,8 @@
                 <a class="button" href="class_index.html">Classes</a>
         </h2>
         <p class="text">
-            <a class="nav" href="https://coverage.readthedocs.io/en/7.5.3">coverage.py v7.5.3</a>,
-            created at 2024-06-23 15:54 +0000
+            <a class="nav" href="https://coverage.readthedocs.io/en/7.6.4">coverage.py v7.6.4</a>,
+            created at 2024-11-11 23:20 +0000
         </p>
     </div>
 </header>
@@ -68,207 +70,139 @@
                 <th id="statements" aria-sort="none" data-default-sort-order="descending" data-shortcut="s">statements<span class="arrows"></span></th>
                 <th id="missing" aria-sort="none" data-default-sort-order="descending" data-shortcut="m">missing<span class="arrows"></span></th>
                 <th id="excluded" aria-sort="none" data-default-sort-order="descending" data-shortcut="x">excluded<span class="arrows"></span></th>
+                <th id="branches" aria-sort="none" data-default-sort-order="descending" data-shortcut="b">branches<span class="arrows"></span></th>
+                <th id="partial" aria-sort="none" data-default-sort-order="descending" data-shortcut="p">partial<span class="arrows"></span></th>
                 <th id="coverage" class="right" aria-sort="none" data-shortcut="c">coverage<span class="arrows"></span></th>
             </tr>
         </thead>
         <tbody>
             <tr class="region">
-                <td class="name left"><a href="z_d7fd9187293521c9_opensubtitlescom_py.html#t35">subliminal/converters/opensubtitlescom.py</a></td>
-                <td class="name left"><a href="z_d7fd9187293521c9_opensubtitlescom_py.html#t35"><data value='convert'>OpenSubtitlesComConverter.convert</data></a></td>
+                <td class="name left"><a href="z_d7fd9187293521c9_addic7ed_py.html#t46">subliminal/converters/addic7ed.py</a></td>
+                <td class="name left"><a href="z_d7fd9187293521c9_addic7ed_py.html#t46"><data value='convert'>Addic7edConverter.convert</data></a></td>
+                <td>7</td>
+                <td>2</td>
+                <td>0</td>
+                <td>6</td>
+                <td>2</td>
+                <td class="right" data-ratio="9 13">69%</td>
+            </tr>
+            <tr class="region">
+                <td class="name left"><a href="z_d7fd9187293521c9_addic7ed_py.html#t57">subliminal/converters/addic7ed.py</a></td>
+                <td class="name left"><a href="z_d7fd9187293521c9_addic7ed_py.html#t57"><data value='reverse'>Addic7edConverter.reverse</data></a></td>
+                <td>8</td>
+                <td>2</td>
+                <td>0</td>
+                <td>6</td>
+                <td>2</td>
+                <td class="right" data-ratio="10 14">71%</td>
+            </tr>
+            <tr class="region">
+                <td class="name left"><a href="z_d7fd9187293521c9_opensubtitles_py.html#t60">subliminal/converters/opensubtitles.py</a></td>
+                <td class="name left"><a href="z_d7fd9187293521c9_opensubtitles_py.html#t60"><data value='convert'>OpenSubtitlesConverter.convert</data></a></td>
+                <td>4</td>
+                <td>1</td>
+                <td>0</td>
+                <td>2</td>
+                <td>1</td>
+                <td class="right" data-ratio="4 6">67%</td>
+            </tr>
+            <tr class="region">
+                <td class="name left"><a href="z_d7fd9187293521c9_opensubtitlescom_py.html#t37">subliminal/converters/opensubtitlescom.py</a></td>
+                <td class="name left"><a href="z_d7fd9187293521c9_opensubtitlescom_py.html#t37"><data value='convert'>OpenSubtitlesComConverter.convert</data></a></td>
                 <td>5</td>
                 <td>1</td>
                 <td>0</td>
-                <td class="right" data-ratio="4 5">80%</td>
-            </tr>
-            <tr class="region">
-                <td class="name left"><a href="z_d7fd9187293521c9_shooter_py.html#t18">subliminal/converters/shooter.py</a></td>
-                <td class="name left"><a href="z_d7fd9187293521c9_shooter_py.html#t18"><data value='init__'>ShooterConverter.__init__</data></a></td>
-                <td>3</td>
-                <td>3</td>
-                <td>0</td>
-                <td class="right" data-ratio="0 3">0%</td>
-            </tr>
-            <tr class="region">
-                <td class="name left"><a href="z_d7fd9187293521c9_shooter_py.html#t23">subliminal/converters/shooter.py</a></td>
-                <td class="name left"><a href="z_d7fd9187293521c9_shooter_py.html#t23"><data value='convert'>ShooterConverter.convert</data></a></td>
                 <td>4</td>
-                <td>4</td>
+                <td>1</td>
+                <td class="right" data-ratio="7 9">78%</td>
+            </tr>
+            <tr class="region">
+                <td class="name left"><a href="z_d7fd9187293521c9_tvsubtitles_py.html#t29">subliminal/converters/tvsubtitles.py</a></td>
+                <td class="name left"><a href="z_d7fd9187293521c9_tvsubtitles_py.html#t29"><data value='convert'>TVsubtitlesConverter.convert</data></a></td>
+                <td>5</td>
+                <td>1</td>
                 <td>0</td>
-                <td class="right" data-ratio="0 4">0%</td>
-            </tr>
-            <tr class="region">
-                <td class="name left"><a href="z_d7fd9187293521c9_shooter_py.html#t31">subliminal/converters/shooter.py</a></td>
-                <td class="name left"><a href="z_d7fd9187293521c9_shooter_py.html#t31"><data value='reverse'>ShooterConverter.reverse</data></a></td>
                 <td>4</td>
-                <td>4</td>
+                <td>1</td>
+                <td class="right" data-ratio="7 9">78%</td>
+            </tr>
+            <tr class="region">
+                <td class="name left"><a href="z_a87be9ec535b46d6_core_py.html#t155">subliminal/core.py</a></td>
+                <td class="name left"><a href="z_a87be9ec535b46d6_core_py.html#t155"><data value='list_subtitles'>ProviderPool.list_subtitles</data></a></td>
+                <td>12</td>
+                <td>5</td>
                 <td>0</td>
-                <td class="right" data-ratio="0 4">0%</td>
-            </tr>
-            <tr class="region">
-                <td class="name left"><a href="z_d7fd9187293521c9_shooter_py.html">subliminal/converters/shooter.py</a></td>
-                <td class="name left"><a href="z_d7fd9187293521c9_shooter_py.html"><data value=''><span class='no-noun'>(no function)</span></data></a></td>
-                <td>8</td>
-                <td>8</td>
-                <td>2</td>
-                <td class="right" data-ratio="0 8">0%</td>
-            </tr>
-            <tr class="region">
-                <td class="name left"><a href="z_d7fd9187293521c9_thesubdb_py.html#t18">subliminal/converters/thesubdb.py</a></td>
-                <td class="name left"><a href="z_d7fd9187293521c9_thesubdb_py.html#t18"><data value='init__'>TheSubDBConverter.__init__</data></a></td>
-                <td>3</td>
-                <td>3</td>
-                <td>0</td>
-                <td class="right" data-ratio="0 3">0%</td>
-            </tr>
-            <tr class="region">
-                <td class="name left"><a href="z_d7fd9187293521c9_thesubdb_py.html#t34">subliminal/converters/thesubdb.py</a></td>
-                <td class="name left"><a href="z_d7fd9187293521c9_thesubdb_py.html#t34"><data value='convert'>TheSubDBConverter.convert</data></a></td>
                 <td>6</td>
-                <td>6</td>
-                <td>0</td>
-                <td class="right" data-ratio="0 6">0%</td>
-            </tr>
-            <tr class="region">
-                <td class="name left"><a href="z_d7fd9187293521c9_thesubdb_py.html#t44">subliminal/converters/thesubdb.py</a></td>
-                <td class="name left"><a href="z_d7fd9187293521c9_thesubdb_py.html#t44"><data value='reverse'>TheSubDBConverter.reverse</data></a></td>
-                <td>4</td>
-                <td>4</td>
-                <td>0</td>
-                <td class="right" data-ratio="0 4">0%</td>
-            </tr>
-            <tr class="region">
-                <td class="name left"><a href="z_d7fd9187293521c9_thesubdb_py.html">subliminal/converters/thesubdb.py</a></td>
-                <td class="name left"><a href="z_d7fd9187293521c9_thesubdb_py.html"><data value=''><span class='no-noun'>(no function)</span></data></a></td>
-                <td>8</td>
-                <td>8</td>
                 <td>2</td>
-                <td class="right" data-ratio="0 8">0%</td>
+                <td class="right" data-ratio="11 18">61%</td>
             </tr>
             <tr class="region">
-                <td class="name left"><a href="z_a87be9ec535b46d6_core_py.html#t96">subliminal/core.py</a></td>
-                <td class="name left"><a href="z_a87be9ec535b46d6_core_py.html#t96"><data value='delitem__'>ProviderPool.__delitem__</data></a></td>
-                <td>8</td>
-                <td>2</td>
-                <td>0</td>
-                <td class="right" data-ratio="6 8">75%</td>
-            </tr>
-            <tr class="region">
-                <td class="name left"><a href="z_a87be9ec535b46d6_core_py.html#t111">subliminal/core.py</a></td>
-                <td class="name left"><a href="z_a87be9ec535b46d6_core_py.html#t111"><data value='list_subtitles_provider'>ProviderPool.list_subtitles_provider</data></a></td>
+                <td class="name left"><a href="z_a87be9ec535b46d6_core_py.html#t186">subliminal/core.py</a></td>
+                <td class="name left"><a href="z_a87be9ec535b46d6_core_py.html#t186"><data value='download_subtitle'>ProviderPool.download_subtitle</data></a></td>
                 <td>13</td>
                 <td>2</td>
-                <td>0</td>
-                <td class="right" data-ratio="11 13">85%</td>
+                <td>2</td>
+                <td>4</td>
+                <td>1</td>
+                <td class="right" data-ratio="14 17">82%</td>
             </tr>
             <tr class="region">
-                <td class="name left"><a href="z_a87be9ec535b46d6_core_py.html#t145">subliminal/core.py</a></td>
-                <td class="name left"><a href="z_a87be9ec535b46d6_core_py.html#t145"><data value='list_subtitles'>ProviderPool.list_subtitles</data></a></td>
-                <td>12</td>
-                <td>5</td>
-                <td>0</td>
-                <td class="right" data-ratio="7 12">58%</td>
-            </tr>
-            <tr class="region">
-                <td class="name left"><a href="z_a87be9ec535b46d6_core_py.html#t176">subliminal/core.py</a></td>
-                <td class="name left"><a href="z_a87be9ec535b46d6_core_py.html#t176"><data value='download_subtitle'>ProviderPool.download_subtitle</data></a></td>
-                <td>15</td>
-                <td>3</td>
-                <td>0</td>
-                <td class="right" data-ratio="12 15">80%</td>
-            </tr>
-            <tr class="region">
-                <td class="name left"><a href="z_a87be9ec535b46d6_core_py.html#t206">subliminal/core.py</a></td>
-                <td class="name left"><a href="z_a87be9ec535b46d6_core_py.html#t206"><data value='download_best_subtitles'>ProviderPool.download_best_subtitles</data></a></td>
-                <td>19</td>
+                <td class="name left"><a href="z_a87be9ec535b46d6_core_py.html#t216">subliminal/core.py</a></td>
+                <td class="name left"><a href="z_a87be9ec535b46d6_core_py.html#t216"><data value='download_best_subtitles'>ProviderPool.download_best_subtitles</data></a></td>
+                <td>25</td>
                 <td>2</td>
                 <td>0</td>
-                <td class="right" data-ratio="17 19">89%</td>
-            </tr>
-            <tr class="region">
-                <td class="name left"><a href="z_a87be9ec535b46d6_core_py.html#t304">subliminal/core.py</a></td>
-                <td class="name left"><a href="z_a87be9ec535b46d6_core_py.html#t304"><data value='list_subtitles'>AsyncProviderPool.list_subtitles</data></a></td>
-                <td>10</td>
+                <td>14</td>
                 <td>3</td>
-                <td>0</td>
-                <td class="right" data-ratio="7 10">70%</td>
+                <td class="right" data-ratio="34 39">87%</td>
             </tr>
             <tr class="region">
-                <td class="name left"><a href="z_a87be9ec535b46d6_core_py.html#t446">subliminal/core.py</a></td>
-                <td class="name left"><a href="z_a87be9ec535b46d6_core_py.html#t446"><data value='scan_archive'>scan_archive</data></a></td>
-                <td>25</td>
-                <td>8</td>
-                <td>0</td>
-                <td class="right" data-ratio="17 25">68%</td>
-            </tr>
-            <tr class="region">
-                <td class="name left"><a href="z_a87be9ec535b46d6_core_py.html#t504">subliminal/core.py</a></td>
-                <td class="name left"><a href="z_a87be9ec535b46d6_core_py.html#t504"><data value='scan_videos'>scan_videos</data></a></td>
-                <td>46</td>
-                <td>3</td>
-                <td>9</td>
-                <td class="right" data-ratio="43 46">93%</td>
-            </tr>
-            <tr class="region">
-                <td class="name left"><a href="z_a87be9ec535b46d6_core_py.html#t600">subliminal/core.py</a></td>
-                <td class="name left"><a href="z_a87be9ec535b46d6_core_py.html#t600"><data value='refine'>refine</data></a></td>
-                <td>11</td>
-                <td>3</td>
-                <td>1</td>
-                <td class="right" data-ratio="8 11">73%</td>
-            </tr>
-            <tr class="region">
-                <td class="name left"><a href="z_a87be9ec535b46d6_extensions_py.html#t44">subliminal/extensions.py</a></td>
-                <td class="name left"><a href="z_a87be9ec535b46d6_extensions_py.html#t44"><data value='list_entry_points'>RegistrableExtensionManager.list_entry_points</data></a></td>
-                <td>10</td>
-                <td>3</td>
-                <td>0</td>
-                <td class="right" data-ratio="7 10">70%</td>
-            </tr>
-            <tr class="region">
-                <td class="name left"><a href="z_a87be9ec535b46d6_extensions_py.html#t63">subliminal/extensions.py</a></td>
-                <td class="name left"><a href="z_a87be9ec535b46d6_extensions_py.html#t63"><data value='register'>RegistrableExtensionManager.register</data></a></td>
+                <td class="name left"><a href="z_a87be9ec535b46d6_core_py.html#t333">subliminal/core.py</a></td>
+                <td class="name left"><a href="z_a87be9ec535b46d6_core_py.html#t333"><data value='list_subtitles'>AsyncProviderPool.list_subtitles</data></a></td>
                 <td>12</td>
                 <td>4</td>
                 <td>0</td>
-                <td class="right" data-ratio="8 12">67%</td>
-            </tr>
-            <tr class="region">
-                <td class="name left"><a href="z_a87be9ec535b46d6_extensions_py.html#t91">subliminal/extensions.py</a></td>
-                <td class="name left"><a href="z_a87be9ec535b46d6_extensions_py.html#t91"><data value='unregister'>RegistrableExtensionManager.unregister</data></a></td>
-                <td>11</td>
+                <td>6</td>
                 <td>2</td>
-                <td>0</td>
-                <td class="right" data-ratio="9 11">82%</td>
+                <td class="right" data-ratio="12 18">67%</td>
             </tr>
             <tr class="region">
-                <td class="name left"><a href="z_a87be9ec535b46d6_extensions_py.html#t112">subliminal/extensions.py</a></td>
-                <td class="name left"><a href="z_a87be9ec535b46d6_extensions_py.html#t112"><data value='parse_entry_point'>parse_entry_point</data></a></td>
-                <td>7</td>
+                <td class="name left"><a href="z_a87be9ec535b46d6_core_py.html#t681">subliminal/core.py</a></td>
+                <td class="name left"><a href="z_a87be9ec535b46d6_core_py.html#t681"><data value='refine'>refine</data></a></td>
+                <td>12</td>
+                <td>12</td>
+                <td>0</td>
+                <td>6</td>
+                <td>0</td>
+                <td class="right" data-ratio="0 18">0%</td>
+            </tr>
+            <tr class="region">
+                <td class="name left"><a href="z_585999839401bd56___init___py.html#t58">subliminal/providers/__init__.py</a></td>
+                <td class="name left"><a href="z_585999839401bd56___init___py.html#t58"><data value='init__'>TimeoutSafeTransport.__init__</data></a></td>
+                <td>4</td>
+                <td>0</td>
+                <td>0</td>
                 <td>2</td>
-                <td>0</td>
-                <td class="right" data-ratio="5 7">71%</td>
-            </tr>
-            <tr class="region">
-                <td class="name left"><a href="z_a87be9ec535b46d6_matches_py.html#t55">subliminal/matches.py</a></td>
-                <td class="name left"><a href="z_a87be9ec535b46d6_matches_py.html#t55"><data value='title_matches'>title_matches</data></a></td>
-                <td>5</td>
                 <td>1</td>
-                <td>0</td>
-                <td class="right" data-ratio="4 5">80%</td>
+                <td class="right" data-ratio="5 6">83%</td>
             </tr>
             <tr class="region">
-                <td class="name left"><a href="z_a87be9ec535b46d6_matches_py.html#t123">subliminal/matches.py</a></td>
-                <td class="name left"><a href="z_a87be9ec535b46d6_matches_py.html#t123"><data value='country_matches'>country_matches</data></a></td>
-                <td>7</td>
-                <td>2</td>
-                <td>0</td>
-                <td class="right" data-ratio="5 7">71%</td>
-            </tr>
-            <tr class="region">
-                <td class="name left"><a href="z_585999839401bd56___init___py.html#t271">subliminal/providers/__init__.py</a></td>
-                <td class="name left"><a href="z_585999839401bd56___init___py.html#t271"><data value='repr__'>Provider.__repr__</data></a></td>
+                <td class="name left"><a href="z_585999839401bd56___init___py.html#t149">subliminal/providers/__init__.py</a></td>
+                <td class="name left"><a href="z_585999839401bd56___init___py.html#t149"><data value='hash_video'>Provider.hash_video</data></a></td>
                 <td>1</td>
                 <td>1</td>
+                <td>0</td>
+                <td>0</td>
+                <td>0</td>
+                <td class="right" data-ratio="0 1">0%</td>
+            </tr>
+            <tr class="region">
+                <td class="name left"><a href="z_585999839401bd56___init___py.html#t272">subliminal/providers/__init__.py</a></td>
+                <td class="name left"><a href="z_585999839401bd56___init___py.html#t272"><data value='repr__'>Provider.__repr__</data></a></td>
+                <td>1</td>
+                <td>1</td>
+                <td>0</td>
+                <td>0</td>
                 <td>0</td>
                 <td class="right" data-ratio="0 1">0%</td>
             </tr>
@@ -278,7 +212,19 @@
                 <td>8</td>
                 <td>8</td>
                 <td>0</td>
-                <td class="right" data-ratio="0 8">0%</td>
+                <td>4</td>
+                <td>0</td>
+                <td class="right" data-ratio="0 12">0%</td>
+            </tr>
+            <tr class="region">
+                <td class="name left"><a href="z_585999839401bd56_addic7ed_py.html#t179">subliminal/providers/addic7ed.py</a></td>
+                <td class="name left"><a href="z_585999839401bd56_addic7ed_py.html#t179"><data value='get_matches'>Addic7edSubtitle.get_matches</data></a></td>
+                <td>6</td>
+                <td>0</td>
+                <td>0</td>
+                <td>4</td>
+                <td>1</td>
+                <td class="right" data-ratio="9 10">90%</td>
             </tr>
             <tr class="region">
                 <td class="name left"><a href="z_585999839401bd56_addic7ed_py.html#t241">subliminal/providers/addic7ed.py</a></td>
@@ -286,7 +232,9 @@
                 <td>12</td>
                 <td>6</td>
                 <td>0</td>
-                <td class="right" data-ratio="6 12">50%</td>
+                <td>4</td>
+                <td>1</td>
+                <td class="right" data-ratio="7 16">44%</td>
             </tr>
             <tr class="region">
                 <td class="name left"><a href="z_585999839401bd56_addic7ed_py.html#t260">subliminal/providers/addic7ed.py</a></td>
@@ -294,7 +242,9 @@
                 <td>5</td>
                 <td>1</td>
                 <td>0</td>
-                <td class="right" data-ratio="4 5">80%</td>
+                <td>2</td>
+                <td>1</td>
+                <td class="right" data-ratio="5 7">71%</td>
             </tr>
             <tr class="region">
                 <td class="name left"><a href="z_585999839401bd56_addic7ed_py.html#t270">subliminal/providers/addic7ed.py</a></td>
@@ -302,7 +252,9 @@
                 <td>21</td>
                 <td>3</td>
                 <td>0</td>
-                <td class="right" data-ratio="18 21">86%</td>
+                <td>8</td>
+                <td>2</td>
+                <td class="right" data-ratio="24 29">83%</td>
             </tr>
             <tr class="region">
                 <td class="name left"><a href="z_585999839401bd56_addic7ed_py.html#t309">subliminal/providers/addic7ed.py</a></td>
@@ -310,7 +262,9 @@
                 <td>18</td>
                 <td>18</td>
                 <td>0</td>
-                <td class="right" data-ratio="0 18">0%</td>
+                <td>8</td>
+                <td>0</td>
+                <td class="right" data-ratio="0 26">0%</td>
             </tr>
             <tr class="region">
                 <td class="name left"><a href="z_585999839401bd56_addic7ed_py.html#t341">subliminal/providers/addic7ed.py</a></td>
@@ -318,7 +272,9 @@
                 <td>11</td>
                 <td>11</td>
                 <td>0</td>
-                <td class="right" data-ratio="0 11">0%</td>
+                <td>4</td>
+                <td>0</td>
+                <td class="right" data-ratio="0 15">0%</td>
             </tr>
             <tr class="region">
                 <td class="name left"><a href="z_585999839401bd56_addic7ed_py.html#t360">subliminal/providers/addic7ed.py</a></td>
@@ -326,7 +282,9 @@
                 <td>22</td>
                 <td>22</td>
                 <td>0</td>
-                <td class="right" data-ratio="0 22">0%</td>
+                <td>8</td>
+                <td>0</td>
+                <td class="right" data-ratio="0 30">0%</td>
             </tr>
             <tr class="region">
                 <td class="name left"><a href="z_585999839401bd56_addic7ed_py.html#t408">subliminal/providers/addic7ed.py</a></td>
@@ -334,7 +292,9 @@
                 <td>10</td>
                 <td>10</td>
                 <td>0</td>
-                <td class="right" data-ratio="0 10">0%</td>
+                <td>4</td>
+                <td>0</td>
+                <td class="right" data-ratio="0 14">0%</td>
             </tr>
             <tr class="region">
                 <td class="name left"><a href="z_585999839401bd56_addic7ed_py.html#t422">subliminal/providers/addic7ed.py</a></td>
@@ -342,7 +302,9 @@
                 <td>16</td>
                 <td>1</td>
                 <td>0</td>
-                <td class="right" data-ratio="15 16">94%</td>
+                <td>10</td>
+                <td>2</td>
+                <td class="right" data-ratio="23 26">88%</td>
             </tr>
             <tr class="region">
                 <td class="name left"><a href="z_585999839401bd56_addic7ed_py.html#t452">subliminal/providers/addic7ed.py</a></td>
@@ -350,7 +312,19 @@
                 <td>19</td>
                 <td>10</td>
                 <td>0</td>
-                <td class="right" data-ratio="9 19">47%</td>
+                <td>8</td>
+                <td>2</td>
+                <td class="right" data-ratio="13 27">48%</td>
+            </tr>
+            <tr class="region">
+                <td class="name left"><a href="z_585999839401bd56_addic7ed_py.html#t491">subliminal/providers/addic7ed.py</a></td>
+                <td class="name left"><a href="z_585999839401bd56_addic7ed_py.html#t491"><data value='get_show_id_with_alternative_names'>Addic7edProvider._get_show_id_with_alternative_names</data></a></td>
+                <td>7</td>
+                <td>0</td>
+                <td>0</td>
+                <td>6</td>
+                <td>2</td>
+                <td class="right" data-ratio="11 13">85%</td>
             </tr>
             <tr class="region">
                 <td class="name left"><a href="z_585999839401bd56_addic7ed_py.html#t506">subliminal/providers/addic7ed.py</a></td>
@@ -358,7 +332,9 @@
                 <td>35</td>
                 <td>6</td>
                 <td>0</td>
-                <td class="right" data-ratio="29 35">83%</td>
+                <td>10</td>
+                <td>4</td>
+                <td class="right" data-ratio="35 45">78%</td>
             </tr>
             <tr class="region">
                 <td class="name left"><a href="z_585999839401bd56_addic7ed_py.html#t592">subliminal/providers/addic7ed.py</a></td>
@@ -366,7 +342,9 @@
                 <td>7</td>
                 <td>3</td>
                 <td>0</td>
-                <td class="right" data-ratio="4 7">57%</td>
+                <td>4</td>
+                <td>2</td>
+                <td class="right" data-ratio="6 11">55%</td>
             </tr>
             <tr class="region">
                 <td class="name left"><a href="z_585999839401bd56_addic7ed_py.html#t610">subliminal/providers/addic7ed.py</a></td>
@@ -374,7 +352,109 @@
                 <td>11</td>
                 <td>4</td>
                 <td>0</td>
-                <td class="right" data-ratio="7 11">64%</td>
+                <td>6</td>
+                <td>3</td>
+                <td class="right" data-ratio="10 17">59%</td>
+            </tr>
+            <tr class="region">
+                <td class="name left"><a href="z_585999839401bd56_bsplayer_py.html#t68">subliminal/providers/bsplayer.py</a></td>
+                <td class="name left"><a href="z_585999839401bd56_bsplayer_py.html#t68"><data value='find_text'>find_text</data></a></td>
+                <td>6</td>
+                <td>2</td>
+                <td>0</td>
+                <td>4</td>
+                <td>2</td>
+                <td class="right" data-ratio="6 10">60%</td>
+            </tr>
+            <tr class="region">
+                <td class="name left"><a href="z_585999839401bd56_bsplayer_py.html#t78">subliminal/providers/bsplayer.py</a></td>
+                <td class="name left"><a href="z_585999839401bd56_bsplayer_py.html#t78"><data value='find_int'>find_int</data></a></td>
+                <td>8</td>
+                <td>3</td>
+                <td>0</td>
+                <td>2</td>
+                <td>0</td>
+                <td class="right" data-ratio="7 10">70%</td>
+            </tr>
+            <tr class="region">
+                <td class="name left"><a href="z_585999839401bd56_bsplayer_py.html#t91">subliminal/providers/bsplayer.py</a></td>
+                <td class="name left"><a href="z_585999839401bd56_bsplayer_py.html#t91"><data value='find_float'>find_float</data></a></td>
+                <td>8</td>
+                <td>4</td>
+                <td>0</td>
+                <td>2</td>
+                <td>1</td>
+                <td class="right" data-ratio="5 10">50%</td>
+            </tr>
+            <tr class="region">
+                <td class="name left"><a href="z_585999839401bd56_bsplayer_py.html#t152">subliminal/providers/bsplayer.py</a></td>
+                <td class="name left"><a href="z_585999839401bd56_bsplayer_py.html#t152"><data value='info'>BSPlayerSubtitle.info</data></a></td>
+                <td>5</td>
+                <td>5</td>
+                <td>0</td>
+                <td>4</td>
+                <td>0</td>
+                <td class="right" data-ratio="0 9">0%</td>
+            </tr>
+            <tr class="region">
+                <td class="name left"><a href="z_585999839401bd56_bsplayer_py.html#t161">subliminal/providers/bsplayer.py</a></td>
+                <td class="name left"><a href="z_585999839401bd56_bsplayer_py.html#t161"><data value='series_name'>BSPlayerSubtitle.series_name</data></a></td>
+                <td>5</td>
+                <td>5</td>
+                <td>0</td>
+                <td>4</td>
+                <td>0</td>
+                <td class="right" data-ratio="0 9">0%</td>
+            </tr>
+            <tr class="region">
+                <td class="name left"><a href="z_585999839401bd56_bsplayer_py.html#t170">subliminal/providers/bsplayer.py</a></td>
+                <td class="name left"><a href="z_585999839401bd56_bsplayer_py.html#t170"><data value='series_title'>BSPlayerSubtitle.series_title</data></a></td>
+                <td>5</td>
+                <td>5</td>
+                <td>0</td>
+                <td>4</td>
+                <td>0</td>
+                <td class="right" data-ratio="0 9">0%</td>
+            </tr>
+            <tr class="region">
+                <td class="name left"><a href="z_585999839401bd56_bsplayer_py.html#t233">subliminal/providers/bsplayer.py</a></td>
+                <td class="name left"><a href="z_585999839401bd56_bsplayer_py.html#t233"><data value='api_request'>BSPlayerProvider._api_request</data></a></td>
+                <td>12</td>
+                <td>0</td>
+                <td>1</td>
+                <td>2</td>
+                <td>1</td>
+                <td class="right" data-ratio="13 14">93%</td>
+            </tr>
+            <tr class="region">
+                <td class="name left"><a href="z_585999839401bd56_bsplayer_py.html#t271">subliminal/providers/bsplayer.py</a></td>
+                <td class="name left"><a href="z_585999839401bd56_bsplayer_py.html#t271"><data value='initialize'>BSPlayerProvider.initialize</data></a></td>
+                <td>6</td>
+                <td>2</td>
+                <td>0</td>
+                <td>2</td>
+                <td>1</td>
+                <td class="right" data-ratio="5 8">62%</td>
+            </tr>
+            <tr class="region">
+                <td class="name left"><a href="z_585999839401bd56_bsplayer_py.html#t283">subliminal/providers/bsplayer.py</a></td>
+                <td class="name left"><a href="z_585999839401bd56_bsplayer_py.html#t283"><data value='terminate'>BSPlayerProvider.terminate</data></a></td>
+                <td>8</td>
+                <td>3</td>
+                <td>0</td>
+                <td>4</td>
+                <td>2</td>
+                <td class="right" data-ratio="7 12">58%</td>
+            </tr>
+            <tr class="region">
+                <td class="name left"><a href="z_585999839401bd56_bsplayer_py.html#t294">subliminal/providers/bsplayer.py</a></td>
+                <td class="name left"><a href="z_585999839401bd56_bsplayer_py.html#t294"><data value='query'>BSPlayerProvider.query</data></a></td>
+                <td>16</td>
+                <td>2</td>
+                <td>0</td>
+                <td>8</td>
+                <td>3</td>
+                <td class="right" data-ratio="19 24">79%</td>
             </tr>
             <tr class="region">
                 <td class="name left"><a href="z_585999839401bd56_gestdown_py.html#t111">subliminal/providers/gestdown.py</a></td>
@@ -382,7 +462,19 @@
                 <td>7</td>
                 <td>7</td>
                 <td>0</td>
-                <td class="right" data-ratio="0 7">0%</td>
+                <td>4</td>
+                <td>0</td>
+                <td class="right" data-ratio="0 11">0%</td>
+            </tr>
+            <tr class="region">
+                <td class="name left"><a href="z_585999839401bd56_gestdown_py.html#t121">subliminal/providers/gestdown.py</a></td>
+                <td class="name left"><a href="z_585999839401bd56_gestdown_py.html#t121"><data value='get_matches'>GestdownSubtitle.get_matches</data></a></td>
+                <td>6</td>
+                <td>0</td>
+                <td>0</td>
+                <td>4</td>
+                <td>1</td>
+                <td class="right" data-ratio="9 10">90%</td>
             </tr>
             <tr class="region">
                 <td class="name left"><a href="z_585999839401bd56_gestdown_py.html#t171">subliminal/providers/gestdown.py</a></td>
@@ -390,7 +482,9 @@
                 <td>3</td>
                 <td>1</td>
                 <td>0</td>
-                <td class="right" data-ratio="2 3">67%</td>
+                <td>2</td>
+                <td>1</td>
+                <td class="right" data-ratio="3 5">60%</td>
             </tr>
             <tr class="region">
                 <td class="name left"><a href="z_585999839401bd56_gestdown_py.html#t178">subliminal/providers/gestdown.py</a></td>
@@ -398,7 +492,19 @@
                 <td>21</td>
                 <td>1</td>
                 <td>0</td>
-                <td class="right" data-ratio="20 21">95%</td>
+                <td>8</td>
+                <td>1</td>
+                <td class="right" data-ratio="27 29">93%</td>
+            </tr>
+            <tr class="region">
+                <td class="name left"><a href="z_585999839401bd56_gestdown_py.html#t218">subliminal/providers/gestdown.py</a></td>
+                <td class="name left"><a href="z_585999839401bd56_gestdown_py.html#t218"><data value='get_title_and_show_id'>GestdownProvider.get_title_and_show_id</data></a></td>
+                <td>9</td>
+                <td>0</td>
+                <td>0</td>
+                <td>6</td>
+                <td>2</td>
+                <td class="right" data-ratio="13 15">87%</td>
             </tr>
             <tr class="region">
                 <td class="name left"><a href="z_585999839401bd56_gestdown_py.html#t235">subliminal/providers/gestdown.py</a></td>
@@ -406,7 +512,9 @@
                 <td>14</td>
                 <td>6</td>
                 <td>0</td>
-                <td class="right" data-ratio="8 14">57%</td>
+                <td>4</td>
+                <td>2</td>
+                <td class="right" data-ratio="10 18">56%</td>
             </tr>
             <tr class="region">
                 <td class="name left"><a href="z_585999839401bd56_gestdown_py.html#t265">subliminal/providers/gestdown.py</a></td>
@@ -414,7 +522,9 @@
                 <td>17</td>
                 <td>3</td>
                 <td>0</td>
-                <td class="right" data-ratio="14 17">82%</td>
+                <td>4</td>
+                <td>2</td>
+                <td class="right" data-ratio="16 21">76%</td>
             </tr>
             <tr class="region">
                 <td class="name left"><a href="z_585999839401bd56_gestdown_py.html#t307">subliminal/providers/gestdown.py</a></td>
@@ -422,111 +532,139 @@
                 <td>25</td>
                 <td>2</td>
                 <td>0</td>
-                <td class="right" data-ratio="23 25">92%</td>
+                <td>10</td>
+                <td>1</td>
+                <td class="right" data-ratio="32 35">91%</td>
             </tr>
             <tr class="region">
-                <td class="name left"><a href="z_585999839401bd56_gestdown_py.html#t375">subliminal/providers/gestdown.py</a></td>
-                <td class="name left"><a href="z_585999839401bd56_gestdown_py.html#t375"><data value='list_subtitles'>GestdownProvider.list_subtitles</data></a></td>
+                <td class="name left"><a href="z_585999839401bd56_gestdown_py.html#t376">subliminal/providers/gestdown.py</a></td>
+                <td class="name left"><a href="z_585999839401bd56_gestdown_py.html#t376"><data value='list_subtitles'>GestdownProvider.list_subtitles</data></a></td>
                 <td>10</td>
                 <td>3</td>
                 <td>0</td>
-                <td class="right" data-ratio="7 10">70%</td>
+                <td>6</td>
+                <td>2</td>
+                <td class="right" data-ratio="11 16">69%</td>
             </tr>
             <tr class="region">
-                <td class="name left"><a href="z_585999839401bd56_gestdown_py.html#t395">subliminal/providers/gestdown.py</a></td>
-                <td class="name left"><a href="z_585999839401bd56_gestdown_py.html#t395"><data value='download_subtitle'>GestdownProvider.download_subtitle</data></a></td>
+                <td class="name left"><a href="z_585999839401bd56_gestdown_py.html#t396">subliminal/providers/gestdown.py</a></td>
+                <td class="name left"><a href="z_585999839401bd56_gestdown_py.html#t396"><data value='download_subtitle'>GestdownProvider.download_subtitle</data></a></td>
                 <td>17</td>
                 <td>8</td>
                 <td>0</td>
-                <td class="right" data-ratio="9 17">53%</td>
+                <td>8</td>
+                <td>4</td>
+                <td class="right" data-ratio="13 25">52%</td>
             </tr>
             <tr class="region">
-                <td class="name left"><a href="z_585999839401bd56_napiprojekt_py.html#t68">subliminal/providers/napiprojekt.py</a></td>
-                <td class="name left"><a href="z_585999839401bd56_napiprojekt_py.html#t68"><data value='info'>NapiProjektSubtitle.info</data></a></td>
+                <td class="name left"><a href="z_585999839401bd56_napiprojekt_py.html#t70">subliminal/providers/napiprojekt.py</a></td>
+                <td class="name left"><a href="z_585999839401bd56_napiprojekt_py.html#t70"><data value='info'>NapiProjektSubtitle.info</data></a></td>
                 <td>1</td>
                 <td>1</td>
+                <td>0</td>
+                <td>0</td>
                 <td>0</td>
                 <td class="right" data-ratio="0 1">0%</td>
             </tr>
             <tr class="region">
-                <td class="name left"><a href="z_585999839401bd56_napiprojekt_py.html#t104">subliminal/providers/napiprojekt.py</a></td>
-                <td class="name left"><a href="z_585999839401bd56_napiprojekt_py.html#t104"><data value='terminate'>NapiProjektProvider.terminate</data></a></td>
+                <td class="name left"><a href="z_585999839401bd56_napiprojekt_py.html#t120">subliminal/providers/napiprojekt.py</a></td>
+                <td class="name left"><a href="z_585999839401bd56_napiprojekt_py.html#t120"><data value='terminate'>NapiProjektProvider.terminate</data></a></td>
                 <td>3</td>
                 <td>1</td>
                 <td>0</td>
-                <td class="right" data-ratio="2 3">67%</td>
+                <td>2</td>
+                <td>1</td>
+                <td class="right" data-ratio="3 5">60%</td>
             </tr>
             <tr class="region">
-                <td class="name left"><a href="z_585999839401bd56_napiprojekt_py.html#t110">subliminal/providers/napiprojekt.py</a></td>
-                <td class="name left"><a href="z_585999839401bd56_napiprojekt_py.html#t110"><data value='parse_content'>NapiProjektProvider._parse_content</data></a></td>
+                <td class="name left"><a href="z_585999839401bd56_napiprojekt_py.html#t126">subliminal/providers/napiprojekt.py</a></td>
+                <td class="name left"><a href="z_585999839401bd56_napiprojekt_py.html#t126"><data value='parse_content'>NapiProjektProvider._parse_content</data></a></td>
                 <td>10</td>
                 <td>5</td>
                 <td>0</td>
-                <td class="right" data-ratio="5 10">50%</td>
+                <td>4</td>
+                <td>1</td>
+                <td class="right" data-ratio="8 14">57%</td>
             </tr>
             <tr class="region">
-                <td class="name left"><a href="z_585999839401bd56_napiprojekt_py.html#t129">subliminal/providers/napiprojekt.py</a></td>
-                <td class="name left"><a href="z_585999839401bd56_napiprojekt_py.html#t129"><data value='query'>NapiProjektProvider.query</data></a></td>
+                <td class="name left"><a href="z_585999839401bd56_napiprojekt_py.html#t145">subliminal/providers/napiprojekt.py</a></td>
+                <td class="name left"><a href="z_585999839401bd56_napiprojekt_py.html#t145"><data value='query'>NapiProjektProvider.query</data></a></td>
                 <td>14</td>
                 <td>1</td>
                 <td>0</td>
-                <td class="right" data-ratio="13 14">93%</td>
+                <td>4</td>
+                <td>1</td>
+                <td class="right" data-ratio="16 18">89%</td>
             </tr>
             <tr class="region">
-                <td class="name left"><a href="z_585999839401bd56_opensubtitles_py.html#t106">subliminal/providers/opensubtitles.py</a></td>
-                <td class="name left"><a href="z_585999839401bd56_opensubtitles_py.html#t106"><data value='info'>OpenSubtitlesSubtitle.info</data></a></td>
+                <td class="name left"><a href="z_585999839401bd56_opensubtitles_py.html#t101">subliminal/providers/opensubtitles.py</a></td>
+                <td class="name left"><a href="z_585999839401bd56_opensubtitles_py.html#t101"><data value='info'>OpenSubtitlesSubtitle.info</data></a></td>
                 <td>5</td>
                 <td>5</td>
                 <td>0</td>
-                <td class="right" data-ratio="0 5">0%</td>
+                <td>4</td>
+                <td>0</td>
+                <td class="right" data-ratio="0 9">0%</td>
             </tr>
             <tr class="region">
-                <td class="name left"><a href="z_585999839401bd56_opensubtitles_py.html#t115">subliminal/providers/opensubtitles.py</a></td>
-                <td class="name left"><a href="z_585999839401bd56_opensubtitles_py.html#t115"><data value='series_name'>OpenSubtitlesSubtitle.series_name</data></a></td>
+                <td class="name left"><a href="z_585999839401bd56_opensubtitles_py.html#t110">subliminal/providers/opensubtitles.py</a></td>
+                <td class="name left"><a href="z_585999839401bd56_opensubtitles_py.html#t110"><data value='series_name'>OpenSubtitlesSubtitle.series_name</data></a></td>
                 <td>4</td>
                 <td>1</td>
                 <td>0</td>
-                <td class="right" data-ratio="3 4">75%</td>
+                <td>2</td>
+                <td>1</td>
+                <td class="right" data-ratio="4 6">67%</td>
             </tr>
             <tr class="region">
-                <td class="name left"><a href="z_585999839401bd56_opensubtitles_py.html#t123">subliminal/providers/opensubtitles.py</a></td>
-                <td class="name left"><a href="z_585999839401bd56_opensubtitles_py.html#t123"><data value='series_title'>OpenSubtitlesSubtitle.series_title</data></a></td>
+                <td class="name left"><a href="z_585999839401bd56_opensubtitles_py.html#t118">subliminal/providers/opensubtitles.py</a></td>
+                <td class="name left"><a href="z_585999839401bd56_opensubtitles_py.html#t118"><data value='series_title'>OpenSubtitlesSubtitle.series_title</data></a></td>
                 <td>4</td>
                 <td>1</td>
                 <td>0</td>
-                <td class="right" data-ratio="3 4">75%</td>
+                <td>2</td>
+                <td>1</td>
+                <td class="right" data-ratio="4 6">67%</td>
             </tr>
             <tr class="region">
-                <td class="name left"><a href="z_585999839401bd56_opensubtitles_py.html#t130">subliminal/providers/opensubtitles.py</a></td>
-                <td class="name left"><a href="z_585999839401bd56_opensubtitles_py.html#t130"><data value='get_matches'>OpenSubtitlesSubtitle.get_matches</data></a></td>
+                <td class="name left"><a href="z_585999839401bd56_opensubtitles_py.html#t125">subliminal/providers/opensubtitles.py</a></td>
+                <td class="name left"><a href="z_585999839401bd56_opensubtitles_py.html#t125"><data value='get_matches'>OpenSubtitlesSubtitle.get_matches</data></a></td>
                 <td>20</td>
                 <td>5</td>
                 <td>0</td>
-                <td class="right" data-ratio="15 20">75%</td>
+                <td>16</td>
+                <td>2</td>
+                <td class="right" data-ratio="25 36">69%</td>
             </tr>
             <tr class="region">
-                <td class="name left"><a href="z_585999839401bd56_opensubtitles_py.html#t236">subliminal/providers/opensubtitles.py</a></td>
-                <td class="name left"><a href="z_585999839401bd56_opensubtitles_py.html#t236"><data value='query'>OpenSubtitlesProvider.query</data></a></td>
+                <td class="name left"><a href="z_585999839401bd56_opensubtitles_py.html#t230">subliminal/providers/opensubtitles.py</a></td>
+                <td class="name left"><a href="z_585999839401bd56_opensubtitles_py.html#t230"><data value='query'>OpenSubtitlesProvider.query</data></a></td>
                 <td>44</td>
                 <td>1</td>
                 <td>0</td>
-                <td class="right" data-ratio="43 44">98%</td>
+                <td>20</td>
+                <td>1</td>
+                <td class="right" data-ratio="62 64">97%</td>
             </tr>
             <tr class="region">
-                <td class="name left"><a href="z_585999839401bd56_opensubtitles_py.html#t323">subliminal/providers/opensubtitles.py</a></td>
-                <td class="name left"><a href="z_585999839401bd56_opensubtitles_py.html#t323"><data value='list_subtitles'>OpenSubtitlesProvider.list_subtitles</data></a></td>
+                <td class="name left"><a href="z_585999839401bd56_opensubtitles_py.html#t317">subliminal/providers/opensubtitles.py</a></td>
+                <td class="name left"><a href="z_585999839401bd56_opensubtitles_py.html#t317"><data value='list_subtitles'>OpenSubtitlesProvider.list_subtitles</data></a></td>
                 <td>9</td>
                 <td>1</td>
                 <td>0</td>
-                <td class="right" data-ratio="8 9">89%</td>
+                <td>4</td>
+                <td>1</td>
+                <td class="right" data-ratio="11 13">85%</td>
             </tr>
             <tr class="region">
-                <td class="name left"><a href="z_585999839401bd56_opensubtitles_py.html#t408">subliminal/providers/opensubtitles.py</a></td>
-                <td class="name left"><a href="z_585999839401bd56_opensubtitles_py.html#t408"><data value='checked'>checked</data></a></td>
+                <td class="name left"><a href="z_585999839401bd56_opensubtitles_py.html#t402">subliminal/providers/opensubtitles.py</a></td>
+                <td class="name left"><a href="z_585999839401bd56_opensubtitles_py.html#t402"><data value='checked'>checked</data></a></td>
                 <td>18</td>
                 <td>6</td>
                 <td>0</td>
-                <td class="right" data-ratio="12 18">67%</td>
+                <td>16</td>
+                <td>6</td>
+                <td class="right" data-ratio="22 34">65%</td>
             </tr>
             <tr class="region">
                 <td class="name left"><a href="z_585999839401bd56_opensubtitlescom_py.html#t136">subliminal/providers/opensubtitlescom.py</a></td>
@@ -534,157 +672,217 @@
                 <td>4</td>
                 <td>1</td>
                 <td>0</td>
-                <td class="right" data-ratio="3 4">75%</td>
-            </tr>
-            <tr class="region">
-                <td class="name left"><a href="z_585999839401bd56_opensubtitlescom_py.html#t291">subliminal/providers/opensubtitlescom.py</a></td>
-                <td class="name left"><a href="z_585999839401bd56_opensubtitlescom_py.html#t291"><data value='info'>OpenSubtitlesComSubtitle.info</data></a></td>
-                <td>5</td>
-                <td>5</td>
-                <td>0</td>
-                <td class="right" data-ratio="0 5">0%</td>
-            </tr>
-            <tr class="region">
-                <td class="name left"><a href="z_585999839401bd56_opensubtitlescom_py.html#t299">subliminal/providers/opensubtitlescom.py</a></td>
-                <td class="name left"><a href="z_585999839401bd56_opensubtitlescom_py.html#t299"><data value='get_matches'>OpenSubtitlesComSubtitle.get_matches</data></a></td>
-                <td>13</td>
-                <td>1</td>
-                <td>0</td>
-                <td class="right" data-ratio="12 13">92%</td>
-            </tr>
-            <tr class="region">
-                <td class="name left"><a href="z_585999839401bd56_opensubtitlescom_py.html#t341">subliminal/providers/opensubtitlescom.py</a></td>
-                <td class="name left"><a href="z_585999839401bd56_opensubtitlescom_py.html#t341"><data value='wrapper'>requires_auth.wrapper</data></a></td>
-                <td>6</td>
                 <td>2</td>
-                <td>0</td>
+                <td>1</td>
                 <td class="right" data-ratio="4 6">67%</td>
             </tr>
             <tr class="region">
-                <td class="name left"><a href="z_585999839401bd56_opensubtitlescom_py.html#t404">subliminal/providers/opensubtitlescom.py</a></td>
-                <td class="name left"><a href="z_585999839401bd56_opensubtitlescom_py.html#t404"><data value='terminate'>OpenSubtitlesComProvider.terminate</data></a></td>
+                <td class="name left"><a href="z_585999839401bd56_opensubtitlescom_py.html#t301">subliminal/providers/opensubtitlescom.py</a></td>
+                <td class="name left"><a href="z_585999839401bd56_opensubtitlescom_py.html#t301"><data value='info'>OpenSubtitlesComSubtitle.info</data></a></td>
+                <td>5</td>
+                <td>5</td>
+                <td>0</td>
+                <td>4</td>
+                <td>0</td>
+                <td class="right" data-ratio="0 9">0%</td>
+            </tr>
+            <tr class="region">
+                <td class="name left"><a href="z_585999839401bd56_opensubtitlescom_py.html#t309">subliminal/providers/opensubtitlescom.py</a></td>
+                <td class="name left"><a href="z_585999839401bd56_opensubtitlescom_py.html#t309"><data value='get_matches'>OpenSubtitlesComSubtitle.get_matches</data></a></td>
+                <td>13</td>
+                <td>1</td>
+                <td>0</td>
+                <td>8</td>
+                <td>1</td>
+                <td class="right" data-ratio="19 21">90%</td>
+            </tr>
+            <tr class="region">
+                <td class="name left"><a href="z_585999839401bd56_opensubtitlescom_py.html#t351">subliminal/providers/opensubtitlescom.py</a></td>
+                <td class="name left"><a href="z_585999839401bd56_opensubtitlescom_py.html#t351"><data value='wrapper'>requires_auth.wrapper</data></a></td>
+                <td>6</td>
+                <td>2</td>
+                <td>0</td>
+                <td>4</td>
+                <td>1</td>
+                <td class="right" data-ratio="7 10">70%</td>
+            </tr>
+            <tr class="region">
+                <td class="name left"><a href="z_585999839401bd56_opensubtitlescom_py.html#t414">subliminal/providers/opensubtitlescom.py</a></td>
+                <td class="name left"><a href="z_585999839401bd56_opensubtitlescom_py.html#t414"><data value='terminate'>OpenSubtitlesComProvider.terminate</data></a></td>
                 <td>3</td>
                 <td>1</td>
                 <td>0</td>
-                <td class="right" data-ratio="2 3">67%</td>
+                <td>2</td>
+                <td>1</td>
+                <td class="right" data-ratio="3 5">60%</td>
             </tr>
             <tr class="region">
-                <td class="name left"><a href="z_585999839401bd56_opensubtitlescom_py.html#t412">subliminal/providers/opensubtitlescom.py</a></td>
-                <td class="name left"><a href="z_585999839401bd56_opensubtitlescom_py.html#t412"><data value='check_token'>OpenSubtitlesComProvider.check_token</data></a></td>
+                <td class="name left"><a href="z_585999839401bd56_opensubtitlescom_py.html#t422">subliminal/providers/opensubtitlescom.py</a></td>
+                <td class="name left"><a href="z_585999839401bd56_opensubtitlescom_py.html#t422"><data value='check_token'>OpenSubtitlesComProvider.check_token</data></a></td>
                 <td>12</td>
                 <td>5</td>
                 <td>0</td>
-                <td class="right" data-ratio="7 12">58%</td>
+                <td>8</td>
+                <td>3</td>
+                <td class="right" data-ratio="12 20">60%</td>
             </tr>
             <tr class="region">
-                <td class="name left"><a href="z_585999839401bd56_opensubtitlescom_py.html#t433">subliminal/providers/opensubtitlescom.py</a></td>
-                <td class="name left"><a href="z_585999839401bd56_opensubtitlescom_py.html#t433"><data value='login'>OpenSubtitlesComProvider.login</data></a></td>
+                <td class="name left"><a href="z_585999839401bd56_opensubtitlescom_py.html#t443">subliminal/providers/opensubtitlescom.py</a></td>
+                <td class="name left"><a href="z_585999839401bd56_opensubtitlescom_py.html#t443"><data value='login'>OpenSubtitlesComProvider.login</data></a></td>
                 <td>24</td>
                 <td>5</td>
                 <td>0</td>
-                <td class="right" data-ratio="19 24">79%</td>
+                <td>8</td>
+                <td>3</td>
+                <td class="right" data-ratio="24 32">75%</td>
             </tr>
             <tr class="region">
-                <td class="name left"><a href="z_585999839401bd56_opensubtitlescom_py.html#t470">subliminal/providers/opensubtitlescom.py</a></td>
-                <td class="name left"><a href="z_585999839401bd56_opensubtitlescom_py.html#t470"><data value='logout'>OpenSubtitlesComProvider.logout</data></a></td>
+                <td class="name left"><a href="z_585999839401bd56_opensubtitlescom_py.html#t480">subliminal/providers/opensubtitlescom.py</a></td>
+                <td class="name left"><a href="z_585999839401bd56_opensubtitlescom_py.html#t480"><data value='logout'>OpenSubtitlesComProvider.logout</data></a></td>
                 <td>4</td>
                 <td>1</td>
                 <td>0</td>
-                <td class="right" data-ratio="3 4">75%</td>
+                <td>2</td>
+                <td>1</td>
+                <td class="right" data-ratio="4 6">67%</td>
             </tr>
             <tr class="region">
-                <td class="name left"><a href="z_585999839401bd56_opensubtitlescom_py.html#t478">subliminal/providers/opensubtitlescom.py</a></td>
-                <td class="name left"><a href="z_585999839401bd56_opensubtitlescom_py.html#t478"><data value='reset_token'>OpenSubtitlesComProvider.reset_token</data></a></td>
+                <td class="name left"><a href="z_585999839401bd56_opensubtitlescom_py.html#t488">subliminal/providers/opensubtitlescom.py</a></td>
+                <td class="name left"><a href="z_585999839401bd56_opensubtitlescom_py.html#t488"><data value='reset_token'>OpenSubtitlesComProvider.reset_token</data></a></td>
                 <td>2</td>
                 <td>2</td>
+                <td>0</td>
+                <td>0</td>
                 <td>0</td>
                 <td class="right" data-ratio="0 2">0%</td>
             </tr>
             <tr class="region">
-                <td class="name left"><a href="z_585999839401bd56_opensubtitlescom_py.html#t484">subliminal/providers/opensubtitlescom.py</a></td>
-                <td class="name left"><a href="z_585999839401bd56_opensubtitlescom_py.html#t484"><data value='token'>OpenSubtitlesComProvider.token</data></a></td>
+                <td class="name left"><a href="z_585999839401bd56_opensubtitlescom_py.html#t494">subliminal/providers/opensubtitlescom.py</a></td>
+                <td class="name left"><a href="z_585999839401bd56_opensubtitlescom_py.html#t494"><data value='token'>OpenSubtitlesComProvider.token</data></a></td>
                 <td>9</td>
                 <td>1</td>
                 <td>0</td>
-                <td class="right" data-ratio="8 9">89%</td>
+                <td>6</td>
+                <td>1</td>
+                <td class="right" data-ratio="13 15">87%</td>
             </tr>
             <tr class="region">
-                <td class="name left"><a href="z_585999839401bd56_opensubtitlescom_py.html#t497">subliminal/providers/opensubtitlescom.py</a></td>
-                <td class="name left"><a href="z_585999839401bd56_opensubtitlescom_py.html#t497"><data value='token'>OpenSubtitlesComProvider.token</data></a></td>
+                <td class="name left"><a href="z_585999839401bd56_opensubtitlescom_py.html#t507">subliminal/providers/opensubtitlescom.py</a></td>
+                <td class="name left"><a href="z_585999839401bd56_opensubtitlescom_py.html#t507"><data value='token'>OpenSubtitlesComProvider.token</data></a></td>
                 <td>3</td>
                 <td>1</td>
                 <td>0</td>
-                <td class="right" data-ratio="2 3">67%</td>
+                <td>2</td>
+                <td>1</td>
+                <td class="right" data-ratio="3 5">60%</td>
             </tr>
             <tr class="region">
-                <td class="name left"><a href="z_585999839401bd56_opensubtitlescom_py.html#t504">subliminal/providers/opensubtitlescom.py</a></td>
-                <td class="name left"><a href="z_585999839401bd56_opensubtitlescom_py.html#t504"><data value='token'>OpenSubtitlesComProvider.token</data></a></td>
+                <td class="name left"><a href="z_585999839401bd56_opensubtitlescom_py.html#t514">subliminal/providers/opensubtitlescom.py</a></td>
+                <td class="name left"><a href="z_585999839401bd56_opensubtitlescom_py.html#t514"><data value='token'>OpenSubtitlesComProvider.token</data></a></td>
                 <td>4</td>
                 <td>1</td>
                 <td>0</td>
-                <td class="right" data-ratio="3 4">75%</td>
+                <td>4</td>
+                <td>1</td>
+                <td class="right" data-ratio="6 8">75%</td>
             </tr>
             <tr class="region">
-                <td class="name left"><a href="z_585999839401bd56_opensubtitlescom_py.html#t512">subliminal/providers/opensubtitlescom.py</a></td>
-                <td class="name left"><a href="z_585999839401bd56_opensubtitlescom_py.html#t512"><data value='user_infos'>OpenSubtitlesComProvider.user_infos</data></a></td>
+                <td class="name left"><a href="z_585999839401bd56_opensubtitlescom_py.html#t522">subliminal/providers/opensubtitlescom.py</a></td>
+                <td class="name left"><a href="z_585999839401bd56_opensubtitlescom_py.html#t522"><data value='user_infos'>OpenSubtitlesComProvider.user_infos</data></a></td>
                 <td>6</td>
                 <td>1</td>
                 <td>0</td>
-                <td class="right" data-ratio="5 6">83%</td>
+                <td>2</td>
+                <td>1</td>
+                <td class="right" data-ratio="6 8">75%</td>
             </tr>
             <tr class="region">
-                <td class="name left"><a href="z_585999839401bd56_opensubtitlescom_py.html#t523">subliminal/providers/opensubtitlescom.py</a></td>
-                <td class="name left"><a href="z_585999839401bd56_opensubtitlescom_py.html#t523"><data value='api_post'>OpenSubtitlesComProvider.api_post</data></a></td>
+                <td class="name left"><a href="z_585999839401bd56_opensubtitlescom_py.html#t533">subliminal/providers/opensubtitlescom.py</a></td>
+                <td class="name left"><a href="z_585999839401bd56_opensubtitlescom_py.html#t533"><data value='api_post'>OpenSubtitlesComProvider.api_post</data></a></td>
                 <td>12</td>
                 <td>6</td>
                 <td>0</td>
-                <td class="right" data-ratio="6 12">50%</td>
+                <td>4</td>
+                <td>1</td>
+                <td class="right" data-ratio="7 16">44%</td>
             </tr>
             <tr class="region">
-                <td class="name left"><a href="z_585999839401bd56_opensubtitlescom_py.html#t548">subliminal/providers/opensubtitlescom.py</a></td>
-                <td class="name left"><a href="z_585999839401bd56_opensubtitlescom_py.html#t548"><data value='api_get'>OpenSubtitlesComProvider.api_get</data></a></td>
+                <td class="name left"><a href="z_585999839401bd56_opensubtitlescom_py.html#t558">subliminal/providers/opensubtitlescom.py</a></td>
+                <td class="name left"><a href="z_585999839401bd56_opensubtitlescom_py.html#t558"><data value='api_get'>OpenSubtitlesComProvider.api_get</data></a></td>
                 <td>13</td>
                 <td>2</td>
                 <td>0</td>
-                <td class="right" data-ratio="11 13">85%</td>
+                <td>4</td>
+                <td>2</td>
+                <td class="right" data-ratio="13 17">76%</td>
             </tr>
             <tr class="region">
-                <td class="name left"><a href="z_585999839401bd56_opensubtitlescom_py.html#t575">subliminal/providers/opensubtitlescom.py</a></td>
-                <td class="name left"><a href="z_585999839401bd56_opensubtitlescom_py.html#t575"><data value='search'>OpenSubtitlesComProvider._search</data></a></td>
+                <td class="name left"><a href="z_585999839401bd56_opensubtitlescom_py.html#t585">subliminal/providers/opensubtitlescom.py</a></td>
+                <td class="name left"><a href="z_585999839401bd56_opensubtitlescom_py.html#t585"><data value='search'>OpenSubtitlesComProvider._search</data></a></td>
                 <td>8</td>
                 <td>1</td>
                 <td>0</td>
-                <td class="right" data-ratio="7 8">88%</td>
+                <td>4</td>
+                <td>1</td>
+                <td class="right" data-ratio="10 12">83%</td>
             </tr>
             <tr class="region">
-                <td class="name left"><a href="z_585999839401bd56_opensubtitlescom_py.html#t594">subliminal/providers/opensubtitlescom.py</a></td>
-                <td class="name left"><a href="z_585999839401bd56_opensubtitlescom_py.html#t594"><data value='make_query'>OpenSubtitlesComProvider._make_query</data></a></td>
+                <td class="name left"><a href="z_585999839401bd56_opensubtitlescom_py.html#t604">subliminal/providers/opensubtitlescom.py</a></td>
+                <td class="name left"><a href="z_585999839401bd56_opensubtitlescom_py.html#t604"><data value='make_query'>OpenSubtitlesComProvider._make_query</data></a></td>
                 <td>37</td>
                 <td>8</td>
                 <td>0</td>
-                <td class="right" data-ratio="29 37">78%</td>
+                <td>34</td>
+                <td>7</td>
+                <td class="right" data-ratio="54 71">76%</td>
             </tr>
             <tr class="region">
-                <td class="name left"><a href="z_585999839401bd56_opensubtitlescom_py.html#t733">subliminal/providers/opensubtitlescom.py</a></td>
-                <td class="name left"><a href="z_585999839401bd56_opensubtitlescom_py.html#t733"><data value='download_subtitle'>OpenSubtitlesComProvider.download_subtitle</data></a></td>
+                <td class="name left"><a href="z_585999839401bd56_opensubtitlescom_py.html#t676">subliminal/providers/opensubtitlescom.py</a></td>
+                <td class="name left"><a href="z_585999839401bd56_opensubtitlescom_py.html#t676"><data value='query'>OpenSubtitlesComProvider.query</data></a></td>
+                <td>18</td>
+                <td>0</td>
+                <td>0</td>
+                <td>10</td>
+                <td>2</td>
+                <td class="right" data-ratio="26 28">93%</td>
+            </tr>
+            <tr class="region">
+                <td class="name left"><a href="z_585999839401bd56_opensubtitlescom_py.html#t725">subliminal/providers/opensubtitlescom.py</a></td>
+                <td class="name left"><a href="z_585999839401bd56_opensubtitlescom_py.html#t725"><data value='list_subtitles'>OpenSubtitlesComProvider.list_subtitles</data></a></td>
+                <td>8</td>
+                <td>0</td>
+                <td>0</td>
+                <td>4</td>
+                <td>1</td>
+                <td class="right" data-ratio="11 12">92%</td>
+            </tr>
+            <tr class="region">
+                <td class="name left"><a href="z_585999839401bd56_opensubtitlescom_py.html#t748">subliminal/providers/opensubtitlescom.py</a></td>
+                <td class="name left"><a href="z_585999839401bd56_opensubtitlescom_py.html#t748"><data value='download_subtitle'>OpenSubtitlesComProvider.download_subtitle</data></a></td>
                 <td>19</td>
                 <td>8</td>
                 <td>0</td>
-                <td class="right" data-ratio="11 19">58%</td>
+                <td>10</td>
+                <td>4</td>
+                <td class="right" data-ratio="15 29">52%</td>
             </tr>
             <tr class="region">
-                <td class="name left"><a href="z_585999839401bd56_opensubtitlescom_py.html#t823">subliminal/providers/opensubtitlescom.py</a></td>
-                <td class="name left"><a href="z_585999839401bd56_opensubtitlescom_py.html#t823"><data value='checked'>checked</data></a></td>
+                <td class="name left"><a href="z_585999839401bd56_opensubtitlescom_py.html#t838">subliminal/providers/opensubtitlescom.py</a></td>
+                <td class="name left"><a href="z_585999839401bd56_opensubtitlescom_py.html#t838"><data value='checked'>checked</data></a></td>
                 <td>18</td>
                 <td>6</td>
                 <td>0</td>
-                <td class="right" data-ratio="12 18">67%</td>
+                <td>16</td>
+                <td>6</td>
+                <td class="right" data-ratio="22 34">65%</td>
             </tr>
             <tr class="region">
                 <td class="name left"><a href="z_585999839401bd56_podnapisi_py.html#t62">subliminal/providers/podnapisi.py</a></td>
                 <td class="name left"><a href="z_585999839401bd56_podnapisi_py.html#t62"><data value='info'>PodnapisiSubtitle.info</data></a></td>
                 <td>1</td>
                 <td>1</td>
+                <td>0</td>
+                <td>0</td>
                 <td>0</td>
                 <td class="right" data-ratio="0 1">0%</td>
             </tr>
@@ -694,7 +892,9 @@
                 <td>3</td>
                 <td>1</td>
                 <td>0</td>
-                <td class="right" data-ratio="2 3">67%</td>
+                <td>2</td>
+                <td>1</td>
+                <td class="right" data-ratio="3 5">60%</td>
             </tr>
             <tr class="region">
                 <td class="name left"><a href="z_585999839401bd56_podnapisi_py.html#t115">subliminal/providers/podnapisi.py</a></td>
@@ -702,7 +902,9 @@
                 <td>44</td>
                 <td>7</td>
                 <td>0</td>
-                <td class="right" data-ratio="37 44">84%</td>
+                <td>14</td>
+                <td>4</td>
+                <td class="right" data-ratio="47 58">81%</td>
             </tr>
             <tr class="region">
                 <td class="name left"><a href="z_585999839401bd56_podnapisi_py.html#t209">subliminal/providers/podnapisi.py</a></td>
@@ -710,7 +912,9 @@
                 <td>13</td>
                 <td>2</td>
                 <td>0</td>
-                <td class="right" data-ratio="11 13">85%</td>
+                <td>8</td>
+                <td>2</td>
+                <td class="right" data-ratio="17 21">81%</td>
             </tr>
             <tr class="region">
                 <td class="name left"><a href="z_585999839401bd56_podnapisi_py.html#t232">subliminal/providers/podnapisi.py</a></td>
@@ -718,7 +922,9 @@
                 <td>10</td>
                 <td>3</td>
                 <td>0</td>
-                <td class="right" data-ratio="7 10">70%</td>
+                <td>4</td>
+                <td>2</td>
+                <td class="right" data-ratio="9 14">64%</td>
             </tr>
             <tr class="region">
                 <td class="name left"><a href="z_585999839401bd56_tvsubtitles_py.html#t72">subliminal/providers/tvsubtitles.py</a></td>
@@ -726,7 +932,19 @@
                 <td>1</td>
                 <td>1</td>
                 <td>0</td>
+                <td>0</td>
+                <td>0</td>
                 <td class="right" data-ratio="0 1">0%</td>
+            </tr>
+            <tr class="region">
+                <td class="name left"><a href="z_585999839401bd56_tvsubtitles_py.html#t76">subliminal/providers/tvsubtitles.py</a></td>
+                <td class="name left"><a href="z_585999839401bd56_tvsubtitles_py.html#t76"><data value='get_matches'>TVsubtitlesSubtitle.get_matches</data></a></td>
+                <td>6</td>
+                <td>0</td>
+                <td>0</td>
+                <td>4</td>
+                <td>2</td>
+                <td class="right" data-ratio="8 10">80%</td>
             </tr>
             <tr class="region">
                 <td class="name left"><a href="z_585999839401bd56_tvsubtitles_py.html#t145">subliminal/providers/tvsubtitles.py</a></td>
@@ -734,7 +952,9 @@
                 <td>3</td>
                 <td>1</td>
                 <td>0</td>
-                <td class="right" data-ratio="2 3">67%</td>
+                <td>2</td>
+                <td>1</td>
+                <td class="right" data-ratio="3 5">60%</td>
             </tr>
             <tr class="region">
                 <td class="name left"><a href="z_585999839401bd56_tvsubtitles_py.html#t152">subliminal/providers/tvsubtitles.py</a></td>
@@ -742,7 +962,9 @@
                 <td>22</td>
                 <td>3</td>
                 <td>0</td>
-                <td class="right" data-ratio="19 22">86%</td>
+                <td>10</td>
+                <td>2</td>
+                <td class="right" data-ratio="27 32">84%</td>
             </tr>
             <tr class="region">
                 <td class="name left"><a href="z_585999839401bd56_tvsubtitles_py.html#t191">subliminal/providers/tvsubtitles.py</a></td>
@@ -750,7 +972,9 @@
                 <td>17</td>
                 <td>1</td>
                 <td>0</td>
-                <td class="right" data-ratio="16 17">94%</td>
+                <td>8</td>
+                <td>1</td>
+                <td class="right" data-ratio="23 25">92%</td>
             </tr>
             <tr class="region">
                 <td class="name left"><a href="z_585999839401bd56_tvsubtitles_py.html#t227">subliminal/providers/tvsubtitles.py</a></td>
@@ -758,7 +982,9 @@
                 <td>20</td>
                 <td>1</td>
                 <td>0</td>
-                <td class="right" data-ratio="19 20">95%</td>
+                <td>6</td>
+                <td>1</td>
+                <td class="right" data-ratio="24 26">92%</td>
             </tr>
             <tr class="region">
                 <td class="name left"><a href="z_585999839401bd56_tvsubtitles_py.html#t276">subliminal/providers/tvsubtitles.py</a></td>
@@ -766,7 +992,9 @@
                 <td>13</td>
                 <td>3</td>
                 <td>0</td>
-                <td class="right" data-ratio="10 13">77%</td>
+                <td>8</td>
+                <td>3</td>
+                <td class="right" data-ratio="15 21">71%</td>
             </tr>
             <tr class="region">
                 <td class="name left"><a href="z_585999839401bd56_tvsubtitles_py.html#t301">subliminal/providers/tvsubtitles.py</a></td>
@@ -774,45 +1002,37 @@
                 <td>21</td>
                 <td>5</td>
                 <td>0</td>
-                <td class="right" data-ratio="16 21">76%</td>
-            </tr>
-            <tr class="region">
-                <td class="name left"><a href="z_85f374613d351c95_hash_py.html#t75">subliminal/refiners/hash.py</a></td>
-                <td class="name left"><a href="z_85f374613d351c95_hash_py.html#t75"><data value='hash_napiprojekt'>hash_napiprojekt</data></a></td>
+                <td>8</td>
                 <td>4</td>
-                <td>4</td>
-                <td>0</td>
-                <td class="right" data-ratio="0 4">0%</td>
+                <td class="right" data-ratio="20 29">69%</td>
             </tr>
             <tr class="region">
-                <td class="name left"><a href="z_85f374613d351c95_hash_py.html#t89">subliminal/refiners/hash.py</a></td>
-                <td class="name left"><a href="z_85f374613d351c95_hash_py.html#t89"><data value='hash_shooter'>hash_shooter</data></a></td>
-                <td>11</td>
-                <td>11</td>
+                <td class="name left"><a href="z_85f374613d351c95_hash_py.html#t63">subliminal/refiners/hash.py</a></td>
+                <td class="name left"><a href="z_85f374613d351c95_hash_py.html#t63"><data value='refine'>refine</data></a></td>
+                <td>18</td>
+                <td>18</td>
                 <td>0</td>
-                <td class="right" data-ratio="0 11">0%</td>
+                <td>12</td>
+                <td>0</td>
+                <td class="right" data-ratio="0 30">0%</td>
             </tr>
             <tr class="region">
-                <td class="name left"><a href="z_85f374613d351c95_hash_py.html#t121">subliminal/refiners/hash.py</a></td>
-                <td class="name left"><a href="z_85f374613d351c95_hash_py.html#t121"><data value='refine'>refine</data></a></td>
-                <td>17</td>
-                <td>4</td>
-                <td>0</td>
-                <td class="right" data-ratio="13 17">76%</td>
-            </tr>
-            <tr class="region">
-                <td class="name left"><a href="z_85f374613d351c95_metadata_py.html#t19">subliminal/refiners/metadata.py</a></td>
-                <td class="name left"><a href="z_85f374613d351c95_metadata_py.html#t19"><data value='refine'>refine</data></a></td>
+                <td class="name left"><a href="z_85f374613d351c95_metadata_py.html#t21">subliminal/refiners/metadata.py</a></td>
+                <td class="name left"><a href="z_85f374613d351c95_metadata_py.html#t21"><data value='refine'>refine</data></a></td>
                 <td>58</td>
                 <td>28</td>
                 <td>0</td>
-                <td class="right" data-ratio="30 58">52%</td>
+                <td>34</td>
+                <td>12</td>
+                <td class="right" data-ratio="46 92">50%</td>
             </tr>
             <tr class="region">
                 <td class="name left"><a href="z_85f374613d351c95_omdb_py.html#t25">subliminal/refiners/omdb.py</a></td>
                 <td class="name left"><a href="z_85f374613d351c95_omdb_py.html#t25"><data value='split_year_omdb'>split_year_omdb</data></a></td>
                 <td>5</td>
                 <td>3</td>
+                <td>0</td>
+                <td>0</td>
                 <td>0</td>
                 <td class="right" data-ratio="2 5">40%</td>
             </tr>
@@ -822,7 +1042,9 @@
                 <td>9</td>
                 <td>9</td>
                 <td>0</td>
-                <td class="right" data-ratio="0 9">0%</td>
+                <td>4</td>
+                <td>0</td>
+                <td class="right" data-ratio="0 13">0%</td>
             </tr>
             <tr class="region">
                 <td class="name left"><a href="z_85f374613d351c95_omdb_py.html#t87">subliminal/refiners/omdb.py</a></td>
@@ -830,7 +1052,9 @@
                 <td>10</td>
                 <td>2</td>
                 <td>0</td>
-                <td class="right" data-ratio="8 10">80%</td>
+                <td>4</td>
+                <td>1</td>
+                <td class="right" data-ratio="11 14">79%</td>
             </tr>
             <tr class="region">
                 <td class="name left"><a href="z_85f374613d351c95_omdb_py.html#t114">subliminal/refiners/omdb.py</a></td>
@@ -838,7 +1062,9 @@
                 <td>12</td>
                 <td>3</td>
                 <td>0</td>
-                <td class="right" data-ratio="9 12">75%</td>
+                <td>6</td>
+                <td>2</td>
+                <td class="right" data-ratio="13 18">72%</td>
             </tr>
             <tr class="region">
                 <td class="name left"><a href="z_85f374613d351c95_omdb_py.html#t174">subliminal/refiners/omdb.py</a></td>
@@ -846,7 +1072,9 @@
                 <td>12</td>
                 <td>1</td>
                 <td>0</td>
-                <td class="right" data-ratio="11 12">92%</td>
+                <td>6</td>
+                <td>2</td>
+                <td class="right" data-ratio="15 18">83%</td>
             </tr>
             <tr class="region">
                 <td class="name left"><a href="z_85f374613d351c95_omdb_py.html#t198">subliminal/refiners/omdb.py</a></td>
@@ -854,7 +1082,9 @@
                 <td>4</td>
                 <td>1</td>
                 <td>0</td>
-                <td class="right" data-ratio="3 4">75%</td>
+                <td>2</td>
+                <td>1</td>
+                <td class="right" data-ratio="4 6">67%</td>
             </tr>
             <tr class="region">
                 <td class="name left"><a href="z_85f374613d351c95_omdb_py.html#t207">subliminal/refiners/omdb.py</a></td>
@@ -862,7 +1092,9 @@
                 <td>26</td>
                 <td>6</td>
                 <td>0</td>
-                <td class="right" data-ratio="20 26">77%</td>
+                <td>14</td>
+                <td>4</td>
+                <td class="right" data-ratio="30 40">75%</td>
             </tr>
             <tr class="region">
                 <td class="name left"><a href="z_85f374613d351c95_omdb_py.html#t248">subliminal/refiners/omdb.py</a></td>
@@ -870,7 +1102,9 @@
                 <td>26</td>
                 <td>8</td>
                 <td>0</td>
-                <td class="right" data-ratio="18 26">69%</td>
+                <td>14</td>
+                <td>5</td>
+                <td class="right" data-ratio="27 40">68%</td>
             </tr>
             <tr class="region">
                 <td class="name left"><a href="z_85f374613d351c95_omdb_py.html#t293">subliminal/refiners/omdb.py</a></td>
@@ -878,13 +1112,17 @@
                 <td>7</td>
                 <td>1</td>
                 <td>0</td>
-                <td class="right" data-ratio="6 7">86%</td>
+                <td>6</td>
+                <td>2</td>
+                <td class="right" data-ratio="10 13">77%</td>
             </tr>
             <tr class="region">
                 <td class="name left"><a href="z_85f374613d351c95_tmdb_py.html#t21">subliminal/refiners/tmdb.py</a></td>
                 <td class="name left"><a href="z_85f374613d351c95_tmdb_py.html#t21"><data value='split_year'>split_year</data></a></td>
                 <td>5</td>
                 <td>3</td>
+                <td>0</td>
+                <td>0</td>
                 <td>0</td>
                 <td class="right" data-ratio="2 5">40%</td>
             </tr>
@@ -894,7 +1132,9 @@
                 <td>21</td>
                 <td>3</td>
                 <td>0</td>
-                <td class="right" data-ratio="18 21">86%</td>
+                <td>12</td>
+                <td>3</td>
+                <td class="right" data-ratio="27 33">82%</td>
             </tr>
             <tr class="region">
                 <td class="name left"><a href="z_85f374613d351c95_tmdb_py.html#t172">subliminal/refiners/tmdb.py</a></td>
@@ -902,7 +1142,9 @@
                 <td>5</td>
                 <td>1</td>
                 <td>0</td>
-                <td class="right" data-ratio="4 5">80%</td>
+                <td>2</td>
+                <td>1</td>
+                <td class="right" data-ratio="5 7">71%</td>
             </tr>
             <tr class="region">
                 <td class="name left"><a href="z_85f374613d351c95_tmdb_py.html#t186">subliminal/refiners/tmdb.py</a></td>
@@ -910,7 +1152,9 @@
                 <td>5</td>
                 <td>5</td>
                 <td>0</td>
-                <td class="right" data-ratio="0 5">0%</td>
+                <td>2</td>
+                <td>0</td>
+                <td class="right" data-ratio="0 7">0%</td>
             </tr>
             <tr class="region">
                 <td class="name left"><a href="z_85f374613d351c95_tmdb_py.html#t200">subliminal/refiners/tmdb.py</a></td>
@@ -918,7 +1162,19 @@
                 <td>5</td>
                 <td>5</td>
                 <td>0</td>
-                <td class="right" data-ratio="0 5">0%</td>
+                <td>2</td>
+                <td>0</td>
+                <td class="right" data-ratio="0 7">0%</td>
+            </tr>
+            <tr class="region">
+                <td class="name left"><a href="z_85f374613d351c95_tmdb_py.html#t221">subliminal/refiners/tmdb.py</a></td>
+                <td class="name left"><a href="z_85f374613d351c95_tmdb_py.html#t221"><data value='apikey'>TMDBClient.apikey</data></a></td>
+                <td>5</td>
+                <td>0</td>
+                <td>0</td>
+                <td>4</td>
+                <td>1</td>
+                <td class="right" data-ratio="8 9">89%</td>
             </tr>
             <tr class="region">
                 <td class="name left"><a href="z_85f374613d351c95_tmdb_py.html#t231">subliminal/refiners/tmdb.py</a></td>
@@ -926,7 +1182,9 @@
                 <td>23</td>
                 <td>5</td>
                 <td>6</td>
-                <td class="right" data-ratio="18 23">78%</td>
+                <td>6</td>
+                <td>3</td>
+                <td class="right" data-ratio="21 29">72%</td>
             </tr>
             <tr class="region">
                 <td class="name left"><a href="z_85f374613d351c95_tmdb_py.html#t276">subliminal/refiners/tmdb.py</a></td>
@@ -934,7 +1192,19 @@
                 <td>15</td>
                 <td>5</td>
                 <td>0</td>
-                <td class="right" data-ratio="10 15">67%</td>
+                <td>6</td>
+                <td>3</td>
+                <td class="right" data-ratio="13 21">62%</td>
+            </tr>
+            <tr class="region">
+                <td class="name left"><a href="z_85f374613d351c95_tmdb_py.html#t304">subliminal/refiners/tmdb.py</a></td>
+                <td class="name left"><a href="z_85f374613d351c95_tmdb_py.html#t304"><data value='refine'>refine</data></a></td>
+                <td>9</td>
+                <td>0</td>
+                <td>0</td>
+                <td>6</td>
+                <td>1</td>
+                <td class="right" data-ratio="14 15">93%</td>
             </tr>
             <tr class="region">
                 <td class="name left"><a href="z_85f374613d351c95_tvdb_py.html#t35">subliminal/refiners/tvdb.py</a></td>
@@ -942,7 +1212,9 @@
                 <td>5</td>
                 <td>1</td>
                 <td>0</td>
-                <td class="right" data-ratio="4 5">80%</td>
+                <td>4</td>
+                <td>1</td>
+                <td class="right" data-ratio="7 9">78%</td>
             </tr>
             <tr class="region">
                 <td class="name left"><a href="z_85f374613d351c95_tvdb_py.html#t169">subliminal/refiners/tvdb.py</a></td>
@@ -950,7 +1222,9 @@
                 <td>10</td>
                 <td>2</td>
                 <td>0</td>
-                <td class="right" data-ratio="8 10">80%</td>
+                <td>6</td>
+                <td>2</td>
+                <td class="right" data-ratio="12 16">75%</td>
             </tr>
             <tr class="region">
                 <td class="name left"><a href="z_85f374613d351c95_tvdb_py.html#t246">subliminal/refiners/tvdb.py</a></td>
@@ -958,7 +1232,9 @@
                 <td>5</td>
                 <td>1</td>
                 <td>0</td>
-                <td class="right" data-ratio="4 5">80%</td>
+                <td>2</td>
+                <td>1</td>
+                <td class="right" data-ratio="5 7">71%</td>
             </tr>
             <tr class="region">
                 <td class="name left"><a href="z_85f374613d351c95_tvdb_py.html#t263">subliminal/refiners/tvdb.py</a></td>
@@ -966,7 +1242,9 @@
                 <td>6</td>
                 <td>6</td>
                 <td>0</td>
-                <td class="right" data-ratio="0 6">0%</td>
+                <td>2</td>
+                <td>0</td>
+                <td class="right" data-ratio="0 8">0%</td>
             </tr>
             <tr class="region">
                 <td class="name left"><a href="z_85f374613d351c95_tvdb_py.html#t283">subliminal/refiners/tvdb.py</a></td>
@@ -974,7 +1252,9 @@
                 <td>4</td>
                 <td>1</td>
                 <td>0</td>
-                <td class="right" data-ratio="3 4">75%</td>
+                <td>2</td>
+                <td>1</td>
+                <td class="right" data-ratio="4 6">67%</td>
             </tr>
             <tr class="region">
                 <td class="name left"><a href="z_85f374613d351c95_tvdb_py.html#t300">subliminal/refiners/tvdb.py</a></td>
@@ -982,7 +1262,9 @@
                 <td>5</td>
                 <td>1</td>
                 <td>0</td>
-                <td class="right" data-ratio="4 5">80%</td>
+                <td>2</td>
+                <td>1</td>
+                <td class="right" data-ratio="5 7">71%</td>
             </tr>
             <tr class="region">
                 <td class="name left"><a href="z_85f374613d351c95_tvdb_py.html#t322">subliminal/refiners/tvdb.py</a></td>
@@ -990,7 +1272,9 @@
                 <td>5</td>
                 <td>2</td>
                 <td>0</td>
-                <td class="right" data-ratio="3 5">60%</td>
+                <td>4</td>
+                <td>2</td>
+                <td class="right" data-ratio="5 9">56%</td>
             </tr>
             <tr class="region">
                 <td class="name left"><a href="z_85f374613d351c95_tvdb_py.html#t339">subliminal/refiners/tvdb.py</a></td>
@@ -998,142 +1282,64 @@
                 <td>74</td>
                 <td>13</td>
                 <td>6</td>
-                <td class="right" data-ratio="61 74">82%</td>
+                <td>34</td>
+                <td>7</td>
+                <td class="right" data-ratio="88 108">81%</td>
             </tr>
             <tr class="region">
-                <td class="name left"><a href="z_a87be9ec535b46d6_score_py.html#t102">subliminal/score.py</a></td>
-                <td class="name left"><a href="z_a87be9ec535b46d6_score_py.html#t102"><data value='clip'>clip</data></a></td>
-                <td>5</td>
-                <td>5</td>
+                <td class="name left"><a href="z_a87be9ec535b46d6_score_py.html#t135">subliminal/score.py</a></td>
+                <td class="name left"><a href="z_a87be9ec535b46d6_score_py.html#t135"><data value='match_hearing_impaired'>match_hearing_impaired</data></a></td>
+                <td>1</td>
+                <td>1</td>
                 <td>0</td>
-                <td class="right" data-ratio="0 5">0%</td>
-            </tr>
-            <tr class="region">
-                <td class="name left"><a href="z_a87be9ec535b46d6_score_py.html#t136">subliminal/score.py</a></td>
-                <td class="name left"><a href="z_a87be9ec535b46d6_score_py.html#t136"><data value='get_scores'>get_scores</data></a></td>
-                <td>5</td>
-                <td>1</td>
-                <td>1</td>
-                <td class="right" data-ratio="4 5">80%</td>
-            </tr>
-            <tr class="region">
-                <td class="name left"><a href="z_a87be9ec535b46d6_score_py.html#t165">subliminal/score.py</a></td>
-                <td class="name left"><a href="z_a87be9ec535b46d6_score_py.html#t165"><data value='compute_score'>compute_score</data></a></td>
-                <td>38</td>
-                <td>12</td>
                 <td>0</td>
-                <td class="right" data-ratio="26 38">68%</td>
-            </tr>
-            <tr class="region">
-                <td class="name left"><a href="z_a87be9ec535b46d6_subtitle_py.html#t137">subliminal/subtitle.py</a></td>
-                <td class="name left"><a href="z_a87be9ec535b46d6_subtitle_py.html#t137"><data value='info'>Subtitle.info</data></a></td>
-                <td>1</td>
-                <td>1</td>
                 <td>0</td>
                 <td class="right" data-ratio="0 1">0%</td>
             </tr>
             <tr class="region">
-                <td class="name left"><a href="z_a87be9ec535b46d6_subtitle_py.html#t185">subliminal/subtitle.py</a></td>
-                <td class="name left"><a href="z_a87be9ec535b46d6_subtitle_py.html#t185"><data value='reencode'>Subtitle.reencode</data></a></td>
-                <td>11</td>
-                <td>4</td>
-                <td>0</td>
-                <td class="right" data-ratio="7 11">64%</td>
-            </tr>
-            <tr class="region">
-                <td class="name left"><a href="z_a87be9ec535b46d6_subtitle_py.html#t225">subliminal/subtitle.py</a></td>
-                <td class="name left"><a href="z_a87be9ec535b46d6_subtitle_py.html#t225"><data value='check_is_valid'>Subtitle._check_is_valid</data></a></td>
+                <td class="name left"><a href="z_a87be9ec535b46d6_score_py.html#t144">subliminal/score.py</a></td>
+                <td class="name left"><a href="z_a87be9ec535b46d6_score_py.html#t144"><data value='compute_score'>compute_score</data></a></td>
+                <td>32</td>
+                <td>10</td>
+                <td>3</td>
                 <td>18</td>
                 <td>5</td>
-                <td>0</td>
-                <td class="right" data-ratio="13 18">72%</td>
-            </tr>
-            <tr class="region">
-                <td class="name left"><a href="z_a87be9ec535b46d6_subtitle_py.html#t263">subliminal/subtitle.py</a></td>
-                <td class="name left"><a href="z_a87be9ec535b46d6_subtitle_py.html#t263"><data value='guess_encoding'>Subtitle.guess_encoding</data></a></td>
-                <td>50</td>
-                <td>15</td>
-                <td>0</td>
                 <td class="right" data-ratio="35 50">70%</td>
             </tr>
             <tr class="region">
-                <td class="name left"><a href="z_a87be9ec535b46d6_subtitle_py.html#t410">subliminal/subtitle.py</a></td>
-                <td class="name left"><a href="z_a87be9ec535b46d6_subtitle_py.html#t410"><data value='hash__'>Subtitle.__hash__</data></a></td>
-                <td>1</td>
-                <td>1</td>
+                <td class="name left"><a href="z_a87be9ec535b46d6_subtitle_py.html#t448">subliminal/subtitle.py</a></td>
+                <td class="name left"><a href="z_a87be9ec535b46d6_subtitle_py.html#t448"><data value='info'>EmbeddedSubtitle.info</data></a></td>
+                <td>6</td>
                 <td>0</td>
-                <td class="right" data-ratio="0 1">0%</td>
-            </tr>
-            <tr class="region">
-                <td class="name left"><a href="z_a87be9ec535b46d6_subtitle_py.html#t417">subliminal/subtitle.py</a></td>
-                <td class="name left"><a href="z_a87be9ec535b46d6_subtitle_py.html#t417"><data value='get_subtitle_format'>get_subtitle_format</data></a></td>
-                <td>9</td>
-                <td>3</td>
                 <td>0</td>
-                <td class="right" data-ratio="6 9">67%</td>
-            </tr>
-            <tr class="region">
-                <td class="name left"><a href="z_a87be9ec535b46d6_utils_py.html#t117">subliminal/utils.py</a></td>
-                <td class="name left"><a href="z_a87be9ec535b46d6_utils_py.html#t117"><data value='matches_title'>matches_title</data></a></td>
-                <td>11</td>
-                <td>2</td>
-                <td>0</td>
-                <td class="right" data-ratio="9 11">82%</td>
-            </tr>
-            <tr class="region">
-                <td class="name left"><a href="z_a87be9ec535b46d6_utils_py.html#t146">subliminal/utils.py</a></td>
-                <td class="name left"><a href="z_a87be9ec535b46d6_utils_py.html#t146"><data value='handle_exception'>handle_exception</data></a></td>
-                <td>9</td>
                 <td>4</td>
-                <td>0</td>
-                <td class="right" data-ratio="5 9">56%</td>
-            </tr>
-            <tr class="region">
-                <td class="name left"><a href="z_a87be9ec535b46d6_video_py.html#t248">subliminal/video.py</a></td>
-                <td class="name left"><a href="z_a87be9ec535b46d6_video_py.html#t248"><data value='repr__'>Video.__repr__</data></a></td>
                 <td>1</td>
-                <td>1</td>
-                <td>0</td>
-                <td class="right" data-ratio="0 1">0%</td>
-            </tr>
-            <tr class="region">
-                <td class="name left"><a href="z_a87be9ec535b46d6_video_py.html#t381">subliminal/video.py</a></td>
-                <td class="name left"><a href="z_a87be9ec535b46d6_video_py.html#t381"><data value='repr__'>Episode.__repr__</data></a></td>
-                <td>1</td>
-                <td>1</td>
-                <td>0</td>
-                <td class="right" data-ratio="0 1">0%</td>
-            </tr>
-            <tr class="region">
-                <td class="name left"><a href="z_a87be9ec535b46d6_video_py.html#t470">subliminal/video.py</a></td>
-                <td class="name left"><a href="z_a87be9ec535b46d6_video_py.html#t470"><data value='repr__'>Movie.__repr__</data></a></td>
-                <td>1</td>
-                <td>1</td>
-                <td>0</td>
-                <td class="right" data-ratio="0 1">0%</td>
+                <td class="right" data-ratio="9 10">90%</td>
             </tr>
         </tbody>
         <tfoot>
             <tr class="total">
                 <td class="name left">Total</td>
                 <td class="name left">&nbsp;</td>
-                <td>3248</td>
-                <td>527</td>
-                <td>114</td>
-                <td class="right" data-ratio="2721 3248">84%</td>
+                <td>3102</td>
+                <td>459</td>
+                <td>424</td>
+                <td>960</td>
+                <td>201</td>
+                <td class="right" data-ratio="3302 4062">81%</td>
             </tr>
         </tfoot>
     </table>
     <p id="no_rows">
         No items found using the specified filter.
     </p>
-        <p>177 functions skipped due to complete coverage.</p>
+        <p>160 functions skipped due to complete coverage.</p>
 </main>
 <footer>
     <div class="content">
         <p>
-            <a class="nav" href="https://coverage.readthedocs.io/en/7.5.3">coverage.py v7.5.3</a>,
-            created at 2024-06-23 15:54 +0000
+            <a class="nav" href="https://coverage.readthedocs.io/en/7.6.4">coverage.py v7.6.4</a>,
+            created at 2024-11-11 23:20 +0000
         </p>
     </div>
     <aside class="hidden">
