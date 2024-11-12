@@ -83,8 +83,11 @@ Both automatic and manual processes described above follow the same steps from t
 
 * After all tests pass and the PR has been approved, merge the PR.
   Merging the PR will trigger the
-  [publish workflow](https://github.com/pytest-dev/pytest/actions/workflows/publish.yaml),
+  [tag-release workflow](https://github.com/Diaoul/subliminal/actions/workflows/tag-release.yaml), that will add a release tag.
+
+  This new tag will then trigger the
+  [publish workflow](https://github.com/Diaoul/subliminal/actions/workflows/publish.yaml),
   using the ``release-MAJOR.MINOR.PATCH`` branch as source.
 
-  This job will tag the new version and publish a draft for a Github release.
+  This job will publish a draft for a Github release.
   When the Github release draft is published, the same workflow will publish to PyPI.
