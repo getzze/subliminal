@@ -3,6 +3,12 @@ Changelog
 
 .. towncrier release notes start
 
+`v2.2.2dev7 <https://github.com/Diaoul/subliminal/tree/2.2.2dev7>`_ (2024-11-12)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+No significant changes.
+
+
 `v2.2.2dev6 <https://github.com/Diaoul/subliminal/tree/2.2.2dev6>`_ (2024-11-12)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
