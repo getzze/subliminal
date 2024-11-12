@@ -49,24 +49,21 @@ jobs:
       id-token: write
       contents: write
     steps:
-    - name: Fetch version
-      id: version
-      run: |
-        VERSION=${GITHUB_HEAD_REF#release-}
-        echo Version: $VERSION
-        echo "VERSION=$VERSION" >> $GITHUB_ENV
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
-    - name: Push tag with version
-      runs-on: ubuntu-latest
-      steps:
-        - uses: actions/checkout@v4
-          with:
-            fetch-depth: 0
+      - name: Fetch version
+        id: version
+        run: |
+          VERSION=${GITHUB_HEAD_REF#release-}
+          echo Version: $VERSION
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
 
-        - name: Tag the commit
-          run: |
-            git tag --annotate --message="Release version ${{ VERSION }}" ${{ VERSION }} ${{ github.sha }}
-            git push origin ${{ VERSION }}
+      - name: Tag the commit
+        run: |
+          git tag --annotate --message="Release version ${{ VERSION }}" ${{ VERSION }} ${{ github.sha }}
+          git push origin ${{ VERSION }}
 
   github-release:
     name: Make a GitHub Release and upload Python package.
