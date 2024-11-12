@@ -53,17 +53,12 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Fetch version
-        id: version
-        run: |
-          VERSION=${GITHUB_HEAD_REF#release-}
-          echo Version: $VERSION
-          echo "VERSION=$VERSION" >> $GITHUB_ENV
-
       - name: Tag the commit
         run: |
-          git tag --annotate --message="Release version ${{ VERSION }}" ${{ VERSION }} ${{ github.sha }}
-          git push origin ${{ VERSION }}
+          RELEASE_VERSION=${GITHUB_HEAD_REF#release-}
+          echo Release version: $RELEASE_VERSION
+          git tag --annotate --message="Release version ${{ RELEASE_VERSION }}" ${{ RELEASE_VERSION }} ${{ github.sha }}
+          git push origin ${{ RELEASE_VERSION }}
 
   github-release:
     name: Make a GitHub Release and upload Python package.
