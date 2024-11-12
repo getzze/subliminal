@@ -77,7 +77,7 @@ def check_docs() -> None:
 def changelog(version: str, *, write_out: bool = False) -> None:
     """Call towncrier to generate the changelog."""
     addopts = [] if write_out else ['--draft']
-    check_call(['towncrier', '--yes', '--version', version, *addopts])
+    check_call(['towncrier', 'build', '--yes', '--version', version, *addopts])
 
 
 def bump_version(version: str) -> None:
