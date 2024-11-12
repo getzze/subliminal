@@ -73,6 +73,10 @@ def find_next_version(base_branch: str, *, is_major: bool, is_minor: bool, prere
     valid_versions.sort()
     last_version = valid_versions[-1]
 
+    print(f'Current version from git tag: {Fore.CYAN}{last_version}')
+    bump_str = 'major' if is_major else 'minor' if is_minor else 'patch'
+    print(f'Bump {bump_str} version')
+
     if is_major:
         return f'{last_version[0]+1}.0.0{prerelease}'
     if is_minor:

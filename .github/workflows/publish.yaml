@@ -18,6 +18,9 @@ permissions:
   contents: read
   id-token: write
 
+env:
+  FORCE_COLOR: "1"
+
 # https://packaging.python.org/en/latest/guides/publishing-package-distribution-releases-using-github-actions-ci-cd-workflows/
 jobs:
   # Always build & lint package.
