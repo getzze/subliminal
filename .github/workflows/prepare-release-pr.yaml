@@ -1,4 +1,4 @@
-name: prepare release pr
+name: Prepare release PR
 
 on:
   workflow_dispatch:
