@@ -149,7 +149,6 @@ def prepare_release_pr(base_branch: str, bump: str, token: str, prerelease: str)
         version,
         template_name,
         release_branch,  # doc_version
-        '--skip-check-links',
     ]
     print('Running', ' '.join(cmdline))
     run(
