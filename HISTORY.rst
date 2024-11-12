@@ -3,6 +3,47 @@ Changelog
 
 .. towncrier release notes start
 
+`v2.3.0dev <https://github.com/Diaoul/subliminal/tree/2.3.0dev>`_ (2024-11-12)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Changes
+-------
+
+- Add CLI `ignore` option for refiners, providers and subtitle ids. (`#585 <https://github.com/Diaoul/subliminal/issues/585>`_, `#1018 <https://github.com/Diaoul/subliminal/issues/1018>`_)
+- Allow to use the latest of creation and modification date to compute the age of the file. (`#860 <https://github.com/Diaoul/subliminal/issues/860>`_)
+- Add a `-n/--name` option to use a replacement name for the video.
+  Sort files alphabetically before scanning a directory. (`#991 <https://github.com/Diaoul/subliminal/issues/991>`_, `#1132 <https://github.com/Diaoul/subliminal/issues/1132>`_)
+- Add an option to change the style of the language suffix of saved subtitles.
+  Allow adding the language type, hi or forced. (`#1022 <https://github.com/Diaoul/subliminal/issues/1022>`_)
+- add `subtitles` attribute to Video (`#1151 <https://github.com/Diaoul/subliminal/issues/1151>`_)
+- Add Provider.hash_video staticmethod, to allow creating standalone providers. (`#1172 <https://github.com/Diaoul/subliminal/issues/1172>`_)
+- Add cli option to prefer or disfavor hearing impaired (-hi/-HI) or foreign only (-fo/-FO) subtitles. (`#1175 <https://github.com/Diaoul/subliminal/issues/1175>`_)
+- Drop python 3.8, support python 3.13. (`#1176 <https://github.com/Diaoul/subliminal/issues/1176>`_)
+- Remove addic7ed and napiprojekt from the list of disabled providers.
+  Remove the default_providers and default_refiners variables,
+  instead the get_default_providers() and get_default_refiners() functions can be used. (`#1181 <https://github.com/Diaoul/subliminal/issues/1181>`_)
+- Add release scripts, documentation and Github Actions (`#1186 <https://github.com/Diaoul/subliminal/issues/1186>`_)
+
+
+Provider Changes
+----------------
+
+- Added BSPlayer provider (`#996 <https://github.com/Diaoul/subliminal/issues/996>`_)
+- [OpenSubtitlesCom] Avoid duplicate subtitles (`#1146 <https://github.com/Diaoul/subliminal/issues/1146>`_)
+
+
+Documentation
+-------------
+
+- `#1142 <https://github.com/Diaoul/subliminal/issues/1142>`_, `#1143 <https://github.com/Diaoul/subliminal/issues/1143>`_, `#1144 <https://github.com/Diaoul/subliminal/issues/1144>`_, `#1147 <https://github.com/Diaoul/subliminal/issues/1147>`_, `#1148 <https://github.com/Diaoul/subliminal/issues/1148>`_, `#1157 <https://github.com/Diaoul/subliminal/issues/1157>`_, `#1178 <https://github.com/Diaoul/subliminal/issues/1178>`_
+
+
+Misc
+----
+
+- `#1134 <https://github.com/Diaoul/subliminal/issues/1134>`_, `#1153 <https://github.com/Diaoul/subliminal/issues/1153>`_, `#1171 <https://github.com/Diaoul/subliminal/issues/1171>`_, `#1174 <https://github.com/Diaoul/subliminal/issues/1174>`_
+
+
 2.2.1
 ^^^^^
 **release date:** 2024-06-27
