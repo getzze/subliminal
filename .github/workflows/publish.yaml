@@ -4,6 +4,10 @@ on:
   push:
     tags:
       - '*'
+  workflow_run:
+    workflows: ["Tag release"]
+    types:
+      - completed
   release:
     types:
       - published
@@ -32,7 +36,9 @@ jobs:
     name: Make a GitHub Release
     needs: [build-package]
     # only publish a Github release on push tag
-    if: ${{ github.event_name == 'push' && startsWith(github.ref, 'refs/tags/') }}
+    if: |
+      (github.event_name == 'push' && startsWith(github.ref, 'refs/tags/'))
+      || github.event_name == 'workflow_run'
     runs-on: ubuntu-latest
 
     permissions:
@@ -54,7 +60,6 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           files: dist/*
-          tag_name: ${{ github.event.inputs.version }}
           generate_release_notes: true
           draft: true
 
