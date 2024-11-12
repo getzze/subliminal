@@ -34,7 +34,7 @@ class InvalidFeatureRelease(Exception):  # noqa: D101
     pass
 
 
-SLUG = 'Diaoul/subliminal'
+SLUG = 'getzze/subliminal'
 
 PR_BODY = """\
 Created by the [prepare release pr]\
@@ -64,14 +64,19 @@ def login(token: str) -> Repository:
 def find_next_version(base_branch: str, *, is_major: bool, is_minor: bool, prerelease: str) -> str:
     """Find the next version, being a major, minor or patch bump."""
     output = check_output(['git', 'tag'], encoding='UTF-8')
-    valid_versions = []
+    valid_versions: list[tuple[int, ...]] = []
     for v in output.splitlines():
-        m = re.match(r'\d.\d.\d+$', v.strip())
+        # Match 'major.minor.patch', do not match tags of pre-release versions
+        m = re.match(r'v?(\d+)\.(\d+)\.(\d+)$', v.strip())
         if m:
-            valid_versions.append(tuple(int(x) for x in v.split('.')))
+            valid_versions.append(tuple(int(x) for x in m.groups()))
 
     valid_versions.sort()
     last_version = valid_versions[-1]
+
+    print(f'Current version from git tag: {Fore.CYAN}{last_version}')
+    bump_str = 'major' if is_major else 'minor' if is_minor else 'patch'
+    print(f'Bump {bump_str} version')
 
     if is_major:
         return f'{last_version[0]+1}.0.0{prerelease}'
@@ -109,14 +114,14 @@ def prepare_release_pr(base_branch: str, bump: str, token: str, prerelease: str)
 
     release_branch = f'release-{version}'
 
-    # run(
-    #     ['git', 'config', 'user.name', 'pytest bot'],
-    #     check=True,
-    # )
-    # run(
-    #     ['git', 'config', 'user.email', 'pytestbot@gmail.com'],
-    #     check=True,
-    # )
+    run(
+        ['git', 'config', 'user.name', 'subliminal bot'],
+        check=True,
+    )
+    run(
+        ['git', 'config', 'user.email', 'diaoulael@gmail.com'],
+        check=True,
+    )
 
     run(
         ['git', 'checkout', '-b', release_branch, f'origin/{base_branch}'],
@@ -144,7 +149,6 @@ def prepare_release_pr(base_branch: str, bump: str, token: str, prerelease: str)
         version,
         template_name,
         release_branch,  # doc_version
-        '--skip-check-links',
     ]
     print('Running', ' '.join(cmdline))
     run(
