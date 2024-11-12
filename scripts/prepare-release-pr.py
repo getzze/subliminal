@@ -64,11 +64,12 @@ def login(token: str) -> Repository:
 def find_next_version(base_branch: str, *, is_major: bool, is_minor: bool, prerelease: str) -> str:
     """Find the next version, being a major, minor or patch bump."""
     output = check_output(['git', 'tag'], encoding='UTF-8')
-    valid_versions = []
+    valid_versions: list[tuple[int, ...]] = []
     for v in output.splitlines():
-        m = re.match(r'\d.\d.\d+$', v.strip())
+        # Match 'major.minor.patch', do not match tags of pre-release versions
+        m = re.match(r'v?(\d+)\.(\d+)\.(\d+)$', v.strip())
         if m:
-            valid_versions.append(tuple(int(x) for x in v.split('.')))
+            valid_versions.append(tuple(int(x) for x in m.groups()))
 
     valid_versions.sort()
     last_version = valid_versions[-1]
