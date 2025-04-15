@@ -36,7 +36,6 @@ extensions = [
     'sphinxcontrib.programoutput',
     'sphinx_autodoc_typehints',
     'sphinx_changelog',
-    'sphinx_rtd_theme',
 ]
 
 # Add any paths that contain templates here, relative to this directory.
@@ -58,6 +57,8 @@ project = subliminal.__title__
 copyright = ' '.join(subliminal.__copyright__.split()[1:])
 author = subliminal.__copyright__.split(', ')[1]
 repository = f'https://github.com/Diaoul/{project}/'
+pypi_url = f'https://pypi.org/project/{project}/'
+rtd_url = f'https://{project}.readthedocs.io/'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -117,22 +118,49 @@ todo_include_todos = False
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
-html_theme = 'sphinx_rtd_theme'
+html_theme = 'furo'
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
 # documentation.
-# html_theme_options = {}
-# html_theme_options = {
-#     'github_user': 'Diaoul',
-#     'github_repo': project,
-#     'travis_button': True,
-#     'gratipay_user': 'Diaoul'
-# }
+html_theme_options = {
+    # configure 'edit source' button
+    'source_repository': repository,
+    'source_directory': 'docs/',
+    'source_branch': 'main',
+    'top_of_page_buttons': [],
+    # Add link to repository
+    'footer_icons': [
+        {
+            'name': 'ReadTheDocs',
+            'url': rtd_url,
+            'class': 'bi bi-book-half bi-2x',
+        },
+        {
+            'name': 'PyPI',
+            'url': pypi_url,
+            'class': 'bi bi-box-fill bi-2x',
+        },
+        {
+            'name': 'GitHub',
+            'url': repository,
+            'class': 'bi bi-github bi-2x',
+        },
+    ],
+}
+
+html_static_path = ['_static']
+
+html_css_files = [
+    # add icon after external links
+    'css/ext-links.css',
+    # load the open source bootstrap icon set
+    'https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css',
+]
 
 # The name for this set of Sphinx documents.  If None, it defaults to
 # "<project> v<release> documentation".
-# html_title = None
+html_title = f'{project} {release}'
 
 # A shorter title for the navigation bar.  Default is the same as html_title.
 # html_short_title = None
@@ -145,11 +173,6 @@ html_theme = 'sphinx_rtd_theme'
 # docs.  This file should be a Windows icon file (.ico) being 16x16 or 32x32
 # pixels large.
 # html_favicon = None
-
-# Add any paths that contain custom static files (such as style sheets) here,
-# relative to this directory. They are copied after the builtin static files,
-# so a file named "default.css" will overwrite the builtin "default.css".
-html_static_path = ['_static']
 
 # Add any extra paths that contain custom files (such as robots.txt or
 # .htaccess) here, relative to this directory. These files are copied

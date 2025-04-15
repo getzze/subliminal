@@ -56,10 +56,10 @@ dependencies = [
 [project.optional-dependencies]
 rar = ["rarfile>=2.7"]
 docs = [
-    "sphinx<8.2",
-    "sphinx_rtd_theme>=2",
+    "sphinx",
+    "furo>=2024.5.6",  # to hide top_of_page_buttons
     "sphinxcontrib-programoutput",
-    "sphinx_autodoc_typehints",
+    "sphinx_autodoc_typehints>=3.1",  # compatible with sphinx v8.2
     "sphinx_changelog",
     "vcrpy>=5",  # keep synchronized with tests dependencies
     "towncrier",
