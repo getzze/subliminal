@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import asyncio
+import functools
 import logging
 from importlib import import_module
 from itertools import count
@@ -19,7 +20,7 @@ from subliminal.video import Episode, Movie, Video
 from . import AsyncProvider, Provider
 
 if TYPE_CHECKING:
-    from collections.abc import Mapping, Sequence, Set
+    from collections.abc import Callable, Mapping, Sequence, Set
 
 logger = logging.getLogger(__name__)
 
@@ -88,118 +89,8 @@ class MockSubtitle(Subtitle):
         return matches | self.matches
 
 
-class MockProvider(Provider):
-    """Mock Provider."""
-
-    languages: ClassVar[Set[Language]] = {Language(lang) for lang in LANGUAGES}
-    subtitle_class: ClassVar = MockSubtitle
-    internal_subtitle_pool: ClassVar[list[MockSubtitle]] = []
-
-    video_types: ClassVar = (Episode, Movie)
-
-    logged_in: bool
-    subtitle_pool: list[MockSubtitle]
-    is_broken: bool
-    is_failed: bool
-
-    def __init__(
-        self,
-        subtitle_pool: Sequence[MockSubtitle] | None = None,
-        *,
-        is_broken: bool = False,
-        is_failed: bool = False,
-        **kwargs: Any,
-    ) -> None:
-        self.logged_in = False
-        self.subtitle_pool = list(self.internal_subtitle_pool)
-        if subtitle_pool is not None:  # pragma: no cover
-            self.subtitle_pool.extend(list(subtitle_pool))
-        self.is_broken = is_broken
-        self.is_failed = is_failed
-
-    def initialize(self) -> None:
-        """Initialize the provider."""
-        logger.info('Mock provider %s was initialized', self.__class__.__name__)
-        self.logged_in = True
-
-    def terminate(self) -> None:
-        """Terminate the provider."""
-        if not self.logged_in:  # pragma: no cover
-            logger.info('Mock provider %s was not terminated', self.__class__.__name__)
-            raise NotInitializedProviderError
-
-        logger.info('Mock provider %s was terminated', self.__class__.__name__)
-        self.logged_in = False
-
-    def query(
-        self,
-        languages: Set[Language],
-        video: Video | None = None,
-        matches: Set[str] | None = None,
-    ) -> list[MockSubtitle]:  # pragma: no cover
-        """Query the provider for subtitles."""
-        if self.is_broken:
-            msg = f'Mock provider {self.__class__.__name__} query raised a discarding error'
-            raise DiscardingError(msg)
-        if self.is_failed:
-            msg = f'Mock provider {self.__class__.__name__} query raised an error'
-            raise ProviderError(msg)
-
-        subtitles = []
-        for lang in languages:
-            subtitle = self.subtitle_class(language=lang, video=video, matches=matches)
-            subtitles.append(subtitle)
-        logger.info(
-            'Mock provider %s query for video %r and languages %s: %d',
-            self.__class__.__name__,
-            video.name if video else None,
-            languages,
-            len(subtitles),
-        )
-        return subtitles
-
-    def list_subtitles(self, video: Video, languages: Set[Language]) -> list[MockSubtitle]:
-        """List all the subtitles for the video."""
-        if self.is_broken:
-            msg = f'Mock provider {self.__class__.__name__} list_subtitles raised a discarding error'
-            raise DiscardingError(msg)
-        if self.is_failed:
-            msg = f'Mock provider {self.__class__.__name__} list_subtitles raised an error'
-            raise ProviderError(msg)
-
-        subtitles = [
-            subtitle
-            for subtitle in self.subtitle_pool
-            if subtitle.language in languages and video.name.endswith(subtitle.video_name)
-        ]
-        logger.info(
-            'Mock provider %s list subtitles for video %r and languages %s: %d',
-            self.__class__.__name__,
-            video.name,
-            languages,
-            len(subtitles),
-        )
-        return subtitles
-
-    def download_subtitle(self, subtitle: MockSubtitle) -> None:
-        """Download the content of the subtitle."""
-        if self.is_broken:
-            msg = f'Mock provider {self.__class__.__name__} download_subtitle raised a discarding error'
-            raise DiscardingError(msg)
-        if self.is_failed:
-            msg = f'Mock provider {self.__class__.__name__} download_subtitle raised an error'
-            raise ProviderError(msg)
-
-        logger.info(
-            'Mock provider %s download subtitle %s',
-            self.__class__.__name__,
-            subtitle,
-        )
-        subtitle.set_content(subtitle.fake_content)
-
-
-class AsyncMockProvider(AsyncProvider):
-    """Mock asynchronous Provider."""
+class _BaseMockProvider:
+    """Base for synchronous and asynchronous mock Provider."""
 
     languages: ClassVar[Set[Language]] = {Language(lang) for lang in LANGUAGES}
     subtitle_class: ClassVar = MockSubtitle
@@ -230,12 +121,12 @@ class AsyncMockProvider(AsyncProvider):
         self.is_failed = is_failed
         self.delay = delay
 
-    async def initialize(self) -> None:
+    def _initialize(self) -> None:
         """Initialize the provider."""
         logger.info('Mock provider %s was initialized', self.__class__.__name__)
         self.logged_in = True
 
-    async def terminate(self) -> None:
+    def _terminate(self) -> None:
         """Terminate the provider."""
         if not self.logged_in:  # pragma: no cover
             logger.info('Mock provider %s was not terminated', self.__class__.__name__)
@@ -244,7 +135,7 @@ class AsyncMockProvider(AsyncProvider):
         logger.info('Mock provider %s was terminated', self.__class__.__name__)
         self.logged_in = False
 
-    async def query(
+    def _query(
         self,
         languages: Set[Language],
         video: Video | None = None,
@@ -257,9 +148,6 @@ class AsyncMockProvider(AsyncProvider):
         if self.is_failed:
             msg = f'Mock provider {self.__class__.__name__} query raised an error'
             raise ProviderError(msg)
-
-        # Async sleep
-        await asyncio.sleep(self.delay)
 
         subtitles = []
         for lang in languages:
@@ -274,7 +162,7 @@ class AsyncMockProvider(AsyncProvider):
         )
         return subtitles
 
-    async def list_subtitles(self, video: Video, languages: Set[Language]) -> list[MockSubtitle]:
+    def _list_subtitles(self, video: Video, languages: Set[Language]) -> list[MockSubtitle]:
         """List all the subtitles for the video."""
         if self.is_broken:
             msg = f'Mock provider {self.__class__.__name__} list_subtitles raised a discarding error'
@@ -282,9 +170,6 @@ class AsyncMockProvider(AsyncProvider):
         if self.is_failed:
             msg = f'Mock provider {self.__class__.__name__} list_subtitles raised an error'
             raise ProviderError(msg)
-
-        # Async sleep
-        await asyncio.sleep(self.delay)
 
         subtitles = [
             subtitle
@@ -300,7 +185,7 @@ class AsyncMockProvider(AsyncProvider):
         )
         return subtitles
 
-    async def download_subtitle(self, subtitle: MockSubtitle) -> None:
+    def _download_subtitle(self, subtitle: MockSubtitle) -> None:
         """Download the content of the subtitle."""
         if self.is_broken:
             msg = f'Mock provider {self.__class__.__name__} download_subtitle raised a discarding error'
@@ -309,15 +194,87 @@ class AsyncMockProvider(AsyncProvider):
             msg = f'Mock provider {self.__class__.__name__} download_subtitle raised an error'
             raise ProviderError(msg)
 
-        # Async sleep
-        await asyncio.sleep(self.delay)
-
         logger.info(
             'Mock provider %s download subtitle %s',
             self.__class__.__name__,
             subtitle,
         )
         subtitle.set_content(subtitle.fake_content)
+
+
+def async_delay(func: Callable) -> Callable:
+    """Add a delay before calling a coroutine."""
+
+    @functools.wraps(func)
+    async def wrapped(self: _BaseMockProvider, *args: Any, **kwargs: Any) -> Any:
+        # Async sleep
+        await asyncio.sleep(self.delay)
+
+        # Call the original method
+        return await func(self, *args, **kwargs)
+
+    return wrapped
+
+
+class AsyncMockProvider(_BaseMockProvider, AsyncProvider):
+    """Mock asynchronous Provider."""
+
+    async def initialize(self) -> None:
+        """Initialize the provider."""
+        self._initialize()
+
+    async def terminate(self) -> None:
+        """Terminate the provider."""
+        self._terminate()
+
+    @async_delay
+    async def query(
+        self,
+        languages: Set[Language],
+        video: Video | None = None,
+        matches: Set[str] | None = None,
+    ) -> list[MockSubtitle]:  # pragma: no cover
+        """Query the provider for subtitles."""
+        return self._query(languages=languages, video=video, matches=matches)
+
+    @async_delay
+    async def list_subtitles(self, video: Video, languages: Set[Language]) -> list[MockSubtitle]:
+        """List all the subtitles for the video."""
+        return self._list_subtitles(video, languages)
+
+    @async_delay
+    async def download_subtitle(self, subtitle: MockSubtitle) -> None:
+        """Download the content of the subtitle."""
+        return self._download_subtitle(subtitle)
+
+
+class MockProvider(_BaseMockProvider, Provider):
+    """Mock synchronous Provider."""
+
+    def initialize(self) -> None:
+        """Initialize the provider."""
+        self._initialize()
+
+    def terminate(self) -> None:
+        """Terminate the provider."""
+        self._terminate()
+
+    def query(
+        self,
+        languages: Set[Language],
+        video: Video | None = None,
+        matches: Set[str] | None = None,
+    ) -> list[MockSubtitle]:  # pragma: no cover
+        """Query the provider for subtitles."""
+        return self._query(languages=languages, video=video, matches=matches)
+
+    def list_subtitles(self, video: Video, languages: Set[Language]) -> list[MockSubtitle]:
+        """List all the subtitles for the video."""
+        return self._list_subtitles(video, languages)
+
+    def download_subtitle(self, subtitle: MockSubtitle) -> None:
+        """Download the content of the subtitle."""
+        return self._download_subtitle(subtitle)
 
 
 def mock_subtitle_provider(
